@@ -30,7 +30,13 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. D-pad up/down/left/right moves focus between focusable elements on screen
   3. OK button activates the focused element; Back button returns to the previous screen
   4. Focus state is visually distinct — user can always see what is selected
-**Plans**: TBD
+**Plans:** 3 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Project scaffold: Vite 6 + SolidJS, chrome68 build target, vitest wired
+- [ ] 01-02-PLAN.md — Infrastructure: global CSS design tokens, navigation module, appinfo.json
+- [ ] 01-03-PLAN.md — App shell: MemoryRouter routing, 4 skeleton screens, Back key handler, ExitConfirmDialog
+
 **UI hint**: yes
 
 ### Phase 2: Authentication
@@ -97,7 +103,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/? | Not started | - |
+| 1. Foundation | 0/3 | Not started | - |
 | 2. Authentication | 0/? | Not started | - |
 | 3. Channel List | 0/? | Not started | - |
 | 4. Stream Playback | 0/? | Not started | - |

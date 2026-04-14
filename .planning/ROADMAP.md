@@ -96,8 +96,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — Service layer: TwitchChatService (EventSub WebSocket) + EmoteService (BTTV/7TV/FFZ) with tests
-- [ ] 05-02-PLAN.md — UI: ChatSidebar + ChatMessage components, PlayerScreen integration with toggle and emotes
+- [x] 05-01-PLAN.md — Service layer: TwitchChatService (EventSub WebSocket) + EmoteService (BTTV/7TV/FFZ) with tests
+- [x] 05-02-PLAN.md — UI: ChatSidebar + ChatMessage components, PlayerScreen integration with toggle and emotes
 
 **UI hint**: yes
 

@@ -81,8 +81,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — TwitchStreamService: GQL PlaybackAccessToken + Usher URL builder with tests
-- [ ] 04-02-PLAN.md — PlayerScreen: hls.js video player with loading, error overlay, info bar
+- [x] 04-01-PLAN.md — TwitchStreamService: GQL PlaybackAccessToken + Usher URL builder with tests
+- [x] 04-02-PLAN.md — PlayerScreen: hls.js video player with loading, error overlay, info bar
 
 ### Phase 5: Chat
 **Goal**: A read-only chat overlay renders live Twitch chat — including native and third-party emotes — over the stream, and can be toggled

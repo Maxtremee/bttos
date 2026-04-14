@@ -1,0 +1,11 @@
+{
+  "id": "com.dev.twitchalt",
+  "version": "0.1.0",
+  "vendor": "Dev",
+  "type": "web",
+  "main": "index.html",
+  "title": "Twitch Alt",
+  "icon": "icon.png",
+  "largeIcon": "icon.png",
+  "disableBackHistoryAPI": true
+}

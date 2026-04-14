@@ -1,39 +1,321 @@
-import { onMount } from 'solid-js'
+import { createSignal, createResource, createEffect, onMount, onCleanup, Show } from 'solid-js'
+import { useParams } from '@solidjs/router'
+import Hls from 'hls.js'
 import { Focusable, useSpatialNavigation } from '../navigation'
+import { twitchStreamService } from '../services/TwitchStreamService'
+import { authStore } from '../stores/authStore'
+import type { StreamData } from '../services/TwitchChannelService'
+
+const CLIENT_ID = import.meta.env.VITE_TWITCH_CLIENT_ID as string
+
+function helixHeaders(): Record<string, string> {
+  return {
+    'Authorization': `Bearer ${authStore.token}`,
+    'Client-Id': CLIENT_ID,
+  }
+}
+
+/**
+ * Format viewer count for display.
+ * Uses "watching" per UI-SPEC copywriting contract.
+ */
+function formatWatching(count: number): string {
+  if (count >= 1000) {
+    return `${(count / 1000).toFixed(1)}K watching`
+  }
+  return `${count} watching`
+}
+
+/**
+ * Determine errorKind from a caught error.
+ * - TypeError (network failure) or message containing "fetch" -> 'network'
+ * - Message containing "offline" -> 'offline'
+ * - Otherwise -> 'unknown'
+ */
+function classifyError(err: unknown): 'offline' | 'network' | 'unknown' {
+  if (err instanceof TypeError) return 'network'
+  if (err instanceof Error) {
+    const msg = err.message.toLowerCase()
+    if (msg.includes('offline')) return 'offline'
+    if (msg.includes('fetch') || msg.includes('network')) return 'network'
+  }
+  return 'unknown'
+}
 
 export default function PlayerScreen() {
+  const params = useParams<{ channel: string }>()
   const { setFocus } = useSpatialNavigation()
-  onMount(() => setFocus('player-primary'))
+
+  // --- State signals ---
+  const [playerState, setPlayerState] = createSignal<'loading' | 'playing' | 'error'>('loading')
+  const [errorKind, setErrorKind] = createSignal<'offline' | 'network' | 'unknown'>('unknown')
+  const [infoVisible, setInfoVisible] = createSignal(true)
+
+  let videoRef!: HTMLVideoElement
+  let hls: Hls | undefined
+  let hideTimer: ReturnType<typeof setTimeout> | undefined
+  let retryCount = 0
+
+  // --- Stream metadata fetch for info bar ---
+  const [streamData] = createResource(
+    () => params.channel,
+    async (login: string) => {
+      const res = await fetch(
+        `https://api.twitch.tv/helix/streams?user_login=${encodeURIComponent(login)}`,
+        { headers: helixHeaders() }
+      )
+      if (!res.ok) return null
+      const json = await res.json() as { data: StreamData[] }
+      return json.data[0] ?? null
+    }
+  )
+
+  // --- Info bar auto-hide logic ---
+  function showInfoBar() {
+    setInfoVisible(true)
+    clearTimeout(hideTimer)
+    hideTimer = setTimeout(() => setInfoVisible(false), 4000)
+  }
+
+  // --- HLS player initialization ---
+  async function initPlayer() {
+    setPlayerState('loading')
+    retryCount = 0
+
+    try {
+      const m3u8Url = await twitchStreamService.fetchStreamM3u8Url(params.channel)
+
+      if (!Hls.isSupported()) {
+        setErrorKind('unknown')
+        setPlayerState('error')
+        return
+      }
+
+      hls = new Hls({
+        maxBufferLength: 30,
+        maxBufferSize: 30_000_000,
+        backBufferLength: 0,
+        liveSyncDurationCount: 3,
+      })
+
+      hls.attachMedia(videoRef)
+      hls.loadSource(m3u8Url)
+
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        videoRef.play().catch(() => {})
+        setPlayerState('playing')
+        showInfoBar()
+      })
+
+      hls.on(Hls.Events.ERROR, (_event: string, data: { fatal: boolean; type: string; details?: string }) => {
+        if (!data.fatal) return
+
+        if (data.type === Hls.ErrorTypes.NETWORK_ERROR && retryCount < 3) {
+          retryCount++
+          setTimeout(() => {
+            hls?.startLoad()
+          }, 2000 * Math.pow(2, retryCount - 1))
+          return
+        }
+
+        if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+          hls?.recoverMediaError()
+          return
+        }
+
+        // Fatal unrecoverable error
+        hls?.destroy()
+        hls = undefined
+
+        if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+          // Network error after max retries
+          if (data.details && data.details.includes('manifestLoadError')) {
+            setErrorKind('offline')
+          } else {
+            setErrorKind('network')
+          }
+        } else {
+          setErrorKind('unknown')
+        }
+        setPlayerState('error')
+      })
+    } catch (err) {
+      setErrorKind(classifyError(err))
+      setPlayerState('error')
+    }
+  }
+
+  // --- Retry handler ---
+  function handleRetry() {
+    hls?.destroy()
+    hls = undefined
+    initPlayer()
+  }
+
+  // --- Focus on error overlay ---
+  createEffect(() => {
+    if (playerState() === 'error') {
+      setFocus('player-retry')
+    }
+  })
+
+  // --- Lifecycle ---
+  onMount(() => {
+    initPlayer()
+    showInfoBar()
+    window.addEventListener('keydown', showInfoBar)
+  })
+
+  onCleanup(() => {
+    window.removeEventListener('keydown', showInfoBar)
+    clearTimeout(hideTimer)
+    hls?.destroy()
+  })
 
   return (
-    <main style={{ padding: 'var(--space-2xl)', 'min-height': '100vh' }}>
-      <h1 style={{
-        'font-size': 'var(--font-size-heading)',
-        'font-weight': 'var(--font-weight-semibold)',
-        color: 'var(--color-text-primary)',
-        'margin-bottom': 'var(--space-xl)',
-      }}>
-        Player screen — navigation test
-      </h1>
-      <Focusable focusKey="player-primary" as="div">
-        {({ focused }) => (
-          <button
-            class={focused() ? 'focused' : ''}
-            style={{
-              'min-height': 'var(--min-target-height)',
-              padding: 'var(--space-md) var(--space-xl)',
-              'font-size': 'var(--font-size-label)',
-              'font-weight': 'var(--font-weight-semibold)',
-              background: 'var(--color-surface)',
-              color: 'var(--color-text-primary)',
-              border: 'none',
-              cursor: 'pointer',
-            }}
-          >
-            Placeholder
-          </button>
-        )}
-      </Focusable>
-    </main>
+    <div style={{ position: 'relative', width: '100%', height: '100vh', background: 'var(--color-bg)' }}>
+      {/* Video element -- always rendered, hls.js manages it via MSE */}
+      <video
+        ref={videoRef!}
+        style={{
+          width: '100%',
+          height: '100vh',
+          'object-fit': 'cover',
+          display: playerState() === 'error' ? 'none' : 'block',
+        }}
+      />
+
+      {/* Loading overlay */}
+      <Show when={playerState() === 'loading'}>
+        <div style={{
+          position: 'absolute',
+          top: '0',
+          left: '0',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          'align-items': 'center',
+          'justify-content': 'center',
+        }}>
+          <span style={{
+            'font-size': 'var(--font-size-body)',
+            color: 'var(--color-text-secondary)',
+          }}>
+            Loading stream...
+          </span>
+        </div>
+      </Show>
+
+      {/* Error overlay */}
+      <Show when={playerState() === 'error'}>
+        <div style={{
+          position: 'absolute',
+          top: '0',
+          left: '0',
+          width: '100%',
+          height: '100%',
+          background: 'var(--color-surface)',
+          display: 'flex',
+          'flex-direction': 'column',
+          'align-items': 'center',
+          'justify-content': 'center',
+          gap: 'var(--space-md)',
+        }}>
+          <h2 style={{
+            'font-size': 'var(--font-size-heading)',
+            'font-weight': 'var(--font-weight-semibold)',
+            color: 'var(--color-text-primary)',
+          }}>
+            {errorKind() === 'offline'
+              ? 'Stream is offline'
+              : errorKind() === 'network'
+              ? 'Connection lost'
+              : 'Playback error'}
+          </h2>
+          <p style={{
+            'font-size': 'var(--font-size-body)',
+            color: 'var(--color-text-secondary)',
+          }}>
+            {errorKind() === 'offline'
+              ? 'This channel has ended their stream. Press OK to retry or Back to return to channels.'
+              : errorKind() === 'network'
+              ? 'Could not reach the stream. Check your connection, then press OK to retry.'
+              : 'Something went wrong. Press OK to retry or Back to return to channels.'}
+          </p>
+          <Focusable focusKey="player-retry" onEnterPress={handleRetry} as="button">
+            {({ focused }: { focused: () => boolean }) => (
+              <button
+                class={focused() ? 'focused' : ''}
+                onClick={handleRetry}
+                style={{
+                  'min-height': 'var(--min-target-height)',
+                  padding: 'var(--space-md) var(--space-xl)',
+                  'font-size': 'var(--font-size-label)',
+                  'font-weight': 'var(--font-weight-semibold)',
+                  background: 'var(--color-accent)',
+                  color: 'var(--color-text-primary)',
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                Retry
+              </button>
+            )}
+          </Focusable>
+        </div>
+      </Show>
+
+      {/* Info bar -- bottom overlay, auto-hide */}
+      <Show when={playerState() === 'playing' && infoVisible() && streamData()}>
+        <div style={{
+          position: 'absolute',
+          bottom: '0',
+          left: '0',
+          width: '100%',
+          padding: 'var(--space-lg) var(--space-xl)',
+          background: 'rgba(26, 26, 26, 0.85)',
+          transition: 'opacity 0.3s ease',
+        }}>
+          <div style={{
+            display: 'flex',
+            'justify-content': 'space-between',
+            'align-items': 'flex-start',
+          }}>
+            <div>
+              <div style={{
+                'font-size': 'var(--font-size-heading)',
+                'font-weight': 'var(--font-weight-semibold)',
+                color: 'var(--color-text-primary)',
+              }}>
+                {streamData()!.user_name}
+              </div>
+              <div style={{
+                'font-size': 'var(--font-size-body)',
+                color: 'var(--color-text-secondary)',
+                overflow: 'hidden',
+                'text-overflow': 'ellipsis',
+                'white-space': 'nowrap',
+              }}>
+                {streamData()!.title}
+              </div>
+            </div>
+            <div style={{ 'text-align': 'right' }}>
+              <div style={{
+                'font-size': 'var(--font-size-label)',
+                color: 'var(--color-text-secondary)',
+              }}>
+                {streamData()!.game_name}
+              </div>
+              <div style={{
+                'font-size': 'var(--font-size-label)',
+                color: 'var(--color-text-secondary)',
+              }}>
+                {formatWatching(streamData()!.viewer_count)}
+              </div>
+            </div>
+          </div>
+        </div>
+      </Show>
+    </div>
   )
 }

@@ -2,9 +2,47 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render } from 'solid-js/web'
 
+// --- Hoisted shared state for mocks (available inside vi.mock factories) ---
+const { mockSetFocus, mockFetchStreamM3u8Url, hlsEventHandlers, mockHlsInstance, MockHls } = vi.hoisted(() => {
+  type HlsEventHandler = (...args: unknown[]) => void
+  const hlsEventHandlers = new Map<string, HlsEventHandler>()
+  const mockHlsInstance = {
+    attachMedia: vi.fn(),
+    loadSource: vi.fn(),
+    destroy: vi.fn(),
+    recoverMediaError: vi.fn(),
+    startLoad: vi.fn(),
+    on: vi.fn((event: string, handler: HlsEventHandler) => {
+      hlsEventHandlers.set(event, handler)
+    }),
+  }
+  const MockHlsCtor = vi.fn(() => mockHlsInstance) as unknown as {
+    new (config?: unknown): typeof mockHlsInstance
+    isSupported: () => boolean
+    Events: Record<string, string>
+    ErrorTypes: Record<string, string>
+  }
+  MockHlsCtor.isSupported = () => true
+  MockHlsCtor.Events = {
+    MANIFEST_PARSED: 'hlsManifestParsed',
+    ERROR: 'hlsError',
+  }
+  MockHlsCtor.ErrorTypes = {
+    NETWORK_ERROR: 'networkError',
+    MEDIA_ERROR: 'mediaError',
+  }
+
+  return {
+    mockSetFocus: vi.fn(),
+    mockFetchStreamM3u8Url: vi.fn(),
+    hlsEventHandlers,
+    mockHlsInstance,
+    MockHls: MockHlsCtor,
+  }
+})
+
 // --- Module mocks ---
 
-const mockSetFocus = vi.fn()
 vi.mock('../../navigation', () => ({
   useSpatialNavigation: () => ({ setFocus: mockSetFocus }),
   Focusable: (props: {
@@ -18,7 +56,6 @@ vi.mock('../../navigation', () => ({
   },
 }))
 
-const mockFetchStreamM3u8Url = vi.fn()
 vi.mock('../../services/TwitchStreamService', () => ({
   twitchStreamService: {
     get fetchStreamM3u8Url() { return mockFetchStreamM3u8Url },
@@ -32,36 +69,6 @@ vi.mock('../../stores/authStore', () => ({
 vi.mock('@solidjs/router', () => ({
   useParams: () => ({ channel: 'testchannel' }),
 }))
-
-// --- hls.js mock ---
-type HlsEventHandler = (...args: unknown[]) => void
-const hlsEventHandlers = new Map<string, HlsEventHandler>()
-const mockHlsInstance = {
-  attachMedia: vi.fn(),
-  loadSource: vi.fn(),
-  destroy: vi.fn(),
-  recoverMediaError: vi.fn(),
-  startLoad: vi.fn(),
-  on: vi.fn((event: string, handler: HlsEventHandler) => {
-    hlsEventHandlers.set(event, handler)
-  }),
-}
-
-const MockHls = vi.fn(() => mockHlsInstance) as unknown as {
-  new (config?: unknown): typeof mockHlsInstance
-  isSupported: () => boolean
-  Events: Record<string, string>
-  ErrorTypes: Record<string, string>
-}
-MockHls.isSupported = () => true
-MockHls.Events = {
-  MANIFEST_PARSED: 'hlsManifestParsed',
-  ERROR: 'hlsError',
-}
-MockHls.ErrorTypes = {
-  NETWORK_ERROR: 'networkError',
-  MEDIA_ERROR: 'mediaError',
-}
 
 vi.mock('hls.js', () => ({
   default: MockHls,

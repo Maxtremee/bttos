@@ -51,10 +51,10 @@ Plans:
 **Plans:** 4 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Test scaffold: install happy-dom + uqr, switch vitest to happy-dom env, create test stubs
-- [ ] 02-02-PLAN.md — Auth service layer: TwitchAuthService (device code flow, token refresh singleton) + authStore
-- [ ] 02-03-PLAN.md — Login screen: full device code + QR UI replacing Phase 1 skeleton
-- [ ] 02-04-PLAN.md — Auth guard: AuthGuard layout component + App.tsx protected route wiring
+- [x] 02-01-PLAN.md — Test scaffold: install happy-dom + uqr, switch vitest to happy-dom env, create test stubs
+- [x] 02-02-PLAN.md — Auth service layer: TwitchAuthService (device code flow, token refresh singleton) + authStore
+- [x] 02-03-PLAN.md — Login screen: full device code + QR UI replacing Phase 1 skeleton
+- [x] 02-04-PLAN.md — Auth guard: AuthGuard layout component + App.tsx protected route wiring
 
 **UI hint**: yes
 

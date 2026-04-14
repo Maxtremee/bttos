@@ -15,11 +15,11 @@ User can log in, see their followed channels, pick one, and watch the stream wit
 - ✓ App loads and runs on real webOS TV hardware (Chromium 68+) — Phase 1
 - ✓ App is fully navigable with a standard TV remote (D-pad + OK + Back) — Phase 1
 - ✓ User can authenticate via device code or QR flow (required to use the app) — Phase 2 (pending human UAT)
+- ✓ User sees a list of their followed channels that are currently live — Phase 3
+- ✓ User can select a channel and watch the stream — Phase 4
+- ✓ Stream plays at auto-selected best quality — Phase 4
 
 ### Active
-- [ ] User sees a list of their followed channels that are currently live
-- [ ] User can select a channel and watch the stream
-- [ ] Stream plays at auto-selected best quality
 - [ ] User can toggle Twitch chat overlay on/off during playback
 - [ ] User can access a settings screen (logout, basic preferences)
 
@@ -76,4 +76,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-14 after Phase 2 completion*
+*Last updated: 2026-04-14 after Phase 4 completion*

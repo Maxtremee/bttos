@@ -68,6 +68,29 @@ vi.mock('../../stores/authStore', () => ({
 
 vi.mock('@solidjs/router', () => ({
   useParams: () => ({ channel: 'testchannel' }),
+  useLocation: () => ({ state: null }),
+}))
+
+vi.mock('../../services/TwitchChatService', () => ({
+  twitchChatService: {
+    connect: vi.fn(),
+    disconnect: vi.fn(),
+    onMessage: undefined,
+    onScopeError: undefined,
+    onConnectionChange: undefined,
+  },
+}))
+
+vi.mock('../../services/EmoteService', () => ({
+  emoteService: {
+    getEmoteMap: vi.fn().mockResolvedValue(new Map()),
+  },
+}))
+
+vi.mock('../../services/TwitchAuthService', () => ({
+  twitchAuthService: {
+    clearTokens: vi.fn(),
+  },
 }))
 
 vi.mock('hls.js', () => ({

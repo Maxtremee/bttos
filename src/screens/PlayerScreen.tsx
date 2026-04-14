@@ -1,10 +1,16 @@
-import { createSignal, createResource, createEffect, onMount, onCleanup, Show } from 'solid-js'
-import { useParams } from '@solidjs/router'
+import { createSignal, createResource, createEffect, createStore as _createStore, onMount, onCleanup, Show } from 'solid-js'
+import { createStore } from 'solid-js/store'
+import { useParams, useLocation } from '@solidjs/router'
 import Hls from 'hls.js'
 import { Focusable, useSpatialNavigation } from '../navigation'
 import { twitchStreamService } from '../services/TwitchStreamService'
+import { twitchChatService } from '../services/TwitchChatService'
+import { emoteService, type EmoteMap } from '../services/EmoteService'
+import { twitchAuthService } from '../services/TwitchAuthService'
 import { authStore } from '../stores/authStore'
 import type { StreamData } from '../services/TwitchChannelService'
+import type { ChatMessage } from '../types/chat'
+import ChatSidebar from '../components/ChatSidebar'
 
 const CLIENT_ID = import.meta.env.VITE_TWITCH_CLIENT_ID as string
 
@@ -44,12 +50,46 @@ function classifyError(err: unknown): 'offline' | 'network' | 'unknown' {
 
 export default function PlayerScreen() {
   const params = useParams<{ channel: string }>()
+  const location = useLocation()
   const { setFocus } = useSpatialNavigation()
 
   // --- State signals ---
   const [playerState, setPlayerState] = createSignal<'loading' | 'playing' | 'error'>('loading')
   const [errorKind, setErrorKind] = createSignal<'offline' | 'network' | 'unknown'>('unknown')
   const [infoVisible, setInfoVisible] = createSignal(true)
+
+  // --- Chat state ---
+  const [chatVisible, setChatVisible] = createSignal(true)
+  const [chatStatus, setChatStatus] = createSignal<'connecting' | 'loading-emotes' | 'active' | 'reconnecting'>('connecting')
+  const [scopeError, setScopeError] = createSignal(false)
+  const [emoteMap, setEmoteMap] = createSignal<EmoteMap>(new Map())
+  const [toggleHintVisible, setToggleHintVisible] = createSignal(true)
+
+  // Chat message store — capped at 150 messages
+  const MAX_MESSAGES = 150
+  const [messages, setMessages] = createStore<ChatMessage[]>([])
+
+  // Message batching — buffer for 100ms before flushing to store
+  let pendingMessages: ChatMessage[] = []
+  let batchTimer: ReturnType<typeof setTimeout> | undefined
+  let toggleHintTimer: ReturnType<typeof setTimeout> | undefined
+
+  function flushMessages() {
+    if (!pendingMessages.length) return
+    setMessages(prev => {
+      const next = [...prev, ...pendingMessages]
+      pendingMessages = []
+      return next.length > MAX_MESSAGES ? next.slice(-MAX_MESSAGES) : next
+    })
+    batchTimer = undefined
+  }
+
+  function queueMessage(msg: ChatMessage) {
+    pendingMessages.push(msg)
+    if (!batchTimer) {
+      batchTimer = setTimeout(flushMessages, 100)
+    }
+  }
 
   let videoRef!: HTMLVideoElement
   let hls: Hls | undefined
@@ -76,6 +116,45 @@ export default function PlayerScreen() {
     clearTimeout(hideTimer)
     hideTimer = setTimeout(() => setInfoVisible(false), 4000)
   }
+
+  // --- Chat lifecycle ---
+  async function initChat(broadcasterId: string) {
+    setChatStatus('connecting')
+
+    // Set up chat service callbacks
+    twitchChatService.onMessage = queueMessage
+    twitchChatService.onScopeError = () => setScopeError(true)
+    twitchChatService.onConnectionChange = (connected) => {
+      setChatStatus(connected ? 'active' : 'reconnecting')
+    }
+
+    // Connect to EventSub
+    twitchChatService.connect(broadcasterId, authStore.userId!, authStore.token!)
+
+    // Fetch emote map
+    setChatStatus('loading-emotes')
+    const map = await emoteService.getEmoteMap(broadcasterId)
+    setEmoteMap(map)
+    setChatStatus('active')
+  }
+
+  // Start chat when stream metadata resolves (provides broadcaster ID)
+  createEffect(() => {
+    const data = streamData()
+    if (!data) return
+
+    // Prefer broadcasterId from router state (passed by ChannelGrid), fall back to streamData.user_id
+    const broadcasterId = (location.state as { broadcasterId?: string })?.broadcasterId || data.user_id
+    initChat(broadcasterId)
+  })
+
+  // Auto-hide toggle hint 3 seconds after stream starts playing
+  createEffect(() => {
+    if (playerState() === 'playing') {
+      clearTimeout(toggleHintTimer)
+      toggleHintTimer = setTimeout(() => setToggleHintVisible(false), 3000)
+    }
+  })
 
   // --- HLS player initialization ---
   async function initPlayer() {
@@ -152,6 +231,25 @@ export default function PlayerScreen() {
     initPlayer()
   }
 
+  // --- Scope error re-auth handler ---
+  function handleScopeReauth() {
+    twitchAuthService.clearTokens()
+    // Navigate to login — AuthGuard will handle redirect
+    window.location.reload()
+  }
+
+  // --- Red button (keyCode 403) toggle handler ---
+  function handleKeyDown(e: KeyboardEvent) {
+    if (e.keyCode === 403) {
+      setChatVisible(v => !v)
+      // Show toggle hint briefly on each toggle
+      setToggleHintVisible(true)
+      clearTimeout(toggleHintTimer)
+      toggleHintTimer = setTimeout(() => setToggleHintVisible(false), 3000)
+    }
+    showInfoBar()  // any key shows info bar
+  }
+
   // --- Focus on error overlay ---
   createEffect(() => {
     if (playerState() === 'error') {
@@ -163,159 +261,221 @@ export default function PlayerScreen() {
   onMount(() => {
     initPlayer()
     showInfoBar()
-    window.addEventListener('keydown', showInfoBar)
+    window.addEventListener('keydown', handleKeyDown)
   })
 
   onCleanup(() => {
-    window.removeEventListener('keydown', showInfoBar)
+    window.removeEventListener('keydown', handleKeyDown)
     clearTimeout(hideTimer)
+    clearTimeout(batchTimer)
+    clearTimeout(toggleHintTimer)
+    twitchChatService.disconnect()
     hls?.destroy()
   })
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100vh', background: 'var(--color-bg)' }}>
-      {/* Video element -- always rendered, hls.js manages it via MSE */}
-      <video
-        ref={videoRef!}
-        style={{
-          width: '100%',
-          height: '100vh',
-          'object-fit': 'cover',
-          display: playerState() === 'error' ? 'none' : 'block',
-        }}
-      />
-
-      {/* Loading overlay */}
-      <Show when={playerState() === 'loading'}>
+    <>
+      {/* Scope error overlay — takes over entire screen */}
+      <Show when={scopeError()}>
         <div style={{
-          position: 'absolute',
-          top: '0',
-          left: '0',
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center',
+          position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+          background: 'var(--color-surface)', display: 'flex', 'flex-direction': 'column',
+          'align-items': 'center', 'justify-content': 'center', gap: 'var(--space-md)',
+          'z-index': 100,
         }}>
-          <span style={{
-            'font-size': 'var(--font-size-body)',
-            color: 'var(--color-text-secondary)',
-          }}>
-            Loading stream...
-          </span>
-        </div>
-      </Show>
-
-      {/* Error overlay */}
-      <Show when={playerState() === 'error'}>
-        <div style={{
-          position: 'absolute',
-          top: '0',
-          left: '0',
-          width: '100%',
-          height: '100%',
-          background: 'var(--color-surface)',
-          display: 'flex',
-          'flex-direction': 'column',
-          'align-items': 'center',
-          'justify-content': 'center',
-          gap: 'var(--space-md)',
-        }}>
-          <h2 style={{
-            'font-size': 'var(--font-size-heading)',
-            'font-weight': 'var(--font-weight-semibold)',
-            color: 'var(--color-text-primary)',
-          }}>
-            {errorKind() === 'offline'
-              ? 'Stream is offline'
-              : errorKind() === 'network'
-              ? 'Connection lost'
-              : 'Playback error'}
+          <h2 style={{ 'font-size': 'var(--font-size-heading)', 'font-weight': 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
+            Chat access required
           </h2>
-          <p style={{
-            'font-size': 'var(--font-size-body)',
-            color: 'var(--color-text-secondary)',
-          }}>
-            {errorKind() === 'offline'
-              ? 'This channel has ended their stream. Press OK to retry or Back to return to channels.'
-              : errorKind() === 'network'
-              ? 'Could not reach the stream. Check your connection, then press OK to retry.'
-              : 'Something went wrong. Press OK to retry or Back to return to channels.'}
+          <p style={{ 'font-size': 'var(--font-size-body)', color: 'var(--color-text-secondary)', 'text-align': 'center', 'max-width': '600px' }}>
+            Your login needs to be updated to show chat. Press OK to log out and sign in again.
           </p>
-          <Focusable focusKey="player-retry" onEnterPress={handleRetry} as="button">
+          <Focusable focusKey="scope-reauth" onEnterPress={handleScopeReauth} as="button">
             {({ focused }: { focused: () => boolean }) => (
               <button
                 class={focused() ? 'focused' : ''}
-                onClick={handleRetry}
+                onClick={handleScopeReauth}
                 style={{
-                  'min-height': 'var(--min-target-height)',
-                  padding: 'var(--space-md) var(--space-xl)',
-                  'font-size': 'var(--font-size-label)',
-                  'font-weight': 'var(--font-weight-semibold)',
-                  background: 'var(--color-accent)',
-                  color: 'var(--color-text-primary)',
-                  border: 'none',
-                  cursor: 'pointer',
+                  'min-height': 'var(--min-target-height)', padding: 'var(--space-md) var(--space-xl)',
+                  'font-size': 'var(--font-size-label)', 'font-weight': 'var(--font-weight-semibold)',
+                  background: 'var(--color-accent)', color: 'var(--color-text-primary)',
+                  border: 'none', cursor: 'pointer',
                 }}
               >
-                Retry
+                Sign in again
               </button>
             )}
           </Focusable>
         </div>
       </Show>
 
-      {/* Info bar -- bottom overlay, auto-hide */}
-      <Show when={playerState() === 'playing' && infoVisible() && streamData()}>
-        <div style={{
-          position: 'absolute',
-          bottom: '0',
-          left: '0',
-          width: '100%',
-          padding: 'var(--space-lg) var(--space-xl)',
-          background: 'rgba(26, 26, 26, 0.85)',
-          transition: 'opacity 0.3s ease',
-        }}>
-          <div style={{
-            display: 'flex',
-            'justify-content': 'space-between',
-            'align-items': 'flex-start',
-          }}>
-            <div>
-              <div style={{
+      {/* Main layout — flex row: video area + chat sidebar */}
+      <div style={{ display: 'flex', width: '100vw', height: '100vh', background: 'var(--color-bg)' }}>
+        {/* Video area — takes remaining space */}
+        <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+          {/* Video element — always rendered, hls.js manages it via MSE */}
+          <video
+            ref={videoRef!}
+            style={{
+              width: '100%',
+              height: '100%',
+              'object-fit': 'contain',
+              display: playerState() === 'error' ? 'none' : 'block',
+            }}
+          />
+
+          {/* Loading overlay */}
+          <Show when={playerState() === 'loading'}>
+            <div style={{
+              position: 'absolute',
+              top: '0',
+              left: '0',
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center',
+            }}>
+              <span style={{
+                'font-size': 'var(--font-size-body)',
+                color: 'var(--color-text-secondary)',
+              }}>
+                Loading stream...
+              </span>
+            </div>
+          </Show>
+
+          {/* Error overlay */}
+          <Show when={playerState() === 'error'}>
+            <div style={{
+              position: 'absolute',
+              top: '0',
+              left: '0',
+              width: '100%',
+              height: '100%',
+              background: 'var(--color-surface)',
+              display: 'flex',
+              'flex-direction': 'column',
+              'align-items': 'center',
+              'justify-content': 'center',
+              gap: 'var(--space-md)',
+            }}>
+              <h2 style={{
                 'font-size': 'var(--font-size-heading)',
                 'font-weight': 'var(--font-weight-semibold)',
                 color: 'var(--color-text-primary)',
               }}>
-                {streamData()!.user_name}
-              </div>
-              <div style={{
+                {errorKind() === 'offline'
+                  ? 'Stream is offline'
+                  : errorKind() === 'network'
+                  ? 'Connection lost'
+                  : 'Playback error'}
+              </h2>
+              <p style={{
                 'font-size': 'var(--font-size-body)',
                 color: 'var(--color-text-secondary)',
-                overflow: 'hidden',
-                'text-overflow': 'ellipsis',
-                'white-space': 'nowrap',
               }}>
-                {streamData()!.title}
+                {errorKind() === 'offline'
+                  ? 'This channel has ended their stream. Press OK to retry or Back to return to channels.'
+                  : errorKind() === 'network'
+                  ? 'Could not reach the stream. Check your connection, then press OK to retry.'
+                  : 'Something went wrong. Press OK to retry or Back to return to channels.'}
+              </p>
+              <Focusable focusKey="player-retry" onEnterPress={handleRetry} as="button">
+                {({ focused }: { focused: () => boolean }) => (
+                  <button
+                    class={focused() ? 'focused' : ''}
+                    onClick={handleRetry}
+                    style={{
+                      'min-height': 'var(--min-target-height)',
+                      padding: 'var(--space-md) var(--space-xl)',
+                      'font-size': 'var(--font-size-label)',
+                      'font-weight': 'var(--font-weight-semibold)',
+                      background: 'var(--color-accent)',
+                      color: 'var(--color-text-primary)',
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Retry
+                  </button>
+                )}
+              </Focusable>
+            </div>
+          </Show>
+
+          {/* Info bar — bottom overlay, auto-hide */}
+          <Show when={playerState() === 'playing' && infoVisible() && streamData()}>
+            <div style={{
+              position: 'absolute',
+              bottom: '0',
+              left: '0',
+              width: '100%',
+              padding: 'var(--space-lg) var(--space-xl)',
+              background: 'rgba(26, 26, 26, 0.85)',
+              transition: 'opacity 0.3s ease',
+            }}>
+              <div style={{
+                display: 'flex',
+                'justify-content': 'space-between',
+                'align-items': 'flex-start',
+              }}>
+                <div>
+                  <div style={{
+                    'font-size': 'var(--font-size-heading)',
+                    'font-weight': 'var(--font-weight-semibold)',
+                    color: 'var(--color-text-primary)',
+                  }}>
+                    {streamData()!.user_name}
+                  </div>
+                  <div style={{
+                    'font-size': 'var(--font-size-body)',
+                    color: 'var(--color-text-secondary)',
+                    overflow: 'hidden',
+                    'text-overflow': 'ellipsis',
+                    'white-space': 'nowrap',
+                  }}>
+                    {streamData()!.title}
+                  </div>
+                </div>
+                <div style={{ 'text-align': 'right' }}>
+                  <div style={{
+                    'font-size': 'var(--font-size-label)',
+                    color: 'var(--color-text-secondary)',
+                  }}>
+                    {streamData()!.game_name}
+                  </div>
+                  <div style={{
+                    'font-size': 'var(--font-size-label)',
+                    color: 'var(--color-text-secondary)',
+                  }}>
+                    {formatWatching(streamData()!.viewer_count)}
+                  </div>
+                </div>
               </div>
             </div>
-            <div style={{ 'text-align': 'right' }}>
-              <div style={{
-                'font-size': 'var(--font-size-label)',
-                color: 'var(--color-text-secondary)',
-              }}>
-                {streamData()!.game_name}
-              </div>
-              <div style={{
-                'font-size': 'var(--font-size-label)',
-                color: 'var(--color-text-secondary)',
-              }}>
-                {formatWatching(streamData()!.viewer_count)}
-              </div>
+          </Show>
+
+          {/* Toggle hint — bottom-right of video area */}
+          <Show when={toggleHintVisible() && playerState() === 'playing'}>
+            <div style={{
+              position: 'absolute', bottom: 'var(--space-xl)', right: 'var(--space-xl)',
+              'font-size': 'var(--font-size-label)', color: 'var(--color-text-disabled)',
+              transition: 'opacity 0.3s ease',
+            }}>
+              Red — toggle chat
             </div>
-          </div>
+          </Show>
         </div>
-      </Show>
-    </div>
+
+        {/* Chat sidebar — conditional on chatVisible signal */}
+        <Show when={chatVisible()}>
+          <ChatSidebar
+            messages={messages}
+            emoteMap={emoteMap()}
+            status={chatStatus()}
+          />
+        </Show>
+      </div>
+    </>
   )
 }

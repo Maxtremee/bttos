@@ -32,7 +32,7 @@ decisions:
 metrics:
   duration: "~15 minutes"
   completed: "2026-04-14"
-  tasks_completed: 2
+  tasks_completed: 3
   tasks_total: 3
   files_created: 6
   files_modified: 2
@@ -108,14 +108,15 @@ These stubs do not prevent the plan's goal (D-pad navigation scaffold) from bein
 - `setFocus` present in `onMount` of all 4 screens
 - `props.onExit()` / `props.onCancel()` — props not destructured (SolidJS Pitfall 4 avoided)
 
-## Checkpoint Pending
+## Checkpoint: APPROVED
 
-Task 3 (human-verify checkpoint) is pending user verification of:
-- Dev server renders "Login screen — navigation test" with purple "Sign in with Twitch" button
-- Focus ring (3px solid purple) visible on focused element
-- Exit dialog appears when dispatching keyCode 461 event from devtools
-- Dialog focus boundary traps Tab to Exit/Cancel only
+Task 3 (human-verify checkpoint) was verified and approved by user on 2026-04-14:
+- Login screen renders with purple "Sign in with Twitch" button on dark background
+- Focus ring (3px solid #9147ff) visible on focused element
+- Exit dialog appears on Back key (keyCode 461)
+- Dialog focus trap works — Tab cycles only between Exit and Cancel
 - Build asset paths are relative (`./assets/`)
+- appinfo.json contains `"disableBackHistoryAPI": true`
 
 ## Self-Check: PASSED
 

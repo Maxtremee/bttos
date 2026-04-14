@@ -1,8 +1,8 @@
-import { useNavigate } from '@solidjs/router'
-import { createEffect, type ParentProps } from 'solid-js'
+import { Outlet, useNavigate } from '@solidjs/router'
+import { createEffect } from 'solid-js'
 import { authStore } from '../stores/authStore'
 
-export default function AuthGuard(props: ParentProps) {
+export default function AuthGuard() {
   const navigate = useNavigate()
 
   createEffect(() => {
@@ -12,5 +12,5 @@ export default function AuthGuard(props: ParentProps) {
     }
   })
 
-  return <>{props.children}</>
+  return <Outlet />
 }

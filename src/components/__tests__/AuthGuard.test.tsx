@@ -5,6 +5,7 @@ import { render } from 'solid-js/web'
 const mockNavigate = vi.fn()
 vi.mock('@solidjs/router', () => ({
   useNavigate: () => mockNavigate,
+  Outlet: () => null,
 }))
 
 // Mock authStore — mutable so tests can set token

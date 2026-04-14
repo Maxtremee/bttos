@@ -66,12 +66,7 @@ Plans:
   1. Live followed channels appear in a grid showing thumbnail, stream title, game name, and viewer count
   2. D-pad navigation moves focus across the grid; OK on a channel card initiates playback
   3. The list auto-refreshes periodically — a channel that goes live appears without requiring app restart
-**Plans:** 2 plans
-
-Plans:
-- [ ] 03-01-PLAN.md — TwitchChannelService (Helix API fetch with pagination) + ChannelCard component
-- [ ] 03-02-PLAN.md — ChannelGrid layout + ChannelsScreen wiring with auto-refresh and loading/empty/error states
-
+**Plans**: TBD
 **UI hint**: yes
 
 ### Phase 4: Stream Playback
@@ -117,7 +112,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Foundation | 0/3 | Not started | - |
 | 2. Authentication | 0/4 | Not started | - |
-| 3. Channel List | 0/2 | Not started | - |
+| 3. Channel List | 0/? | Not started | - |
 | 4. Stream Playback | 0/? | Not started | - |
 | 5. Chat | 0/? | Not started | - |
 | 6. Settings & Polish | 0/? | Not started | - |

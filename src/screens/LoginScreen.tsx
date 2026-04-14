@@ -31,7 +31,7 @@ export default function LoginScreen() {
       const data = await twitchAuthService.requestDeviceCode()
       setDeviceCodeData(data)
       setState('polling')
-      setStatusMessage('Waiting for authorization...')
+      setStatusMessage('Waiting for authorisation...')
       setFocus('login-status-region')
 
       const expiresAt = Date.now() + data.expires_in * 1000

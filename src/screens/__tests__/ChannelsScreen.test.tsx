@@ -31,8 +31,12 @@ vi.mock('../../services/TwitchChannelService', () => ({
 
 import ChannelsScreen from '../ChannelsScreen'
 
-// Flush microtasks
-const flushPromises = () => new Promise<void>((resolve) => setTimeout(resolve, 0))
+// Flush microtasks — multiple rounds to handle chained promises
+const flushPromises = async (rounds = 3) => {
+  for (let i = 0; i < rounds; i++) {
+    await new Promise<void>((resolve) => setTimeout(resolve, 0))
+  }
+}
 
 describe('ChannelsScreen', () => {
   let container: HTMLDivElement
@@ -116,9 +120,20 @@ describe('ChannelsScreen', () => {
   })
 
   it('shows "Could not load channels" when fetch throws an error', async () => {
-    mockFetchLiveFollowedChannels.mockRejectedValue(new Error('Network error'))
+    // Use mockImplementation so we control the rejection timing and can suppress
+    // the unhandled rejection before Vitest sees it.
+    let rejectFn!: (e: Error) => void
+    const controlledPromise = new Promise<never>((_resolve, reject) => {
+      rejectFn = reject
+    })
+    // Attach a no-op catch to prevent "unhandled rejection" at creation time
+    controlledPromise.catch(() => {})
+    mockFetchLiveFollowedChannels.mockReturnValue(controlledPromise)
 
     dispose = render(() => <ChannelsScreen />, container)
+
+    // Now reject — createResource will catch it internally
+    rejectFn(new Error('Network error'))
     await flushPromises()
 
     const text = container.textContent ?? ''

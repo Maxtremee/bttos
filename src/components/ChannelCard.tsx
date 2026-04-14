@@ -14,6 +14,7 @@ export default function ChannelCard(props: ChannelCardProps) {
         background: 'var(--color-surface)',
         'border-radius': '8px',
         overflow: 'hidden',
+        height: '100%',
       }}
     >
       <img
@@ -31,7 +32,20 @@ export default function ChannelCard(props: ChannelCardProps) {
         <div
           style={{
             'font-size': 'var(--font-size-body)',
+            'font-weight': 'var(--font-weight-semibold)',
             color: 'var(--color-text-primary)',
+            overflow: 'hidden',
+            'text-overflow': 'ellipsis',
+            'white-space': 'nowrap',
+          }}
+        >
+          {props.channel.user_name}
+        </div>
+        <div
+          style={{
+            'font-size': 'var(--font-size-label)',
+            color: 'var(--color-text-secondary)',
+            'margin-top': 'var(--space-sm)',
             display: '-webkit-box',
             '-webkit-line-clamp': '2',
             '-webkit-box-orient': 'vertical',

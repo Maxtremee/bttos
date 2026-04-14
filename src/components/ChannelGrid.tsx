@@ -25,6 +25,7 @@ export default function ChannelGrid(props: ChannelGridProps) {
           style={{
             display: 'grid',
             'grid-template-columns': 'repeat(4, 1fr)',
+            'align-items': 'stretch',
             gap: 'var(--space-lg)',
           }}
         >

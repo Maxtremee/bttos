@@ -46,7 +46,7 @@ export default function ChannelsScreen() {
   })
 
   return (
-    <main style={{ padding: 'var(--space-2xl)', 'min-height': '100vh' }}>
+    <main style={{ padding: 'var(--space-2xl)', height: '100vh', 'overflow-y': 'auto' }}>
       <h1
         style={{
           'font-size': 'var(--font-size-heading)',

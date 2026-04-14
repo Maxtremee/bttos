@@ -31,7 +31,7 @@ export default function LoginScreen() {
       const data = await twitchAuthService.requestDeviceCode()
       setDeviceCodeData(data)
       setState('polling')
-      setStatusMessage('Waiting for authorisation...')
+      setStatusMessage('Waiting for authorization...')
       setFocus('login-status-region')
 
       const expiresAt = Date.now() + data.expires_in * 1000
@@ -55,9 +55,16 @@ export default function LoginScreen() {
         }
         // TokenResponse — success
         clearPolling()
-        // userId not returned by token endpoint; fetch from Helix /users in Phase 3
-        // Store empty string for now — authStore.userId populated in Phase 3
-        twitchAuthService.persistTokens(result, '')
+        // Fetch authenticated user's ID from Helix /users
+        const userRes = await fetch('https://api.twitch.tv/helix/users', {
+          headers: {
+            'Authorization': `Bearer ${result.access_token}`,
+            'Client-Id': import.meta.env.VITE_TWITCH_CLIENT_ID as string,
+          },
+        })
+        const userData = await userRes.json() as { data: { id: string }[] }
+        const userId = userData.data?.[0]?.id ?? ''
+        twitchAuthService.persistTokens(result, userId)
         setState('success')
         setStatusMessage('Signed in! Loading your channels...')
         setTimeout(() => navigate('/channels', { replace: true }), 500)

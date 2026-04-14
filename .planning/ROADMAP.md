@@ -48,7 +48,14 @@ Plans:
   2. After logging in, the auth token persists — reopening the app goes directly to the channel list, not the login screen
   3. When an expired token is used, it refreshes silently without logging the user out or showing an error
   4. Opening the app without a stored token lands on the login screen, not a broken state
-**Plans**: TBD
+**Plans:** 4 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — Test scaffold: install happy-dom + uqr, switch vitest to happy-dom env, create test stubs
+- [ ] 02-02-PLAN.md — Auth service layer: TwitchAuthService (device code flow, token refresh singleton) + authStore
+- [ ] 02-03-PLAN.md — Login screen: full device code + QR UI replacing Phase 1 skeleton
+- [ ] 02-04-PLAN.md — Auth guard: AuthGuard layout component + App.tsx protected route wiring
+
 **UI hint**: yes
 
 ### Phase 3: Channel List
@@ -104,7 +111,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 0/3 | Not started | - |
-| 2. Authentication | 0/? | Not started | - |
+| 2. Authentication | 0/4 | Not started | - |
 | 3. Channel List | 0/? | Not started | - |
 | 4. Stream Playback | 0/? | Not started | - |
 | 5. Chat | 0/? | Not started | - |

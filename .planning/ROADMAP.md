@@ -93,7 +93,12 @@ Plans:
   2. Pressing the designated remote button toggles the chat overlay on and off without interrupting playback
   3. Twitch native emotes appear as images rather than text codes
   4. BTTV, 7TV, and FFZ emotes render as images in chat messages
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — Service layer: TwitchChatService (EventSub WebSocket) + EmoteService (BTTV/7TV/FFZ) with tests
+- [ ] 05-02-PLAN.md — UI: ChatSidebar + ChatMessage components, PlayerScreen integration with toggle and emotes
+
 **UI hint**: yes
 
 ### Phase 6: Settings & Polish
@@ -118,5 +123,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 2. Authentication | 0/4 | Not started | - |
 | 3. Channel List | 0/? | Not started | - |
 | 4. Stream Playback | 0/2 | Not started | - |
-| 5. Chat | 0/? | Not started | - |
+| 5. Chat | 0/2 | Not started | - |
 | 6. Settings & Polish | 0/? | Not started | - |

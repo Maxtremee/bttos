@@ -6,9 +6,10 @@ import ChannelsScreen from './screens/ChannelsScreen'
 import PlayerScreen from './screens/PlayerScreen'
 import SettingsScreen from './screens/SettingsScreen'
 import ExitConfirmDialog from './components/ExitConfirmDialog'
+import AuthGuard from './components/AuthGuard'
 
 // Root screens: Back on these triggers exit confirmation (D-03)
-const ROOT_PATHS = ['/', '/login', '/channels']
+const ROOT_PATHS = ['/', '/login']
 
 const KEY_BACK = 461 // webOS remote Back button (keyCode 0x1CD)
 
@@ -48,11 +49,12 @@ export default function App() {
   return (
     <>
       <MemoryRouter history={history} root={(props) => <>{props.children}</>}>
-        <Route path="/" component={LoginScreen} />
         <Route path="/login" component={LoginScreen} />
-        <Route path="/channels" component={ChannelsScreen} />
-        <Route path="/player/:channel" component={PlayerScreen} />
-        <Route path="/settings" component={SettingsScreen} />
+        <Route path="/" component={AuthGuard}>
+          <Route path="/channels" component={ChannelsScreen} />
+          <Route path="/player/:channel" component={PlayerScreen} />
+          <Route path="/settings" component={SettingsScreen} />
+        </Route>
       </MemoryRouter>
       <Show when={showExitDialog()}>
         <ExitConfirmDialog

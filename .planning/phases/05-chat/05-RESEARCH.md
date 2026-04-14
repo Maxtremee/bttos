@@ -575,22 +575,25 @@ function renderFragments(fragments: MessageFragment[], emoteMap: EmoteMap) {
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **broadcaster_user_id routing**
    - What we know: `PlayerScreen` receives `channel` (login name) via `useParams`. EventSub needs numeric `broadcaster_user_id`.
    - What's unclear: Does the channel list already pass numeric ID through router state, or does PlayerScreen need to resolve it?
    - Recommendation: Audit `ChannelsScreen` link/navigation to see if `user_id` from `StreamData` is passed as router state. If not, add a `GET /helix/users?login=` call in the new `TwitchChatService.connect()` flow, or preferably thread the ID through router state in Phase 5 plan.
+   - RESOLVED: ChannelGrid will pass `user_id` via router navigate state (`state: { broadcasterId: channel.user_id }`). PlayerScreen reads it via `useLocation().state.broadcasterId`.
 
 2. **webOS remote keycode for chat toggle button**
    - What we know: keycode 403 = Red button on most LG remotes
    - What's unclear: whether the user wants Red or another button (Info/blue circle = 457 on some models)
    - Recommendation: Default to Red (403). Expose as `CHAT_TOGGLE_KEYCODE` constant in the service. Test on physical device.
+   - RESOLVED: Red button (keyCode 403) chosen. Exposed as constant `CHAT_TOGGLE_KEYCODE`.
 
 3. **Animated emote rendering**
    - What we know: CHAT-06 (animated emotes) is explicitly deferred to v2 requirements
    - What's unclear: Whether static-only emote rendering for animated emotes (Kappa is fine, PartyParrot shows still frame) is acceptable UX
    - Recommendation: Always use `static` format in Twitch CDN URL. For 7TV, use `.webp` which is the static variant at `2x.webp`. This is in-scope; animated GIF/WebP sequences are v2.
+   - RESOLVED: Static-only rendering accepted for v1. Always use `static` format for Twitch CDN, `.webp` for 7TV. Animated emotes deferred to v2 (CHAT-06).
 
 ---
 

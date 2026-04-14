@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 2: Authentication** - Users can log in via device code / QR flow and stay authenticated
 - [ ] **Phase 3: Channel List** - Users see their live followed channels and navigate the grid with a remote
 - [ ] **Phase 4: Stream Playback** - Users can select a channel and watch the live stream
-- [ ] **Phase 5: Chat** - Read-only chat overlay renders over the stream with emotes
+- [ ] **Phase 5: Chat** - Read-only chat sidebar renders beside the stream with emotes
 - [ ] **Phase 6: Settings & Polish** - Users can log out, adjust preferences, and the app handles edge cases cleanly
 
 ## Phase Details
@@ -85,11 +85,11 @@ Plans:
 - [x] 04-02-PLAN.md — PlayerScreen: hls.js video player with loading, error overlay, info bar
 
 ### Phase 5: Chat
-**Goal**: A read-only chat overlay renders live Twitch chat — including native and third-party emotes — over the stream, and can be toggled
+**Goal**: A read-only chat sidebar renders live Twitch chat — including native and third-party emotes — beside the stream, and can be toggled
 **Depends on**: Phase 4
 **Requirements**: CHAT-01, CHAT-02, CHAT-03, CHAT-04
 **Success Criteria** (what must be TRUE):
-  1. Live chat messages appear in a scrolling overlay on top of the video
+  1. Live chat messages appear in a scrolling sidebar beside the video
   2. Pressing the designated remote button toggles the chat overlay on and off without interrupting playback
   3. Twitch native emotes appear as images rather than text codes
   4. BTTV, 7TV, and FFZ emotes render as images in chat messages

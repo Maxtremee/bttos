@@ -2,7 +2,7 @@ import { authStore } from '../stores/authStore'
 import { twitchAuthService } from './TwitchAuthService'
 
 const GQL_ENDPOINT = 'https://gql.twitch.tv/gql'
-const TWITCH_INTERNAL_CLIENT_ID = 'kimne78kx3ncx6brgo4mv6wki5h1ko'
+const GQL_CLIENT_ID = 'kimne78kx3ncx6brgo4mv6wki5h1ko'
 const PERSISTED_QUERY_HASH = 'ed230aa1e33e07eebb8928504583da78a5173989fadfb1ac94be06a04f3cdbe9'
 const CHANNEL_LOGIN_REGEX = /^[a-zA-Z0-9_]{1,25}$/
 
@@ -27,8 +27,8 @@ export function validateChannelLogin(login: string): boolean {
  * 2. Extract signature + value (JWT token) from response
  * 3. Construct Usher m3u8 URL with token params
  *
- * Note: Uses OAuth prefix (NOT Bearer) for GQL Authorization header.
- * Uses Twitch's internal Client-ID (kimne78kx3ncx6brgo4mv6wki5h1ko), not the app's Client-ID.
+ * Note: Uses Bearer prefix for GQL Authorization header (device code flow tokens).
+ * Uses Twitch's internal Client-ID (kimne78kx3ncx6brgo4mv6wki5h1ko) for the GQL endpoint.
  */
 export class TwitchStreamService {
   private async ensureFreshToken(): Promise<void> {
@@ -51,8 +51,8 @@ export class TwitchStreamService {
     const res = await fetch(GQL_ENDPOINT, {
       method: 'POST',
       headers: {
-        'Client-ID': TWITCH_INTERNAL_CLIENT_ID,
-        'Authorization': `OAuth ${authStore.token}`,
+        'Client-ID': GQL_CLIENT_ID,
+        'Authorization': `Bearer ${authStore.token}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -69,6 +69,7 @@ export class TwitchStreamService {
           isVod: false,
           vodID: '',
           playerType: 'site',
+          platform: 'web',
         },
       }),
     })
@@ -108,7 +109,10 @@ export class TwitchStreamService {
       playlist_include_framerate: 'true',
       p: String(Math.floor(Math.random() * 999999)),
     })
-    return `https://usher.ttvnw.net/api/channel/hls/${channelLogin}.m3u8?${params.toString()}`
+    const base = import.meta.env.DEV
+      ? '/proxy/usher/api/channel/hls'
+      : 'https://usher.ttvnw.net/api/channel/hls'
+    return `${base}/${channelLogin}.m3u8?${params.toString()}`
   }
 
   /**

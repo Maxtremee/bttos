@@ -140,7 +140,7 @@ export default function ChannelsScreen() {
 
       <Show when={channels.state === 'ready' || channels.state === 'refreshing'}>
         <Show when={(channels() ?? []).length > 0} fallback={<EmptyState />}>
-          <ChannelGrid channels={channels() ?? []} />
+          <ChannelGrid channels={[...(channels() ?? [])].sort((a, b) => b.viewer_count - a.viewer_count)} />
         </Show>
       </Show>
     </main>

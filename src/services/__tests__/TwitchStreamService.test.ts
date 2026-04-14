@@ -1,6 +1,8 @@
 // @vitest-environment happy-dom
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 
+vi.stubEnv('VITE_TWITCH_CLIENT_ID', 'test_client_id')
+
 // Mutable mock state
 const mockAuthStore = {
   token: 'test_oauth_token',
@@ -64,7 +66,7 @@ describe('TwitchStreamService', () => {
     expect(fetchCall[0]).toBe('https://gql.twitch.tv/gql')
     expect(fetchCall[1].method).toBe('POST')
     expect(fetchCall[1].headers['Client-ID']).toBe('kimne78kx3ncx6brgo4mv6wki5h1ko')
-    expect(fetchCall[1].headers['Authorization']).toBe('OAuth test_oauth_token')
+    expect(fetchCall[1].headers['Authorization']).toBe('Bearer test_oauth_token')
     expect(fetchCall[1].headers['Content-Type']).toBe('application/json')
   })
 
@@ -97,6 +99,7 @@ describe('TwitchStreamService', () => {
       isVod: false,
       vodID: '',
       playerType: 'site',
+      platform: 'web',
     })
   })
 
@@ -116,8 +119,8 @@ describe('TwitchStreamService', () => {
 
     const url = await service.fetchStreamM3u8Url('testchannel')
 
-    expect(url).toContain('https://usher.ttvnw.net/api/channel/hls/testchannel.m3u8')
-    const parsed = new URL(url)
+    expect(url).toContain('/api/channel/hls/testchannel.m3u8')
+    const parsed = new URL(url, 'http://localhost')
     expect(parsed.searchParams.get('sig')).toBe('abc123sig')
     expect(parsed.searchParams.get('token')).toBe('{"channel":"testchannel"}')
     expect(parsed.searchParams.get('allow_source')).toBe('true')

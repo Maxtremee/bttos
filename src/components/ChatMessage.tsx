@@ -19,8 +19,8 @@ function renderTextFragment(frag: MessageFragment, emoteMap: EmoteMap) {
       elements.push(
         <img
           src={emoteUrl}
-          width="28"
-          height="28"
+          width="22"
+          height="22"
           alt={token}
           style="vertical-align: middle; display: inline-block"
         />
@@ -43,25 +43,20 @@ export default function ChatMessage(props: ChatMessageProps) {
 
   return (
     <div style={{
-      display: 'flex',
-      'align-items': 'flex-start',
-      gap: 'var(--space-xs)',
-      'padding-block': 'var(--space-sm)',
+      'padding-block': '2px',
+      'font-size': '14px',
+      'line-height': '1.4',
+      'word-break': 'break-word',
     }}>
       <span style={{
-        'font-size': 'var(--font-size-label)',
         'font-weight': 'var(--font-weight-semibold)',
         color: usernameColor(),
-        'flex-shrink': 0,
       }}>
         {props.message.displayName}:{' '}
       </span>
       <span style={{
-        'font-size': 'var(--font-size-label)',
         'font-weight': 'var(--font-weight-regular)',
         color: 'var(--color-text-primary)',
-        'line-height': 'var(--line-height-label)',
-        'word-break': 'break-word',
       }}>
         <For each={props.message.fragments}>
           {(frag) => {
@@ -69,8 +64,8 @@ export default function ChatMessage(props: ChatMessageProps) {
               return (
                 <img
                   src={`https://static-cdn.jtvnw.net/emoticons/v2/${frag.emote.id}/static/dark/2.0`}
-                  width="28"
-                  height="28"
+                  width="22"
+                  height="22"
                   alt={frag.text}
                   style="vertical-align: middle; display: inline-block"
                 />

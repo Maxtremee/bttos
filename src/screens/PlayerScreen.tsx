@@ -1,4 +1,4 @@
-import { createSignal, createResource, createEffect, createStore as _createStore, onMount, onCleanup, Show } from 'solid-js'
+import { createSignal, createResource, createEffect, onMount, onCleanup, Show } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import { useParams, useLocation } from '@solidjs/router'
 import Hls from 'hls.js'

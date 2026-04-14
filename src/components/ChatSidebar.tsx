@@ -15,7 +15,7 @@ export default function ChatSidebar(props: ChatSidebarProps) {
       width: '360px',
       'flex-shrink': 0,
       height: '100vh',
-      background: 'var(--color-surface)',
+      background: '#000000',
       'border-left': '1px solid rgba(255,255,255,0.1)',
       display: 'flex',
       'flex-direction': 'column',

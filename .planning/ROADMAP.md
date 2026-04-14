@@ -33,9 +33,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans:** 3 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Project scaffold: Vite 6 + SolidJS, chrome68 build target, vitest wired
-- [ ] 01-02-PLAN.md — Infrastructure: global CSS design tokens, navigation module, appinfo.json
-- [ ] 01-03-PLAN.md — App shell: MemoryRouter routing, 4 skeleton screens, Back key handler, ExitConfirmDialog
+- [x] 01-01-PLAN.md — Project scaffold: Vite 6 + SolidJS, chrome68 build target, vitest wired
+- [x] 01-02-PLAN.md — Infrastructure: global CSS design tokens, navigation module, appinfo.json
+- [x] 01-03-PLAN.md — App shell: MemoryRouter routing, 4 skeleton screens, Back key handler, ExitConfirmDialog
 
 **UI hint**: yes
 

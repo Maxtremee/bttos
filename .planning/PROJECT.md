@@ -12,7 +12,8 @@ User can log in, see their followed channels, pick one, and watch the stream wit
 
 ### Validated
 
-(None yet — ship to validate)
+- ✓ App loads and runs on real webOS TV hardware (Chromium 68+) — Phase 1
+- ✓ App is fully navigable with a standard TV remote (D-pad + OK + Back) — Phase 1
 
 ### Active
 
@@ -76,4 +77,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-14 after initialization*
+*Last updated: 2026-04-14 after Phase 1 completion*

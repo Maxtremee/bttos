@@ -647,22 +647,25 @@ export default function AuthGuard() {
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Twitch Client ID delivery mechanism**
    - What we know: `client_id` must be included in all OAuth requests. It is not a secret for Public clients.
    - What's unclear: Whether to hardcode in source (visible in git) or load from `VITE_TWITCH_CLIENT_ID` env var in `.env.local` (not committed).
    - Recommendation: Use `import.meta.env.VITE_TWITCH_CLIENT_ID` — keeps the ID out of version-controlled source code, which is cleaner practice even for non-secret values.
+   - RESOLVED: Use `import.meta.env.VITE_TWITCH_CLIENT_ID`. Plans 02-02 and 02-03 implement this.
 
 2. **`verification_uri` format — does it pre-fill the code?**
    - What we know: Twitch docs show `verification_uri` format as `https://www.twitch.tv/activate?public=true&device-code=[code]`
    - What's unclear: Whether the QR code should encode `verification_uri` (URL with code embedded) or always show both the URL and the `user_code` text separately.
    - Recommendation: Display both — the QR encodes `verification_uri` for phone users, plus `user_code` in large text for users who prefer typing it. Show `verification_uri` hostname (`twitch.tv/activate`) as readable text beneath the QR.
+   - RESOLVED: Display both QR (encoding verification_uri) and user_code text. Plan 02-03 implements this.
 
 3. **Proactive token refresh vs reactive (on 401)**
    - What we know: Access tokens last ~4 hours per Twitch docs. Proactive refresh (5 min before expiry) is recommended in PITFALLS.md to avoid race conditions.
    - What's unclear: Whether to refresh on app startup if `expiresAt < now + 5min`, or only on 401 responses.
    - Recommendation: On app startup, if `expiresAt` is within 5 minutes of expiry or already expired, proactively call `refreshTokens()` before allowing any API call to proceed.
+   - RESOLVED: Deferred to Phase 3 (first phase making API calls). Phase 2 implements the refresh singleton; Phase 3 adds the proactive startup check.
 
 ---
 

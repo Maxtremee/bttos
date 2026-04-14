@@ -1,0 +1,70 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+:root {
+  /* Colors */
+  --color-bg: #0f0f0f;
+  --color-surface: #1a1a1a;
+  --color-accent: #9147ff;
+  --color-destructive: #e53935;
+  --color-text-primary: #f0f0f0;
+  --color-text-secondary: #a0a0a0;
+  --color-text-disabled: #555555;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
+  /* Typography */
+  --font-size-body: 24px;
+  --font-size-label: 20px;
+  --font-size-heading: 32px;
+  --font-size-display: 48px;
+  --font-weight-regular: 400;
+  --font-weight-semibold: 600;
+  --line-height-body: 1.5;
+  --line-height-label: 1.4;
+  --line-height-heading: 1.2;
+  --line-height-display: 1.1;
+
+  /* Focus */
+  --focus-ring: 3px solid var(--color-accent);
+  --focus-ring-offset: 4px;
+
+  /* Safe zone */
+  --safe-zone: 48px;
+
+  /* Remote target minimum */
+  --min-target-height: 44px;
+}
+
+/* Global focus rule — NEVER suppress; replace browser default with custom ring */
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Applied by @lampa-dev/solidjs-spatial-navigation when element is focused */
+.focused {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}

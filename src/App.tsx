@@ -14,9 +14,9 @@ const ROOT_PATHS = ['/', '/login']
 const KEY_BACK = 461 // webOS remote Back button (keyCode 0x1CD)
 
 const history = createMemoryHistory()
-// Start at /login — AuthGuard will redirect to /login anyway if no token,
-// and authenticated users get redirected to /channels by LoginScreen
-history.set({ value: '/login' })
+// Start at /channels if we have a stored token, /login otherwise
+const initialRoute = localStorage.getItem('twitch_access_token') ? '/channels' : '/login'
+history.set({ value: initialRoute })
 
 export default function App() {
   const [showExitDialog, setShowExitDialog] = createSignal(false)

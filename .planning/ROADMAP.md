@@ -78,7 +78,11 @@ Plans:
   2. Stream plays at the highest quality the connection can sustain (ABR / auto quality)
   3. If the stream goes offline or the network drops, the player shows an informative message and does not freeze
   4. A stream info bar shows the channel name, stream title, game, and viewer count during playback
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — TwitchStreamService: GQL PlaybackAccessToken + Usher URL builder with tests
+- [ ] 04-02-PLAN.md — PlayerScreen: hls.js video player with loading, error overlay, info bar
 
 ### Phase 5: Chat
 **Goal**: A read-only chat overlay renders live Twitch chat — including native and third-party emotes — over the stream, and can be toggled
@@ -113,6 +117,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. Foundation | 0/3 | Not started | - |
 | 2. Authentication | 0/4 | Not started | - |
 | 3. Channel List | 0/? | Not started | - |
-| 4. Stream Playback | 0/? | Not started | - |
+| 4. Stream Playback | 0/2 | Not started | - |
 | 5. Chat | 0/? | Not started | - |
 | 6. Settings & Polish | 0/? | Not started | - |

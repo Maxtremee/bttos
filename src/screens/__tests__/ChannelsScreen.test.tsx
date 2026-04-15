@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render } from 'solid-js/web'
+import type { JSX } from 'solid-js'
 
 // --- Module mocks ---
 
@@ -57,18 +58,18 @@ describe('ChannelsScreen', () => {
 
   it('calls setInterval with a 60000ms interval on mount', async () => {
     mockFetchLiveFollowedChannels.mockResolvedValue([])
-    const setIntervalSpy = vi.spyOn(globalThis, 'setInterval')
+    const spy = vi.spyOn(globalThis, 'setInterval')
 
     dispose = render(() => <ChannelsScreen />, container)
     await flushPromises()
 
-    expect(setIntervalSpy).toHaveBeenCalledWith(expect.any(Function), 60_000)
+    expect(spy).toHaveBeenCalledWith(expect.any(Function), 60_000)
   })
 
   it('calls clearInterval with the timer ID on unmount', async () => {
     mockFetchLiveFollowedChannels.mockResolvedValue([])
     const mockTimerId = 999
-    const setIntervalSpy = vi.spyOn(globalThis, 'setInterval').mockReturnValue(mockTimerId as unknown as ReturnType<typeof setInterval>)
+    vi.spyOn(globalThis, 'setInterval').mockReturnValue(mockTimerId as unknown as ReturnType<typeof setInterval>)
     const clearIntervalSpy = vi.spyOn(globalThis, 'clearInterval')
 
     dispose = render(() => <ChannelsScreen />, container)
@@ -83,17 +84,17 @@ describe('ChannelsScreen', () => {
 
   it('interval callback calls refetch (fetchLiveFollowedChannels again)', async () => {
     mockFetchLiveFollowedChannels.mockResolvedValue([])
-    let capturedCallback: (() => void) | null = null
-    vi.spyOn(globalThis, 'setInterval').mockImplementation((cb) => {
-      capturedCallback = cb as () => void
+    let capturedCallback: (() => void) | undefined
+    vi.spyOn(globalThis, 'setInterval').mockImplementation(((cb: () => void) => {
+      capturedCallback = cb
       return 1 as unknown as ReturnType<typeof setInterval>
-    })
+    }) as typeof setInterval)
 
     dispose = render(() => <ChannelsScreen />, container)
     await flushPromises()
 
     const callCountBefore = mockFetchLiveFollowedChannels.mock.calls.length
-    capturedCallback?.()
+    capturedCallback!()
     await flushPromises()
 
     expect(mockFetchLiveFollowedChannels.mock.calls.length).toBeGreaterThan(callCountBefore)

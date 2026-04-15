@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render } from 'solid-js/web'
+import type { JSX } from 'solid-js'
 
 // --- Hoisted shared state for mocks (available inside vi.mock factories) ---
 const { mockSetFocus, mockFetchStreamM3u8Url, hlsEventHandlers, mockHlsInstance, MockHls } = vi.hoisted(() => {

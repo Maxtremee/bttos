@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render } from 'solid-js/web'
+import type { JSX } from 'solid-js'
 
 // Mock navigation
 const mockSetFocus = vi.fn()

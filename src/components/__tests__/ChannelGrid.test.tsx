@@ -103,15 +103,15 @@ describe('ChannelGrid', () => {
     expect(cards.length).toBe(0)
   })
 
-  it('grid container uses CSS Grid with repeat(4, 1fr)', () => {
+  it('grid container uses CSS module grid class', () => {
     dispose = render(() => <ChannelGrid channels={mockChannels} />, container)
 
-    // Find div with grid-template-columns style
+    // Find div with the CSS module grid class (applied via styles.grid)
     const allDivs = container.querySelectorAll('div')
     let foundGrid = false
     allDivs.forEach((div) => {
-      const style = div.getAttribute('style') ?? ''
-      if (style.includes('repeat(4, 1fr)') || style.includes('repeat(4,1fr)')) {
+      const cls = div.getAttribute('class') ?? ''
+      if (cls.includes('grid')) {
         foundGrid = true
       }
     })

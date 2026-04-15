@@ -47,12 +47,12 @@ export default function LogoutConfirmDialog(props: LogoutConfirmDialogProps) {
         }}
       >
         <div
+          class="gap-col-lg"
           style={{
             background: 'var(--color-surface)',
             padding: 'var(--space-xl)',
             display: 'flex',
             'flex-direction': 'column',
-            gap: 'var(--space-lg)',
             'max-width': '600px',
             width: '100%',
           }}
@@ -62,7 +62,6 @@ export default function LogoutConfirmDialog(props: LogoutConfirmDialogProps) {
               'font-size': 'var(--font-size-heading)',
               'font-weight': 'var(--font-weight-semibold)',
               color: 'var(--color-text-primary)',
-              margin: '0',
             }}
           >
             Log out of Twitch?
@@ -71,12 +70,11 @@ export default function LogoutConfirmDialog(props: LogoutConfirmDialogProps) {
             style={{
               'font-size': 'var(--font-size-body)',
               color: 'var(--color-text-secondary)',
-              margin: '0',
             }}
           >
             You will need to sign in again on your phone or computer.
           </p>
-          <div style={{ display: 'flex', gap: 'var(--space-md)' }}>
+          <div class="gap-row-lg" style={{ display: 'flex' }}>
             <Focusable
               focusKey="logout-cancel"
               onEnterPress={() => props.onCancel()}

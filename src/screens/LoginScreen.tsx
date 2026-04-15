@@ -101,13 +101,12 @@ export default function LoginScreen() {
   })
 
   return (
-    <main style={{
+    <main class="gap-col-xl" style={{
       padding: 'var(--space-2xl)',
       'min-height': '100vh',
       display: 'flex',
       'flex-direction': 'column',
       'justify-content': 'center',
-      gap: 'var(--space-xl)',
       background: 'var(--color-bg)',
     }}>
       <h1 style={{
@@ -127,14 +126,13 @@ export default function LoginScreen() {
       </Show>
 
       <Show when={state() === 'polling' || state() === 'success'}>
-        <div style={{
+        <div class="gap-row-2xl" style={{
           display: 'flex',
           'flex-direction': 'row',
-          gap: 'var(--space-2xl)',
           'align-items': 'flex-start',
         }}>
           {/* QR Code column */}
-          <div style={{ display: 'flex', 'flex-direction': 'column', gap: 'var(--space-md)' }}>
+          <div class="gap-col-md" style={{ display: 'flex', 'flex-direction': 'column' }}>
             <div
               innerHTML={qrSvg()}
               style={{
@@ -156,7 +154,7 @@ export default function LoginScreen() {
           {/* Code column */}
           <div
             id="login-status-region"
-            style={{ display: 'flex', 'flex-direction': 'column', gap: 'var(--space-md)' }}
+            class="gap-col-md" style={{ display: 'flex', 'flex-direction': 'column' }}
           >
             <p style={{ 'font-size': 'var(--font-size-body)', color: 'var(--color-text-primary)', margin: 0 }}>
               Go to twitch.tv/activate on your phone or PC, then enter:
@@ -179,7 +177,7 @@ export default function LoginScreen() {
       </Show>
 
       <Show when={state() === 'expired' || state() === 'error'}>
-        <div style={{ display: 'flex', 'flex-direction': 'column', gap: 'var(--space-md)' }}>
+        <div class="gap-col-md" style={{ display: 'flex', 'flex-direction': 'column' }}>
           <p style={{ 'font-size': 'var(--font-size-body)', color: 'var(--color-text-primary)', margin: 0 }}>
             {statusMessage()}
           </p>

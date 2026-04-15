@@ -12,7 +12,7 @@ import type { StreamData } from '../services/TwitchChannelService'
 import type { ChatMessage } from '../types/chat'
 import ChatSidebar from '../components/ChatSidebar'
 import PlayerSettingsOverlay from '../components/PlayerSettingsOverlay'
-import { prefsStore } from '../stores/prefsStore'
+import { prefsStore, updatePref } from '../stores/prefsStore'
 
 const CLIENT_ID = import.meta.env.VITE_TWITCH_CLIENT_ID as string
 
@@ -61,7 +61,6 @@ export default function PlayerScreen() {
   const [infoVisible, setInfoVisible] = createSignal(true)
 
   // --- Chat state ---
-  const [chatVisible, setChatVisible] = createSignal(prefsStore.chatVisible)
   const [chatWidth, setChatWidth] = createSignal(260)
   const [settingsOverlayVisible, setSettingsOverlayVisible] = createSignal(false)
   const [chatStatus, setChatStatus] = createSignal<'connecting' | 'loading-emotes' | 'active' | 'reconnecting'>('connecting')
@@ -248,7 +247,7 @@ export default function PlayerScreen() {
   function handleKeyDown(e: KeyboardEvent) {
     if (e.keyCode === 403) {
       // Red — toggle chat visibility
-      setChatVisible(v => !v)
+      updatePref('chatVisible', !prefsStore.chatVisible)
       setToggleHintVisible(true)
       clearTimeout(toggleHintTimer)
       toggleHintTimer = setTimeout(() => setToggleHintVisible(false), 3000)
@@ -298,10 +297,10 @@ export default function PlayerScreen() {
     <>
       {/* Scope error overlay — takes over entire screen */}
       <Show when={scopeError()}>
-        <div style={{
+        <div class="gap-col-md" style={{
           position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
           background: 'var(--color-surface)', display: 'flex', 'flex-direction': 'column',
-          'align-items': 'center', 'justify-content': 'center', gap: 'var(--space-md)',
+          'align-items': 'center', 'justify-content': 'center',
           'z-index': 100,
         }}>
           <h2 style={{ 'font-size': 'var(--font-size-heading)', 'font-weight': 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
@@ -332,7 +331,7 @@ export default function PlayerScreen() {
       {/* Main layout — flex row: [chat left] video area [chat right] */}
       <div style={{ display: 'flex', width: '100vw', height: '100vh', background: 'var(--color-bg)' }}>
         {/* Chat on LEFT when position is 'left' */}
-        <Show when={chatVisible() && prefsStore.chatPosition === 'left'}>
+        <Show when={prefsStore.chatVisible && prefsStore.chatPosition === 'left'}>
           <ChatSidebar
             messages={messages}
             emoteMap={emoteMap()}
@@ -379,7 +378,7 @@ export default function PlayerScreen() {
 
           {/* Error overlay */}
           <Show when={playerState() === 'error'}>
-            <div style={{
+            <div class="gap-col-md" style={{
               position: 'absolute',
               top: '0',
               left: '0',
@@ -390,7 +389,6 @@ export default function PlayerScreen() {
               'flex-direction': 'column',
               'align-items': 'center',
               'justify-content': 'center',
-              gap: 'var(--space-md)',
             }}>
               <h2 style={{
                 'font-size': 'var(--font-size-heading)',
@@ -507,7 +505,7 @@ export default function PlayerScreen() {
         </div>
 
         {/* Chat on RIGHT when position is 'right' (default) */}
-        <Show when={chatVisible() && prefsStore.chatPosition !== 'left'}>
+        <Show when={prefsStore.chatVisible && prefsStore.chatPosition !== 'left'}>
           <ChatSidebar
             messages={messages}
             emoteMap={emoteMap()}

@@ -7,13 +7,13 @@ import { history } from '../router/history'
 function EmptyState() {
   return (
     <div
+      class="gap-col-sm"
       style={{
         display: 'flex',
         'flex-direction': 'column',
         'align-items': 'center',
         'justify-content': 'center',
         'min-height': '60vh',
-        gap: 'var(--space-sm)',
       }}
     >
       <p
@@ -112,13 +112,13 @@ export default function ChannelsScreen() {
           onMount(() => setFocus('retry-btn'))
           return (
             <div
+              class="gap-col-md"
               style={{
                 display: 'flex',
                 'flex-direction': 'column',
                 'align-items': 'center',
                 'justify-content': 'center',
                 'min-height': '60vh',
-                gap: 'var(--space-md)',
               }}
             >
               <p

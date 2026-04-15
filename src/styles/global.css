@@ -68,3 +68,22 @@ body {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
 }
+
+/*
+ * Flex gap polyfill for Chromium 68 (webOS 5).
+ * CSS gap on flexbox requires Chrome 84+.
+ * Uses lobotomized owl selector (> * + *) for spacing.
+ *
+ * Usage: add class to a flex container alongside flex-direction.
+ *   - .gap-col-* for flex-direction: column (adds margin-top)
+ *   - .gap-row-* for flex-direction: row (adds margin-left)
+ */
+.gap-col-sm > * + * { margin-top: var(--space-sm); }
+.gap-col-md > * + * { margin-top: var(--space-md); }
+.gap-col-lg > * + * { margin-top: var(--space-lg); }
+.gap-col-xl > * + * { margin-top: var(--space-xl); }
+.gap-col-2xl > * + * { margin-top: var(--space-2xl); }
+.gap-row-sm > * + * { margin-left: var(--space-sm); }
+.gap-row-md > * + * { margin-left: var(--space-md); }
+.gap-row-lg > * + * { margin-left: var(--space-lg); }
+.gap-row-2xl > * + * { margin-left: var(--space-2xl); }

@@ -25,6 +25,8 @@ export class TwitchChatService {
   private token = ''
 
   connect(broadcasterId: string, userId: string, token: string): void {
+    // Tear down any existing connection first to prevent duplicates
+    this._closeConnection()
     this.broadcasterId = broadcasterId
     this.userId = userId
     this.token = token
@@ -33,13 +35,19 @@ export class TwitchChatService {
   }
 
   disconnect(): void {
+    this._closeConnection()
+    this.onMessage = undefined
+    this.onScopeError = undefined
+    this.onConnectionChange = undefined
+  }
+
+  private _closeConnection(): void {
     this._clearTimers()
     if (this.ws) {
       this.ws.close(1000)
       this.ws = null
     }
     this.reconnectAttempt = 0
-    this.onConnectionChange?.(false)
   }
 
   private openWebSocket(url: string): void {
@@ -47,15 +55,18 @@ export class TwitchChatService {
     this.ws = ws
 
     ws.onmessage = (event: MessageEvent) => {
+      if (this.ws !== ws) return // stale socket
       this.lastMessageAt = Date.now()
       this._handleMessage(event, ws)
     }
 
     ws.onopen = () => {
+      if (this.ws !== ws) return // stale socket
       this.onConnectionChange?.(true)
     }
 
     ws.onclose = (event: CloseEvent) => {
+      if (this.ws !== ws) return // stale socket — already replaced or disconnected
       if (event.code !== 1000) {
         // Abnormal close — schedule reconnect
         this.scheduleReconnect()

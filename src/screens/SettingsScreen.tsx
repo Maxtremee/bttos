@@ -29,10 +29,10 @@ export default function SettingsScreen() {
       </h1>
 
       <div
+        class="gap-col-lg"
         style={{
           display: 'flex',
           'flex-direction': 'column',
-          gap: 'var(--space-sm)',
         }}
       >
         {/* Chat visibility toggle */}
@@ -147,7 +147,7 @@ export default function SettingsScreen() {
         </Focusable>
       </div>
 
-      <LogoutConfirmDialog open={dialogOpen()} onCancel={() => setDialogOpen(false)} />
+      <LogoutConfirmDialog open={dialogOpen()} onCancel={() => { setDialogOpen(false); setFocus('settings-logout') }} />
     </main>
   )
 }

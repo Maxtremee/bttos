@@ -1,5 +1,5 @@
 {
-  "name": "twitch-webos-alt",
+  "name": "bttos",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "test": "vitest run --reporter=verbose --passWithNoTests",
     "package": "vite build && cp appinfo.json icon.png largeIcon.png dist/ && cp -r webOSTVjs-1.2.13 dist/ && ares-package --no-minify dist/ -o .",
-    "deploy": "npm run package && source ~/.nvm/nvm.sh && nvm use 18 && node /Users/maksymilianzadka/.nvm/versions/node/v24.14.1/lib/node_modules/@webos-tools/cli/bin/ares-install.js com.dev.twitchalt_0.1.0_all.ipk"
+    "deploy": "npm run package && source ~/.nvm/nvm.sh && nvm use 18 && node /Users/maksymilianzadka/.nvm/versions/node/v24.14.1/lib/node_modules/@webos-tools/cli/bin/ares-install.js com.dev.bttos_0.1.0_all.ipk"
   },
   "dependencies": {
     "@lampa-dev/solidjs-spatial-navigation": "^1.0.0",

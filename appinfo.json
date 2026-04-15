@@ -1,10 +1,10 @@
 {
-  "id": "com.dev.twitchalt",
+  "id": "com.dev.bttos",
   "version": "0.1.0",
   "vendor": "Dev",
   "type": "web",
   "main": "index.html",
-  "title": "Twitch Alt",
+  "title": "BTTOS",
   "icon": "icon.png",
   "largeIcon": "icon.png",
   "disableBackHistoryAPI": true,

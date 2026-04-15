@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "test": "vitest run --reporter=verbose --passWithNoTests",
-    "package": "vite build && ares-package dist/ -o .",
+    "package": "vite build && cp appinfo.json icon.png largeIcon.png dist/ && cp -r webOSTVjs-1.2.13 dist/ && ares-package --no-minify dist/ -o .",
     "deploy": "npm run package && source ~/.nvm/nvm.sh && nvm use 18 && node /Users/maksymilianzadka/.nvm/versions/node/v24.14.1/lib/node_modules/@webos-tools/cli/bin/ares-install.js com.dev.twitchalt_0.1.0_all.ipk"
   },
   "dependencies": {
@@ -21,7 +21,9 @@
   "devDependencies": {
     "@solidjs/testing-library": "^0.8.10",
     "@testing-library/jest-dom": "^6.9.1",
+    "@vitejs/plugin-legacy": "^6.1.1",
     "happy-dom": "^20.9.0",
+    "terser": "^5.46.1",
     "typescript": "~5.8.3",
     "vite": "^6.3.5",
     "vite-plugin-solid": "^2.11.6",

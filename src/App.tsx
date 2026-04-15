@@ -1,17 +1,16 @@
 import { MemoryRouter, Route } from '@solidjs/router'
 import { createMemoryHistory } from '@solidjs/router'
-import { createSignal, Show, onMount, onCleanup } from 'solid-js'
+import { onMount, onCleanup } from 'solid-js'
 import LoginScreen from './screens/LoginScreen'
 import ChannelsScreen from './screens/ChannelsScreen'
 import PlayerScreen from './screens/PlayerScreen'
 import SettingsScreen from './screens/SettingsScreen'
-import ExitConfirmDialog from './components/ExitConfirmDialog'
 import AuthGuard from './components/AuthGuard'
 
-// Root screens: Back on these triggers exit confirmation (D-03)
-const ROOT_PATHS = ['/', '/login']
+declare const webOS: { platformBack: () => void } | undefined
 
-const KEY_BACK = 461 // webOS remote Back button (keyCode 0x1CD)
+const ROOT_PATHS = ['/', '/login', '/channels']
+const KEY_BACK = 461 // webOS remote Back button
 
 const history = createMemoryHistory()
 // Start at /channels if we have a stored token, /login otherwise
@@ -19,52 +18,33 @@ const initialRoute = localStorage.getItem('twitch_access_token') ? '/channels' :
 history.set({ value: initialRoute })
 
 export default function App() {
-  const [showExitDialog, setShowExitDialog] = createSignal(false)
+  function handleKeyDown(e: KeyboardEvent) {
+    if (e.keyCode !== KEY_BACK) return
+    e.preventDefault()
 
-  function handleBack() {
     const currentPath = history.get() ?? '/'
-
-    if (showExitDialog()) {
-      // Back while dialog is open: dismiss dialog (same as Cancel)
-      setShowExitDialog(false)
-      return
-    }
-
     if (ROOT_PATHS.includes(currentPath)) {
-      // On a root screen: show exit confirmation dialog (D-03)
-      setShowExitDialog(true)
+      // On a root screen — exit the app via webOS platform API
+      if (typeof webOS !== 'undefined') {
+        webOS.platformBack()
+      }
     } else {
-      // On a non-root screen: navigate back in history
-      history.set({ value: currentPath === '/settings' ? '/channels' : '/channels' })
+      // Navigate back to channels
+      history.set({ value: '/channels' })
     }
   }
 
-  function handleKeydown(e: KeyboardEvent) {
-    if (e.keyCode === KEY_BACK) {
-      e.preventDefault()
-      handleBack()
-    }
-  }
-
-  onMount(() => window.addEventListener('keydown', handleKeydown))
-  onCleanup(() => window.removeEventListener('keydown', handleKeydown))
+  onMount(() => window.addEventListener('keydown', handleKeyDown))
+  onCleanup(() => window.removeEventListener('keydown', handleKeyDown))
 
   return (
-    <>
-      <MemoryRouter history={history} root={(props) => <>{props.children}</>}>
-        <Route path="/login" component={LoginScreen} />
-        <Route path="/" component={AuthGuard}>
-          <Route path="/channels" component={ChannelsScreen} />
-          <Route path="/player/:channel" component={PlayerScreen} />
-          <Route path="/settings" component={SettingsScreen} />
-        </Route>
-      </MemoryRouter>
-      <Show when={showExitDialog()}>
-        <ExitConfirmDialog
-          onExit={() => window.close()}
-          onCancel={() => setShowExitDialog(false)}
-        />
-      </Show>
-    </>
+    <MemoryRouter history={history} root={(props) => <>{props.children}</>}>
+      <Route path="/login" component={LoginScreen} />
+      <Route path="/" component={AuthGuard}>
+        <Route path="/channels" component={ChannelsScreen} />
+        <Route path="/player/:channel" component={PlayerScreen} />
+        <Route path="/settings" component={SettingsScreen} />
+      </Route>
+    </MemoryRouter>
   )
 }

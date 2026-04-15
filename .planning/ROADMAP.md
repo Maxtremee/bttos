@@ -109,7 +109,12 @@ Plans:
   1. User can reach a settings screen from the main navigation and log out, returning to the login screen
   2. User can adjust at least one basic preference (e.g., chat position or auto-play behavior) from the settings screen
   3. All remote navigation paths are complete — no dead ends, no unresponsive buttons across the full app
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 06-01-PLAN.md — PrefsStore, shared history module, SettingsScreen with toggles and LogoutConfirmDialog
+- [ ] 06-02-PLAN.md — Gear icon, Green button handler, PlayerSettingsOverlay, ChatSidebar position, navigation audit
+
 **UI hint**: yes
 
 ## Progress
@@ -124,4 +129,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3. Channel List | 0/? | Not started | - |
 | 4. Stream Playback | 0/2 | Not started | - |
 | 5. Chat | 0/2 | Not started | - |
-| 6. Settings & Polish | 0/? | Not started | - |
+| 6. Settings & Polish | 0/2 | Not started | - |

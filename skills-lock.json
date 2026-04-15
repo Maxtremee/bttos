@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "skills": {
+    "architecture-patterns": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "computedHash": "cf81f4523a2fd3017590cf2792fe305e4375d2f75d22037b92f05852e22feae2"
+    },
+    "atomic-design": {
+      "source": "jwilger/agent-skills",
+      "sourceType": "github",
+      "computedHash": "7ccfec65e59c1d9d9b7d798771b335d49ab99c2e726b17ef6e810782347df857"
+    },
+    "solidjs": {
+      "source": "suryavirkapur/skills",
+      "sourceType": "github",
+      "computedHash": "6195dd1cb5df073c6c835e3db3f6828541bcee6753a3c996473d934b80f1ebfa"
+    }
+  }
+}

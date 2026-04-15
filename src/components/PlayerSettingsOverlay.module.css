@@ -1,0 +1,52 @@
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 50;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.panel {
+  width: 400px;
+  background: rgba(26, 26, 26, 0.95);
+  padding: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+}
+
+.sectionTitle {
+  font-size: var(--font-size-heading);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.prefRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: var(--min-target-height);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-surface);
+  cursor: pointer;
+}
+
+.prefLabel {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-primary);
+}
+
+.prefValue {
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-semibold);
+}
+
+.hint {
+  font-size: var(--font-size-label);
+  color: var(--color-text-disabled);
+}

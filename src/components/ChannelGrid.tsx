@@ -3,6 +3,7 @@ import { FocusableGroup, Focusable, useSpatialNavigation } from '../navigation'
 import { useNavigate } from '@solidjs/router'
 import ChannelCard from './ChannelCard'
 import type { StreamData } from '../services/TwitchChannelService'
+import styles from './ChannelGrid.module.css'
 
 interface ChannelGridProps {
   channels: StreamData[]
@@ -21,14 +22,7 @@ export default function ChannelGrid(props: ChannelGridProps) {
   return (
     <FocusableGroup as="div" focusKey="channels-grid">
       {() => (
-        <div
-          style={{
-            display: 'grid',
-            'grid-template-columns': 'repeat(4, 1fr)',
-            'align-items': 'stretch',
-            'grid-gap': 'var(--space-lg)',
-          }}
-        >
+        <div class={styles.grid}>
           <For each={props.channels}>
             {(channel) => (
               <Focusable

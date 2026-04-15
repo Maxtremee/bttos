@@ -1,6 +1,7 @@
 import { For } from 'solid-js'
 import type { ChatMessage, MessageFragment } from '../types/chat'
 import type { EmoteMap } from '../services/EmoteService'
+import styles from './ChatMessage.module.css'
 
 interface ChatMessageProps {
   message: ChatMessage
@@ -23,7 +24,7 @@ function renderTextFragment(frag: MessageFragment, emoteMap: EmoteMap, emoteSize
           width={emoteSizePx}
           height={emoteSizePx}
           alt={token}
-          style="vertical-align: middle; display: inline-block"
+          class={styles.emote}
         />
       )
     } else {
@@ -47,22 +48,11 @@ export default function ChatMessage(props: ChatMessageProps) {
   }
 
   return (
-    <div style={{
-      'padding-block': '2px',
-      'font-size': `${fontSizePx()}px`,
-      'line-height': '1.4',
-      'word-break': 'break-word',
-    }}>
-      <span style={{
-        'font-weight': 'var(--font-weight-semibold)',
-        color: usernameColor(),
-      }}>
+    <div class={styles.message} style={{ 'font-size': `${fontSizePx()}px` }}>
+      <span class={styles.username} style={{ color: usernameColor() }}>
         {props.message.displayName}:{' '}
       </span>
-      <span style={{
-        'font-weight': 'var(--font-weight-regular)',
-        color: 'var(--color-text-primary)',
-      }}>
+      <span class={styles.body}>
         <For each={props.message.fragments}>
           {(frag) => {
             if (frag.type === 'emote' && frag.emote) {
@@ -72,7 +62,7 @@ export default function ChatMessage(props: ChatMessageProps) {
                   width={emoteSizePx()}
                   height={emoteSizePx()}
                   alt={frag.text}
-                  style="vertical-align: middle; display: inline-block"
+                  class={styles.emote}
                 />
               )
             }

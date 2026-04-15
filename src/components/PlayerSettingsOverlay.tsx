@@ -1,6 +1,7 @@
 import { Show, createEffect, onMount, onCleanup } from 'solid-js'
 import { Focusable, useSpatialNavigation } from '../navigation'
 import { prefsStore, updatePref } from '../stores/prefsStore'
+import styles from './PlayerSettingsOverlay.module.css'
 
 interface PlayerSettingsOverlayProps {
   open: boolean
@@ -34,38 +35,10 @@ export default function PlayerSettingsOverlay(props: PlayerSettingsOverlayProps)
   return (
     <Show when={props.open}>
       {/* Full-screen backdrop to center the panel */}
-      <div
-        style={{
-          position: 'fixed',
-          top: '0',
-          left: '0',
-          width: '100vw',
-          height: '100vh',
-          'z-index': 50,
-          background: 'rgba(0, 0, 0, 0.5)',
-          display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center',
-        }}
-      >
-        <div
-          class="gap-col-md"
-          style={{
-            width: '400px',
-            background: 'rgba(26, 26, 26, 0.95)',
-            padding: 'var(--space-xl)',
-            display: 'flex',
-            'flex-direction': 'column',
-          }}
-        >
+      <div class={styles.backdrop}>
+        <div class={`${styles.panel} gap-col-md`}>
           {/* Section title */}
-          <div
-            style={{
-              'font-size': 'var(--font-size-heading)',
-              'font-weight': 'var(--font-weight-semibold)',
-              color: 'var(--color-text-primary)',
-            }}
-          >
+          <div class={styles.sectionTitle}>
             Chat Settings
           </div>
 
@@ -77,30 +50,14 @@ export default function PlayerSettingsOverlay(props: PlayerSettingsOverlayProps)
           >
             {({ focused }: { focused: () => boolean }) => (
               <div
-                class={focused() ? 'focused' : ''}
-                style={{
-                  display: 'flex',
-                  'justify-content': 'space-between',
-                  'align-items': 'center',
-                  'min-height': 'var(--min-target-height)',
-                  padding: 'var(--space-md) var(--space-lg)',
-                  background: 'var(--color-surface)',
-                  cursor: 'pointer',
-                }}
+                class={`${styles.prefRow} ${focused() ? 'focused' : ''}`}
               >
-                <span
-                  style={{
-                    'font-size': 'var(--font-size-body)',
-                    'font-weight': 'var(--font-weight-regular)',
-                    color: 'var(--color-text-primary)',
-                  }}
-                >
+                <span class={styles.prefLabel}>
                   Chat visibility
                 </span>
                 <span
+                  class={styles.prefValue}
                   style={{
-                    'font-size': 'var(--font-size-label)',
-                    'font-weight': 'var(--font-weight-semibold)',
                     color: prefsStore.chatVisible ? 'var(--color-accent)' : 'var(--color-text-disabled)',
                   }}
                 >
@@ -120,32 +77,14 @@ export default function PlayerSettingsOverlay(props: PlayerSettingsOverlayProps)
           >
             {({ focused }: { focused: () => boolean }) => (
               <div
-                class={focused() ? 'focused' : ''}
-                style={{
-                  display: 'flex',
-                  'justify-content': 'space-between',
-                  'align-items': 'center',
-                  'min-height': 'var(--min-target-height)',
-                  padding: 'var(--space-md) var(--space-lg)',
-                  background: 'var(--color-surface)',
-                  cursor: 'pointer',
-                }}
+                class={`${styles.prefRow} ${focused() ? 'focused' : ''}`}
               >
-                <span
-                  style={{
-                    'font-size': 'var(--font-size-body)',
-                    'font-weight': 'var(--font-weight-regular)',
-                    color: 'var(--color-text-primary)',
-                  }}
-                >
+                <span class={styles.prefLabel}>
                   Chat position
                 </span>
                 <span
-                  style={{
-                    'font-size': 'var(--font-size-label)',
-                    'font-weight': 'var(--font-weight-semibold)',
-                    color: 'var(--color-accent)',
-                  }}
+                  class={styles.prefValue}
+                  style={{ color: 'var(--color-accent)' }}
                 >
                   {prefsStore.chatPosition === 'right' ? 'Right' : 'Left'}
                 </span>
@@ -154,12 +93,7 @@ export default function PlayerSettingsOverlay(props: PlayerSettingsOverlayProps)
           </Focusable>
 
           {/* Dismiss hint */}
-          <div
-            style={{
-              'font-size': 'var(--font-size-label)',
-              color: 'var(--color-text-disabled)',
-            }}
-          >
+          <div class={styles.hint}>
             Press Green or Back to close
           </div>
         </div>

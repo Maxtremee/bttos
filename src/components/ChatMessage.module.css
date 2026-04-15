@@ -1,0 +1,19 @@
+.message {
+  padding-block: 2px;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.username {
+  font-weight: var(--font-weight-semibold);
+}
+
+.body {
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-primary);
+}
+
+.emote {
+  vertical-align: middle;
+  display: inline-block;
+}

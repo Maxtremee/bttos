@@ -2,6 +2,7 @@ import { For, Show } from 'solid-js'
 import type { ChatMessage } from '../types/chat'
 import type { EmoteMap } from '../services/EmoteService'
 import ChatMessageComponent from './ChatMessage'
+import styles from './ChatSidebar.module.css'
 
 interface ChatSidebarProps {
   messages: ChatMessage[]
@@ -14,30 +15,20 @@ interface ChatSidebarProps {
 
 export default function ChatSidebar(props: ChatSidebarProps) {
   return (
-    <div style={{
-      width: `${props.width ?? 260}px`,
-      'flex-shrink': 0,
-      height: '100vh',
-      background: '#000000',
-      ...(props.position === 'left'
-        ? { 'border-right': '1px solid rgba(255,255,255,0.1)' }
-        : { 'border-left': '1px solid rgba(255,255,255,0.1)' }),
-      display: 'flex',
-      'flex-direction': 'column',
-      overflow: 'hidden',
-    }}>
+    <div
+      class={`${styles.sidebar} ${props.position === 'left' ? styles.borderRight : styles.borderLeft}`}
+      style={{ width: `${props.width ?? 260}px` }}
+    >
       {/* Status bar — only shown when connecting or reconnecting */}
       <Show when={props.status === 'loading-emotes' || props.status === 'reconnecting'}>
-        <div style={{
-          padding: 'var(--space-lg) var(--space-md) 0',
-        }}>
+        <div class={styles.statusBar}>
           <Show when={props.status === 'loading-emotes'}>
-            <span style={{ 'font-size': 'var(--font-size-label)', color: 'var(--color-text-secondary)' }}>
+            <span class={styles.statusText}>
               Loading chat...
             </span>
           </Show>
           <Show when={props.status === 'reconnecting'}>
-            <span style={{ 'font-size': 'var(--font-size-label)', color: 'var(--color-text-secondary)' }}>
+            <span class={styles.statusText}>
               Reconnecting...
             </span>
           </Show>
@@ -45,13 +36,7 @@ export default function ChatSidebar(props: ChatSidebarProps) {
       </Show>
 
       {/* Message list — column-reverse so newest messages appear at bottom naturally */}
-      <div style={{
-        flex: 1,
-        overflow: 'hidden',
-        padding: '0 var(--space-md)',
-        display: 'flex',
-        'flex-direction': 'column-reverse',
-      }}>
+      <div class={styles.messageList}>
         <For each={[...props.messages].reverse()}>
           {(msg) => (
             <ChatMessageComponent message={msg} emoteMap={props.emoteMap} scale={props.scale ?? 1} />

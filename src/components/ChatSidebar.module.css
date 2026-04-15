@@ -1,0 +1,33 @@
+.sidebar {
+  flex-shrink: 0;
+  height: 100vh;
+  background: #000000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.borderRight {
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.borderLeft {
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.statusBar {
+  padding: var(--space-lg) var(--space-md) 0;
+}
+
+.statusText {
+  font-size: var(--font-size-label);
+  color: var(--color-text-secondary);
+}
+
+.messageList {
+  flex: 1;
+  overflow: hidden;
+  padding: 0 var(--space-md);
+  display: flex;
+  flex-direction: column-reverse;
+}

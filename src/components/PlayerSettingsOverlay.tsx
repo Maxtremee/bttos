@@ -1,4 +1,4 @@
-import { Show, createEffect, onCleanup } from 'solid-js'
+import { Show, createEffect, onMount, onCleanup } from 'solid-js'
 import { Focusable, useSpatialNavigation } from '../navigation'
 import { prefsStore, updatePref } from '../stores/prefsStore'
 
@@ -26,8 +26,10 @@ export default function PlayerSettingsOverlay(props: PlayerSettingsOverlayProps)
     }
   }
 
-  window.addEventListener('keydown', handleKeyDown, true)
-  onCleanup(() => window.removeEventListener('keydown', handleKeyDown, true))
+  onMount(() => {
+    window.addEventListener('keydown', handleKeyDown, true)
+    onCleanup(() => window.removeEventListener('keydown', handleKeyDown, true))
+  })
 
   return (
     <Show when={props.open}>

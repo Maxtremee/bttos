@@ -136,17 +136,20 @@ export class TwitchChatService {
     this.ws = newWs
 
     newWs.onmessage = (event: MessageEvent) => {
+      if (this.ws !== newWs) return
       this.lastMessageAt = Date.now()
       this._handleMessage(event, newWs)
     }
 
     newWs.onopen = () => {
+      if (this.ws !== newWs) return
       // Old WS can be closed now
       oldWs.close(1000)
       this.onConnectionChange?.(true)
     }
 
     newWs.onclose = (event: CloseEvent) => {
+      if (this.ws !== newWs) return
       if (event.code !== 1000) {
         this.scheduleReconnect()
       }
@@ -224,7 +227,9 @@ export class TwitchChatService {
       if (elapsed > threshold && this.keepaliveTimeout > 0) {
         console.warn('[TwitchChatService] Keepalive timeout — reconnecting')
         if (this.ws) {
-          this.ws.close(1006)
+          const staleWs = this.ws
+          this.ws = null // null before close so onclose guard fires
+          staleWs.close(1006)
         }
         this.scheduleReconnect()
       }

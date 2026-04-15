@@ -1,6 +1,6 @@
 import { MemoryRouter, Route } from '@solidjs/router'
-import { createMemoryHistory } from '@solidjs/router'
 import { onMount, onCleanup } from 'solid-js'
+import { history } from './router/history'
 import LoginScreen from './screens/LoginScreen'
 import ChannelsScreen from './screens/ChannelsScreen'
 import PlayerScreen from './screens/PlayerScreen'
@@ -11,11 +11,6 @@ declare const webOS: { platformBack: () => void } | undefined
 
 const ROOT_PATHS = ['/', '/login', '/channels']
 const KEY_BACK = 461 // webOS remote Back button
-
-const history = createMemoryHistory()
-// Start at /channels if we have a stored token, /login otherwise
-const initialRoute = localStorage.getItem('twitch_access_token') ? '/channels' : '/login'
-history.set({ value: initialRoute })
 
 export default function App() {
   function handleKeyDown(e: KeyboardEvent) {

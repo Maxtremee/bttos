@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-04-14)
 Phase: 6 of 6 (settings & polish)
 Plan: Not started
 Status: Ready to execute
-Last activity: 2026-04-15 - Completed quick task 260415-fjn: Use ares-generate to scaffold the webOS app project into the existing one
+Last activity: 2026-04-15 - Completed quick task 260415-hjo: make the yellow button scale the chat down and the blue button scale the chat up
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -83,6 +83,7 @@ None yet.
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 260415-fjn | Use ares-generate to scaffold the webOS app project into the existing one | 2026-04-15 | d97b3ac | [260415-fjn-use-ares-generate-to-scaffold-the-webos-](./quick/260415-fjn-use-ares-generate-to-scaffold-the-webos-/) |
+| 260415-hjo | Add yellow/blue button chat width scaling | 2026-04-15 | 11de2f7 | [260415-hjo-make-the-yellow-button-scale-the-chat-do](./quick/260415-hjo-make-the-yellow-button-scale-the-chat-do/) |
 
 ## Session Continuity
 

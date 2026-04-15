@@ -11,9 +11,20 @@ declare const webOS: { platformBack: () => void } | undefined
 
 const ROOT_PATHS = ['/', '/login', '/channels']
 const KEY_BACK = 461 // webOS remote Back button
+const KEY_GREEN = 404 // webOS remote Green button
 
 export default function App() {
   function handleKeyDown(e: KeyboardEvent) {
+    if (e.keyCode === KEY_GREEN) {
+      e.preventDefault()
+      const currentPath = history.get() ?? '/'
+      if (currentPath === '/channels') {
+        history.set({ value: '/settings' })
+      }
+      // PlayerScreen handles its own Green button via its local handleKeyDown
+      return
+    }
+
     if (e.keyCode !== KEY_BACK) return
     e.preventDefault()
 

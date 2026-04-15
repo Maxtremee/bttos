@@ -11,6 +11,8 @@ import { authStore } from '../stores/authStore'
 import type { StreamData } from '../services/TwitchChannelService'
 import type { ChatMessage } from '../types/chat'
 import ChatSidebar from '../components/ChatSidebar'
+import PlayerSettingsOverlay from '../components/PlayerSettingsOverlay'
+import { prefsStore } from '../stores/prefsStore'
 
 const CLIENT_ID = import.meta.env.VITE_TWITCH_CLIENT_ID as string
 
@@ -59,8 +61,9 @@ export default function PlayerScreen() {
   const [infoVisible, setInfoVisible] = createSignal(true)
 
   // --- Chat state ---
-  const [chatVisible, setChatVisible] = createSignal(true)
+  const [chatVisible, setChatVisible] = createSignal(prefsStore.chatVisible)
   const [chatWidth, setChatWidth] = createSignal(260)
+  const [settingsOverlayVisible, setSettingsOverlayVisible] = createSignal(false)
   const [chatStatus, setChatStatus] = createSignal<'connecting' | 'loading-emotes' | 'active' | 'reconnecting'>('connecting')
   const [scopeError, setScopeError] = createSignal(false)
   const [emoteMap, setEmoteMap] = createSignal<EmoteMap>(new Map())
@@ -261,6 +264,9 @@ export default function PlayerScreen() {
       setToggleHintVisible(true)
       clearTimeout(toggleHintTimer)
       toggleHintTimer = setTimeout(() => setToggleHintVisible(false), 3000)
+    } else if (e.keyCode === 404) {
+      // Green — toggle settings overlay
+      setSettingsOverlayVisible(v => !v)
     }
     showInfoBar()  // any key shows info bar
   }
@@ -323,8 +329,20 @@ export default function PlayerScreen() {
         </div>
       </Show>
 
-      {/* Main layout — flex row: video area + chat sidebar */}
+      {/* Main layout — flex row: [chat left] video area [chat right] */}
       <div style={{ display: 'flex', width: '100vw', height: '100vh', background: 'var(--color-bg)' }}>
+        {/* Chat on LEFT when position is 'left' */}
+        <Show when={chatVisible() && prefsStore.chatPosition === 'left'}>
+          <ChatSidebar
+            messages={messages}
+            emoteMap={emoteMap()}
+            status={chatStatus()}
+            width={chatWidth()}
+            scale={chatWidth() / 260}
+            position="left"
+          />
+        </Show>
+
         {/* Video area — takes remaining space */}
         <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
           {/* Video element — always rendered, hls.js manages it via MSE */}
@@ -477,19 +495,26 @@ export default function PlayerScreen() {
               'font-size': 'var(--font-size-label)', color: 'var(--color-text-disabled)',
               transition: 'opacity 0.3s ease',
             }}>
-              Red — toggle chat  |  Yellow — smaller  |  Blue — larger
+              Red — toggle chat  |  Yellow — smaller  |  Blue — larger  |  Green — settings
             </div>
           </Show>
+
+          {/* Player settings overlay — inside video area container */}
+          <PlayerSettingsOverlay
+            open={settingsOverlayVisible()}
+            onClose={() => setSettingsOverlayVisible(false)}
+          />
         </div>
 
-        {/* Chat sidebar — conditional on chatVisible signal */}
-        <Show when={chatVisible()}>
+        {/* Chat on RIGHT when position is 'right' (default) */}
+        <Show when={chatVisible() && prefsStore.chatPosition !== 'left'}>
           <ChatSidebar
             messages={messages}
             emoteMap={emoteMap()}
             status={chatStatus()}
             width={chatWidth()}
             scale={chatWidth() / 260}
+            position="right"
           />
         </Show>
       </div>

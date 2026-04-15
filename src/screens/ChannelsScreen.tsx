@@ -2,6 +2,7 @@ import { createResource, onMount, onCleanup, Show } from 'solid-js'
 import { Focusable, useSpatialNavigation } from '../navigation'
 import ChannelGrid from '../components/ChannelGrid'
 import { twitchChannelService } from '../services/TwitchChannelService'
+import { history } from '../router/history'
 
 function EmptyState() {
   return (
@@ -47,16 +48,43 @@ export default function ChannelsScreen() {
 
   return (
     <main style={{ padding: 'var(--space-2xl)', height: '100vh', 'overflow-y': 'auto' }}>
-      <h1
-        style={{
+      <div style={{
+        display: 'flex',
+        'justify-content': 'space-between',
+        'align-items': 'center',
+        'margin-bottom': 'var(--space-xl)',
+      }}>
+        <h1 style={{
           'font-size': 'var(--font-size-heading)',
           'font-weight': 'var(--font-weight-semibold)',
           color: 'var(--color-text-primary)',
-          'margin-bottom': 'var(--space-xl)',
-        }}
-      >
-        Live Channels
-      </h1>
+        }}>
+          Live Channels
+        </h1>
+        <Focusable
+          focusKey="channels-gear"
+          onEnterPress={() => history.set({ value: '/settings' })}
+          as="div"
+        >
+          {({ focused }: { focused: () => boolean }) => (
+            <div
+              class={focused() ? 'focused' : ''}
+              style={{
+                'min-width': 'var(--min-target-height)',
+                'min-height': 'var(--min-target-height)',
+                display: 'flex',
+                'align-items': 'center',
+                'justify-content': 'center',
+                'font-size': 'var(--font-size-heading)',
+                color: focused() ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
+                cursor: 'pointer',
+              }}
+            >
+              {'\u2699'}
+            </div>
+          )}
+        </Focusable>
+      </div>
 
       {/* State machine: loading → error | empty | data */}
       <Show when={channels.state === 'pending' || channels.state === 'unresolved'}>

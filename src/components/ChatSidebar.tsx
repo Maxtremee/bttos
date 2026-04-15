@@ -9,6 +9,7 @@ interface ChatSidebarProps {
   status: 'connecting' | 'loading-emotes' | 'active' | 'reconnecting'
   width?: number
   scale?: number
+  position?: 'left' | 'right'
 }
 
 export default function ChatSidebar(props: ChatSidebarProps) {
@@ -18,7 +19,9 @@ export default function ChatSidebar(props: ChatSidebarProps) {
       'flex-shrink': 0,
       height: '100vh',
       background: '#000000',
-      'border-left': '1px solid rgba(255,255,255,0.1)',
+      ...(props.position === 'left'
+        ? { 'border-right': '1px solid rgba(255,255,255,0.1)' }
+        : { 'border-left': '1px solid rgba(255,255,255,0.1)' }),
       display: 'flex',
       'flex-direction': 'column',
       overflow: 'hidden',

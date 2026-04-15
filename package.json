@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "test": "vitest run --reporter=verbose --passWithNoTests"
+    "test": "vitest run --reporter=verbose --passWithNoTests",
+    "package": "vite build && ares-package dist/ -o .",
+    "deploy": "npm run package && source ~/.nvm/nvm.sh && nvm use 18 && node /Users/maksymilianzadka/.nvm/versions/node/v24.14.1/lib/node_modules/@webos-tools/cli/bin/ares-install.js com.dev.twitchalt_0.1.0_all.ipk"
   },
   "dependencies": {
     "@lampa-dev/solidjs-spatial-navigation": "^1.0.0",

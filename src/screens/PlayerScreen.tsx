@@ -489,6 +489,7 @@ export default function PlayerScreen() {
             emoteMap={emoteMap()}
             status={chatStatus()}
             width={chatWidth()}
+            scale={chatWidth() / 260}
           />
         </Show>
       </div>

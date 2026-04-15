@@ -8,6 +8,7 @@ interface ChatSidebarProps {
   emoteMap: EmoteMap
   status: 'connecting' | 'loading-emotes' | 'active' | 'reconnecting'
   width?: number
+  scale?: number
 }
 
 export default function ChatSidebar(props: ChatSidebarProps) {
@@ -50,7 +51,7 @@ export default function ChatSidebar(props: ChatSidebarProps) {
       }}>
         <For each={[...props.messages].reverse()}>
           {(msg) => (
-            <ChatMessageComponent message={msg} emoteMap={props.emoteMap} />
+            <ChatMessageComponent message={msg} emoteMap={props.emoteMap} scale={props.scale ?? 1} />
           )}
         </For>
       </div>

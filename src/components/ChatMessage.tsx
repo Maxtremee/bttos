@@ -5,9 +5,10 @@ import type { EmoteMap } from '../services/EmoteService'
 interface ChatMessageProps {
   message: ChatMessage
   emoteMap: EmoteMap
+  scale?: number
 }
 
-function renderTextFragment(frag: MessageFragment, emoteMap: EmoteMap) {
+function renderTextFragment(frag: MessageFragment, emoteMap: EmoteMap, emoteSizePx: number) {
   const tokens = frag.text.split(' ')
   const elements: unknown[] = []
 
@@ -19,8 +20,8 @@ function renderTextFragment(frag: MessageFragment, emoteMap: EmoteMap) {
       elements.push(
         <img
           src={emoteUrl}
-          width="22"
-          height="22"
+          width={emoteSizePx}
+          height={emoteSizePx}
           alt={token}
           style="vertical-align: middle; display: inline-block"
         />
@@ -35,6 +36,10 @@ function renderTextFragment(frag: MessageFragment, emoteMap: EmoteMap) {
 }
 
 export default function ChatMessage(props: ChatMessageProps) {
+  const scale = () => props.scale ?? 1
+  const fontSizePx = () => Math.max(10, Math.round(14 * scale()))
+  const emoteSizePx = () => Math.round(22 * scale())
+
   const usernameColor = () => {
     const c = props.message.color
     if (!c || c === '#000000') return 'var(--color-text-secondary)'
@@ -44,7 +49,7 @@ export default function ChatMessage(props: ChatMessageProps) {
   return (
     <div style={{
       'padding-block': '2px',
-      'font-size': '14px',
+      'font-size': `${fontSizePx()}px`,
       'line-height': '1.4',
       'word-break': 'break-word',
     }}>
@@ -64,15 +69,15 @@ export default function ChatMessage(props: ChatMessageProps) {
               return (
                 <img
                   src={`https://static-cdn.jtvnw.net/emoticons/v2/${frag.emote.id}/static/dark/2.0`}
-                  width="22"
-                  height="22"
+                  width={emoteSizePx()}
+                  height={emoteSizePx()}
                   alt={frag.text}
                   style="vertical-align: middle; display: inline-block"
                 />
               )
             }
             if (frag.type === 'text') {
-              return <>{renderTextFragment(frag, props.emoteMap)}</>
+              return <>{renderTextFragment(frag, props.emoteMap, emoteSizePx())}</>
             }
             // cheermote or unknown — render as plain text
             return <span>{frag.text}</span>

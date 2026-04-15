@@ -12,7 +12,7 @@ interface ChatSidebarProps {
 export default function ChatSidebar(props: ChatSidebarProps) {
   return (
     <div style={{
-      width: '360px',
+      width: '260px',
       'flex-shrink': 0,
       height: '100vh',
       background: '#000000',

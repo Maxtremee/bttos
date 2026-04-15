@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-04-14)
 Phase: 6 of 6 (settings & polish)
 Plan: Not started
 Status: Ready to execute
-Last activity: 2026-04-15 - Completed quick task 260415-l6j: Rename app to BTTOS in all relevant places
+Last activity: 2026-04-15 - Completed quick task 260415-lly: Move to CSS modules - colocate styles with components
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -86,6 +86,7 @@ None yet.
 | 260415-hjo | Add yellow/blue button chat width scaling | 2026-04-15 | 11de2f7 | [260415-hjo-make-the-yellow-button-scale-the-chat-do](./quick/260415-hjo-make-the-yellow-button-scale-the-chat-do/) |
 | 260415-hnx | Scale chat text size and emotes with yellow/blue buttons | 2026-04-15 | 856704e | [260415-hnx-scale-chat-text-size-with-yellow-blue-bu](./quick/260415-hnx-scale-chat-text-size-with-yellow-blue-bu/) |
 | 260415-l6j | Rename app to BTTOS in all relevant places | 2026-04-15 | 69b0735 | [260415-l6j-rename-app-to-bttos-in-all-relevant-plac](./quick/260415-l6j-rename-app-to-bttos-in-all-relevant-plac/) |
+| 260415-lly | Move to CSS modules - colocate styles with components | 2026-04-15 | cce5838 | [260415-lly-move-to-css-modules-colocate-styles-with](./quick/260415-lly-move-to-css-modules-colocate-styles-with/) |
 
 ## Session Continuity
 

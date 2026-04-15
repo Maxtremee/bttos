@@ -112,8 +112,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 06-01-PLAN.md — PrefsStore, shared history module, SettingsScreen with toggles and LogoutConfirmDialog
-- [ ] 06-02-PLAN.md — Gear icon, Green button handler, PlayerSettingsOverlay, ChatSidebar position, navigation audit
+- [x] 06-01-PLAN.md — PrefsStore, shared history module, SettingsScreen with toggles and LogoutConfirmDialog
+- [x] 06-02-PLAN.md — Gear icon, Green button handler, PlayerSettingsOverlay, ChatSidebar position, navigation audit
 
 **UI hint**: yes
 

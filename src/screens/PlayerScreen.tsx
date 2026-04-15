@@ -60,6 +60,7 @@ export default function PlayerScreen() {
 
   // --- Chat state ---
   const [chatVisible, setChatVisible] = createSignal(true)
+  const [chatWidth, setChatWidth] = createSignal(260)
   const [chatStatus, setChatStatus] = createSignal<'connecting' | 'loading-emotes' | 'active' | 'reconnecting'>('connecting')
   const [scopeError, setScopeError] = createSignal(false)
   const [emoteMap, setEmoteMap] = createSignal<EmoteMap>(new Map())
@@ -139,9 +140,11 @@ export default function PlayerScreen() {
   }
 
   // Start chat when stream metadata resolves (provides broadcaster ID)
+  let chatInitialized = false
   createEffect(() => {
     const data = streamData()
-    if (!data) return
+    if (!data || chatInitialized) return
+    chatInitialized = true
 
     // Prefer broadcasterId from router state (passed by ChannelGrid), fall back to streamData.user_id
     const broadcasterId = (location.state as { broadcasterId?: string })?.broadcasterId || data.user_id
@@ -238,11 +241,23 @@ export default function PlayerScreen() {
     window.location.reload()
   }
 
-  // --- Red button (keyCode 403) toggle handler ---
+  // --- Color button key handlers ---
   function handleKeyDown(e: KeyboardEvent) {
     if (e.keyCode === 403) {
+      // Red — toggle chat visibility
       setChatVisible(v => !v)
-      // Show toggle hint briefly on each toggle
+      setToggleHintVisible(true)
+      clearTimeout(toggleHintTimer)
+      toggleHintTimer = setTimeout(() => setToggleHintVisible(false), 3000)
+    } else if (e.keyCode === 405) {
+      // Yellow — shrink chat
+      setChatWidth(w => Math.max(140, w - 60))
+      setToggleHintVisible(true)
+      clearTimeout(toggleHintTimer)
+      toggleHintTimer = setTimeout(() => setToggleHintVisible(false), 3000)
+    } else if (e.keyCode === 406) {
+      // Blue — grow chat
+      setChatWidth(w => Math.min(500, w + 60))
       setToggleHintVisible(true)
       clearTimeout(toggleHintTimer)
       toggleHintTimer = setTimeout(() => setToggleHintVisible(false), 3000)
@@ -462,7 +477,7 @@ export default function PlayerScreen() {
               'font-size': 'var(--font-size-label)', color: 'var(--color-text-disabled)',
               transition: 'opacity 0.3s ease',
             }}>
-              Red — toggle chat
+              Red — toggle chat  |  Yellow — smaller  |  Blue — larger
             </div>
           </Show>
         </div>
@@ -473,6 +488,7 @@ export default function PlayerScreen() {
             messages={messages}
             emoteMap={emoteMap()}
             status={chatStatus()}
+            width={chatWidth()}
           />
         </Show>
       </div>

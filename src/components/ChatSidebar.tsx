@@ -7,12 +7,13 @@ interface ChatSidebarProps {
   messages: ChatMessage[]
   emoteMap: EmoteMap
   status: 'connecting' | 'loading-emotes' | 'active' | 'reconnecting'
+  width?: number
 }
 
 export default function ChatSidebar(props: ChatSidebarProps) {
   return (
     <div style={{
-      width: '260px',
+      width: `${props.width ?? 260}px`,
       'flex-shrink': 0,
       height: '100vh',
       background: '#000000',

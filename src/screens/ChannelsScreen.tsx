@@ -3,34 +3,15 @@ import { Focusable, useSpatialNavigation } from '../navigation'
 import ChannelGrid from '../components/ChannelGrid'
 import { twitchChannelService } from '../services/TwitchChannelService'
 import { history } from '../router/history'
+import styles from './ChannelsScreen.module.css'
 
 function EmptyState() {
   return (
-    <div
-      class="gap-col-sm"
-      style={{
-        display: 'flex',
-        'flex-direction': 'column',
-        'align-items': 'center',
-        'justify-content': 'center',
-        'min-height': '60vh',
-      }}
-    >
-      <p
-        style={{
-          'font-size': 'var(--font-size-heading)',
-          'font-weight': 'var(--font-weight-semibold)',
-          color: 'var(--color-text-primary)',
-        }}
-      >
+    <div class={`${styles.emptyState} gap-col-sm`}>
+      <p class={styles.emptyHeading}>
         No channels live right now
       </p>
-      <p
-        style={{
-          'font-size': 'var(--font-size-body)',
-          color: 'var(--color-text-secondary)',
-        }}
-      >
+      <p class={styles.emptySubtext}>
         Check back later or follow more channels on Twitch
       </p>
     </div>
@@ -47,18 +28,9 @@ export default function ChannelsScreen() {
   })
 
   return (
-    <main style={{ padding: 'var(--space-2xl)', height: '100vh', 'overflow-y': 'auto' }}>
-      <div style={{
-        display: 'flex',
-        'justify-content': 'space-between',
-        'align-items': 'center',
-        'margin-bottom': 'var(--space-xl)',
-      }}>
-        <h1 style={{
-          'font-size': 'var(--font-size-heading)',
-          'font-weight': 'var(--font-weight-semibold)',
-          color: 'var(--color-text-primary)',
-        }}>
+    <main class={styles.screen}>
+      <div class={styles.header}>
+        <h1 class={styles.heading}>
           Live Channels
         </h1>
         <Focusable
@@ -68,16 +40,9 @@ export default function ChannelsScreen() {
         >
           {({ focused }: { focused: () => boolean }) => (
             <div
-              class={focused() ? 'focused' : ''}
+              class={`${styles.gearButton} ${focused() ? 'focused' : ''}`}
               style={{
-                'min-width': 'var(--min-target-height)',
-                'min-height': 'var(--min-target-height)',
-                display: 'flex',
-                'align-items': 'center',
-                'justify-content': 'center',
-                'font-size': 'var(--font-size-heading)',
                 color: focused() ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
-                cursor: 'pointer',
               }}
             >
               {'\u2699'}
@@ -86,22 +51,10 @@ export default function ChannelsScreen() {
         </Focusable>
       </div>
 
-      {/* State machine: loading → error | empty | data */}
+      {/* State machine: loading -> error | empty | data */}
       <Show when={channels.state === 'pending' || channels.state === 'unresolved'}>
-        <div
-          style={{
-            display: 'flex',
-            'justify-content': 'center',
-            'align-items': 'center',
-            'min-height': '60vh',
-          }}
-        >
-          <p
-            style={{
-              'font-size': 'var(--font-size-body)',
-              color: 'var(--color-text-secondary)',
-            }}
-          >
+        <div class={styles.centerContainer}>
+          <p class={styles.loadingText}>
             Loading channels...
           </p>
         </div>
@@ -111,31 +64,11 @@ export default function ChannelsScreen() {
         {(() => {
           onMount(() => setFocus('retry-btn'))
           return (
-            <div
-              class="gap-col-md"
-              style={{
-                display: 'flex',
-                'flex-direction': 'column',
-                'align-items': 'center',
-                'justify-content': 'center',
-                'min-height': '60vh',
-              }}
-            >
-              <p
-                style={{
-                  'font-size': 'var(--font-size-heading)',
-                  'font-weight': 'var(--font-weight-semibold)',
-                  color: 'var(--color-text-primary)',
-                }}
-              >
+            <div class={`${styles.errorContainer} gap-col-md`}>
+              <p class={styles.errorHeading}>
                 Could not load channels
               </p>
-              <p
-                style={{
-                  'font-size': 'var(--font-size-body)',
-                  color: 'var(--color-text-secondary)',
-                }}
-              >
+              <p class={styles.errorSubtext}>
                 Check your connection and press OK to retry
               </p>
               <Focusable
@@ -145,17 +78,8 @@ export default function ChannelsScreen() {
               >
                 {({ focused }) => (
                   <button
-                    class={focused() ? 'focused' : ''}
+                    class={`${styles.button} ${focused() ? 'focused' : ''}`}
                     onClick={() => refetch()}
-                    style={{
-                      background: 'var(--color-accent)',
-                      color: 'var(--color-text-primary)',
-                      padding: 'var(--space-md) var(--space-xl)',
-                      'font-size': 'var(--font-size-label)',
-                      'font-weight': 'var(--font-weight-semibold)',
-                      border: 'none',
-                      cursor: 'pointer',
-                    }}
                   >
                     Retry
                   </button>

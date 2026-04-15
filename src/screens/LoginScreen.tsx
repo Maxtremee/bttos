@@ -3,6 +3,7 @@ import { useNavigate } from '@solidjs/router'
 import { renderSVG } from 'uqr'
 import { Focusable, useSpatialNavigation } from '../navigation'
 import { twitchAuthService, type DeviceCodeResponse } from '../services/TwitchAuthService'
+import styles from './LoginScreen.module.css'
 
 type AuthScreenState = 'loading' | 'polling' | 'success' | 'expired' | 'error'
 
@@ -101,52 +102,26 @@ export default function LoginScreen() {
   })
 
   return (
-    <main class="gap-col-xl" style={{
-      padding: 'var(--space-2xl)',
-      'min-height': '100vh',
-      display: 'flex',
-      'flex-direction': 'column',
-      'justify-content': 'center',
-      background: 'var(--color-bg)',
-    }}>
-      <h1 style={{
-        'font-size': 'var(--font-size-heading)',
-        'font-weight': 'var(--font-weight-semibold)',
-        'line-height': 'var(--line-height-heading)',
-        color: 'var(--color-text-primary)',
-        margin: 0,
-      }}>
+    <main class={`${styles.screen} gap-col-xl`}>
+      <h1 class={styles.heading}>
         Sign in with Twitch
       </h1>
 
       <Show when={state() === 'loading'}>
-        <p style={{ 'font-size': 'var(--font-size-body)', color: 'var(--color-text-secondary)' }}>
+        <p class={styles.loadingText}>
           Loading...
         </p>
       </Show>
 
       <Show when={state() === 'polling' || state() === 'success'}>
-        <div class="gap-row-2xl" style={{
-          display: 'flex',
-          'flex-direction': 'row',
-          'align-items': 'flex-start',
-        }}>
+        <div class={`${styles.pollingRow} gap-row-2xl`}>
           {/* QR Code column */}
-          <div class="gap-col-md" style={{ display: 'flex', 'flex-direction': 'column' }}>
+          <div class={`${styles.qrColumn} gap-col-md`}>
             <div
               innerHTML={qrSvg()}
-              style={{
-                width: '200px',
-                height: '200px',
-                background: '#ffffff',
-                padding: '8px',
-              }}
+              class={styles.qrCode}
             />
-            <p style={{
-              'font-size': 'var(--font-size-body)',
-              color: 'var(--color-text-secondary)',
-              margin: 0,
-            }}>
+            <p class={styles.verificationHost}>
               {verificationHost()}
             </p>
           </div>
@@ -154,22 +129,15 @@ export default function LoginScreen() {
           {/* Code column */}
           <div
             id="login-status-region"
-            class="gap-col-md" style={{ display: 'flex', 'flex-direction': 'column' }}
+            class={`${styles.codeColumn} gap-col-md`}
           >
-            <p style={{ 'font-size': 'var(--font-size-body)', color: 'var(--color-text-primary)', margin: 0 }}>
+            <p class={styles.instructionText}>
               Go to twitch.tv/activate on your phone or PC, then enter:
             </p>
-            <p style={{
-              'font-size': 'var(--font-size-display)',
-              'font-weight': 'var(--font-weight-semibold)',
-              'line-height': 'var(--line-height-display)',
-              color: 'var(--color-text-primary)',
-              'letter-spacing': '0.1em',
-              margin: 0,
-            }}>
+            <p class={styles.userCode}>
               {deviceCodeData()?.user_code ?? ''}
             </p>
-            <p style={{ 'font-size': 'var(--font-size-body)', color: 'var(--color-text-secondary)', margin: 0 }}>
+            <p class={styles.statusMessage}>
               {statusMessage()}
             </p>
           </div>
@@ -177,25 +145,15 @@ export default function LoginScreen() {
       </Show>
 
       <Show when={state() === 'expired' || state() === 'error'}>
-        <div class="gap-col-md" style={{ display: 'flex', 'flex-direction': 'column' }}>
-          <p style={{ 'font-size': 'var(--font-size-body)', color: 'var(--color-text-primary)', margin: 0 }}>
+        <div class={`${styles.errorColumn} gap-col-md`}>
+          <p class={styles.errorText}>
             {statusMessage()}
           </p>
           <Focusable focusKey="login-retry-btn" as="div" style={{ display: 'inline-block' }}>
             {({ focused }: { focused: () => boolean }) => (
               <button
-                class={focused() ? 'focused' : ''}
+                class={`${styles.button} ${focused() ? 'focused' : ''}`}
                 onClick={startFlow}
-                style={{
-                  'min-height': 'var(--min-target-height)',
-                  padding: 'var(--space-md) var(--space-xl)',
-                  'font-size': 'var(--font-size-label)',
-                  'font-weight': 'var(--font-weight-semibold)',
-                  background: 'var(--color-accent)',
-                  color: 'var(--color-text-primary)',
-                  border: 'none',
-                  cursor: 'pointer',
-                }}
               >
                 Request new code
               </button>

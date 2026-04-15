@@ -2,6 +2,7 @@ import { createSignal, onMount } from 'solid-js'
 import { Focusable, useSpatialNavigation } from '../navigation'
 import { prefsStore, updatePref } from '../stores/prefsStore'
 import LogoutConfirmDialog from '../components/LogoutConfirmDialog'
+import styles from './SettingsScreen.module.css'
 
 export default function SettingsScreen() {
   const { setFocus } = useSpatialNavigation()
@@ -10,31 +11,12 @@ export default function SettingsScreen() {
   onMount(() => setFocus('settings-pref-chat-visible'))
 
   return (
-    <main
-      style={{
-        padding: 'var(--space-2xl)',
-        'min-height': '100vh',
-        background: 'var(--color-bg)',
-      }}
-    >
-      <h1
-        style={{
-          'font-size': 'var(--font-size-heading)',
-          'font-weight': 'var(--font-weight-semibold)',
-          color: 'var(--color-text-primary)',
-          'margin-bottom': 'var(--space-xl)',
-        }}
-      >
+    <main class={styles.screen}>
+      <h1 class={styles.heading}>
         Settings
       </h1>
 
-      <div
-        class="gap-col-lg"
-        style={{
-          display: 'flex',
-          'flex-direction': 'column',
-        }}
-      >
+      <div class={`${styles.prefList} gap-col-lg`}>
         {/* Chat visibility toggle */}
         <Focusable
           focusKey="settings-pref-chat-visible"
@@ -43,29 +25,14 @@ export default function SettingsScreen() {
         >
           {({ focused }) => (
             <div
-              class={focused() ? 'focused' : ''}
-              style={{
-                display: 'flex',
-                'justify-content': 'space-between',
-                'align-items': 'center',
-                'min-height': 'var(--min-target-height)',
-                padding: 'var(--space-md) var(--space-xl)',
-                background: 'var(--color-surface)',
-                cursor: 'pointer',
-              }}
+              class={`${styles.prefRow} ${focused() ? 'focused' : ''}`}
             >
-              <span
-                style={{
-                  'font-size': 'var(--font-size-body)',
-                  color: 'var(--color-text-primary)',
-                }}
-              >
+              <span class={styles.prefLabel}>
                 Chat visibility
               </span>
               <span
+                class={styles.prefValue}
                 style={{
-                  'font-size': 'var(--font-size-label)',
-                  'font-weight': 'var(--font-weight-semibold)',
                   color: prefsStore.chatVisible
                     ? 'var(--color-accent)'
                     : 'var(--color-text-disabled)',
@@ -87,31 +54,14 @@ export default function SettingsScreen() {
         >
           {({ focused }) => (
             <div
-              class={focused() ? 'focused' : ''}
-              style={{
-                display: 'flex',
-                'justify-content': 'space-between',
-                'align-items': 'center',
-                'min-height': 'var(--min-target-height)',
-                padding: 'var(--space-md) var(--space-xl)',
-                background: 'var(--color-surface)',
-                cursor: 'pointer',
-              }}
+              class={`${styles.prefRow} ${focused() ? 'focused' : ''}`}
             >
-              <span
-                style={{
-                  'font-size': 'var(--font-size-body)',
-                  color: 'var(--color-text-primary)',
-                }}
-              >
+              <span class={styles.prefLabel}>
                 Chat position
               </span>
               <span
-                style={{
-                  'font-size': 'var(--font-size-label)',
-                  'font-weight': 'var(--font-weight-semibold)',
-                  color: 'var(--color-accent)',
-                }}
+                class={styles.prefValue}
+                style={{ color: 'var(--color-accent)' }}
               >
                 {prefsStore.chatPosition === 'right' ? 'Right' : 'Left'}
               </span>
@@ -121,7 +71,7 @@ export default function SettingsScreen() {
       </div>
 
       {/* Log Out button — visually separated from prefs */}
-      <div style={{ 'margin-top': 'var(--space-3xl)' }}>
+      <div class={styles.logoutSection}>
         <Focusable
           focusKey="settings-logout"
           onEnterPress={() => setDialogOpen(true)}
@@ -129,17 +79,7 @@ export default function SettingsScreen() {
         >
           {({ focused }) => (
             <button
-              class={focused() ? 'focused' : ''}
-              style={{
-                'min-height': 'var(--min-target-height)',
-                padding: 'var(--space-md) var(--space-xl)',
-                'font-size': 'var(--font-size-label)',
-                'font-weight': 'var(--font-weight-semibold)',
-                color: 'var(--color-text-primary)',
-                background: 'var(--color-destructive)',
-                border: 'none',
-                cursor: 'pointer',
-              }}
+              class={`${styles.button} ${focused() ? 'focused' : ''}`}
             >
               Log Out
             </button>

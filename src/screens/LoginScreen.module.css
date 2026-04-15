@@ -1,0 +1,93 @@
+.screen {
+  padding: var(--space-2xl);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--color-bg);
+}
+
+.heading {
+  font-size: var(--font-size-heading);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-heading);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.loadingText {
+  font-size: var(--font-size-body);
+  color: var(--color-text-secondary);
+}
+
+.pollingRow {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.qrColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.qrCode {
+  width: 200px;
+  height: 200px;
+  background: #ffffff;
+  padding: 8px;
+}
+
+.verificationHost {
+  font-size: var(--font-size-body);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.codeColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.instructionText {
+  font-size: var(--font-size-body);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.userCode {
+  font-size: var(--font-size-display);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-display);
+  color: var(--color-text-primary);
+  letter-spacing: 0.1em;
+  margin: 0;
+}
+
+.statusMessage {
+  font-size: var(--font-size-body);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.errorColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.errorText {
+  font-size: var(--font-size-body);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.button {
+  min-height: var(--min-target-height);
+  padding: var(--space-md) var(--space-xl);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-semibold);
+  background: var(--color-accent);
+  color: var(--color-text-primary);
+  border: none;
+  cursor: pointer;
+}

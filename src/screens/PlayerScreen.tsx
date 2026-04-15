@@ -13,6 +13,7 @@ import type { ChatMessage } from '../types/chat'
 import ChatSidebar from '../components/ChatSidebar'
 import PlayerSettingsOverlay from '../components/PlayerSettingsOverlay'
 import { prefsStore, updatePref } from '../stores/prefsStore'
+import styles from './PlayerScreen.module.css'
 
 const CLIENT_ID = import.meta.env.VITE_TWITCH_CLIENT_ID as string
 
@@ -297,29 +298,18 @@ export default function PlayerScreen() {
     <>
       {/* Scope error overlay — takes over entire screen */}
       <Show when={scopeError()}>
-        <div class="gap-col-md" style={{
-          position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
-          background: 'var(--color-surface)', display: 'flex', 'flex-direction': 'column',
-          'align-items': 'center', 'justify-content': 'center',
-          'z-index': 100,
-        }}>
-          <h2 style={{ 'font-size': 'var(--font-size-heading)', 'font-weight': 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
+        <div class={`${styles.scopeOverlay} gap-col-md`}>
+          <h2 class={styles.scopeHeading}>
             Chat access required
           </h2>
-          <p style={{ 'font-size': 'var(--font-size-body)', color: 'var(--color-text-secondary)', 'text-align': 'center', 'max-width': '600px' }}>
+          <p class={styles.scopeText}>
             Your login needs to be updated to show chat. Press OK to log out and sign in again.
           </p>
           <Focusable focusKey="scope-reauth" onEnterPress={handleScopeReauth} as="button">
             {({ focused }: { focused: () => boolean }) => (
               <button
-                class={focused() ? 'focused' : ''}
+                class={`${styles.button} ${focused() ? 'focused' : ''}`}
                 onClick={handleScopeReauth}
-                style={{
-                  'min-height': 'var(--min-target-height)', padding: 'var(--space-md) var(--space-xl)',
-                  'font-size': 'var(--font-size-label)', 'font-weight': 'var(--font-weight-semibold)',
-                  background: 'var(--color-accent)', color: 'var(--color-text-primary)',
-                  border: 'none', cursor: 'pointer',
-                }}
               >
                 Sign in again
               </button>
@@ -329,7 +319,7 @@ export default function PlayerScreen() {
       </Show>
 
       {/* Main layout — flex row: [chat left] video area [chat right] */}
-      <div style={{ display: 'flex', width: '100vw', height: '100vh', background: 'var(--color-bg)' }}>
+      <div class={styles.layout}>
         {/* Chat on LEFT when position is 'left' */}
         <Show when={prefsStore.chatVisible && prefsStore.chatPosition === 'left'}>
           <ChatSidebar
@@ -343,34 +333,17 @@ export default function PlayerScreen() {
         </Show>
 
         {/* Video area — takes remaining space */}
-        <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+        <div class={styles.videoArea}>
           {/* Video element — always rendered, hls.js manages it via MSE */}
           <video
             ref={videoRef!}
-            style={{
-              width: '100%',
-              height: '100%',
-              'object-fit': 'contain',
-              display: playerState() === 'error' ? 'none' : 'block',
-            }}
+            class={`${styles.video} ${playerState() === 'error' ? styles.videoHidden : ''}`}
           />
 
           {/* Loading overlay */}
           <Show when={playerState() === 'loading'}>
-            <div style={{
-              position: 'absolute',
-              top: '0',
-              left: '0',
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              'align-items': 'center',
-              'justify-content': 'center',
-            }}>
-              <span style={{
-                'font-size': 'var(--font-size-body)',
-                color: 'var(--color-text-secondary)',
-              }}>
+            <div class={styles.loadingOverlay}>
+              <span class={styles.loadingText}>
                 Loading stream...
               </span>
             </div>
@@ -378,33 +351,15 @@ export default function PlayerScreen() {
 
           {/* Error overlay */}
           <Show when={playerState() === 'error'}>
-            <div class="gap-col-md" style={{
-              position: 'absolute',
-              top: '0',
-              left: '0',
-              width: '100%',
-              height: '100%',
-              background: 'var(--color-surface)',
-              display: 'flex',
-              'flex-direction': 'column',
-              'align-items': 'center',
-              'justify-content': 'center',
-            }}>
-              <h2 style={{
-                'font-size': 'var(--font-size-heading)',
-                'font-weight': 'var(--font-weight-semibold)',
-                color: 'var(--color-text-primary)',
-              }}>
+            <div class={`${styles.errorOverlay} gap-col-md`}>
+              <h2 class={styles.errorHeading}>
                 {errorKind() === 'offline'
                   ? 'Stream is offline'
                   : errorKind() === 'network'
                   ? 'Connection lost'
                   : 'Playback error'}
               </h2>
-              <p style={{
-                'font-size': 'var(--font-size-body)',
-                color: 'var(--color-text-secondary)',
-              }}>
+              <p class={styles.errorText}>
                 {errorKind() === 'offline'
                   ? 'This channel has ended their stream. Press OK to retry or Back to return to channels.'
                   : errorKind() === 'network'
@@ -414,18 +369,8 @@ export default function PlayerScreen() {
               <Focusable focusKey="player-retry" onEnterPress={handleRetry} as="button">
                 {({ focused }: { focused: () => boolean }) => (
                   <button
-                    class={focused() ? 'focused' : ''}
+                    class={`${styles.button} ${focused() ? 'focused' : ''}`}
                     onClick={handleRetry}
-                    style={{
-                      'min-height': 'var(--min-target-height)',
-                      padding: 'var(--space-md) var(--space-xl)',
-                      'font-size': 'var(--font-size-label)',
-                      'font-weight': 'var(--font-weight-semibold)',
-                      background: 'var(--color-accent)',
-                      color: 'var(--color-text-primary)',
-                      border: 'none',
-                      cursor: 'pointer',
-                    }}
                   >
                     Retry
                   </button>
@@ -436,49 +381,21 @@ export default function PlayerScreen() {
 
           {/* Info bar — bottom overlay, auto-hide */}
           <Show when={playerState() === 'playing' && infoVisible() && streamData()}>
-            <div style={{
-              position: 'absolute',
-              bottom: '0',
-              left: '0',
-              width: '100%',
-              padding: 'var(--space-lg) var(--space-xl)',
-              background: 'rgba(26, 26, 26, 0.85)',
-              transition: 'opacity 0.3s ease',
-            }}>
-              <div style={{
-                display: 'flex',
-                'justify-content': 'space-between',
-                'align-items': 'flex-start',
-              }}>
+            <div class={styles.infoBar}>
+              <div class={styles.infoBarInner}>
                 <div>
-                  <div style={{
-                    'font-size': 'var(--font-size-heading)',
-                    'font-weight': 'var(--font-weight-semibold)',
-                    color: 'var(--color-text-primary)',
-                  }}>
+                  <div class={styles.infoUsername}>
                     {streamData()!.user_name}
                   </div>
-                  <div style={{
-                    'font-size': 'var(--font-size-body)',
-                    color: 'var(--color-text-secondary)',
-                    overflow: 'hidden',
-                    'text-overflow': 'ellipsis',
-                    'white-space': 'nowrap',
-                  }}>
+                  <div class={styles.infoTitle}>
                     {streamData()!.title}
                   </div>
                 </div>
-                <div style={{ 'text-align': 'right' }}>
-                  <div style={{
-                    'font-size': 'var(--font-size-label)',
-                    color: 'var(--color-text-secondary)',
-                  }}>
+                <div class={styles.infoRight}>
+                  <div class={styles.infoMeta}>
                     {streamData()!.game_name}
                   </div>
-                  <div style={{
-                    'font-size': 'var(--font-size-label)',
-                    color: 'var(--color-text-secondary)',
-                  }}>
+                  <div class={styles.infoMeta}>
                     {formatWatching(streamData()!.viewer_count)}
                   </div>
                 </div>
@@ -488,11 +405,7 @@ export default function PlayerScreen() {
 
           {/* Toggle hint — bottom-right of video area */}
           <Show when={toggleHintVisible() && playerState() === 'playing'}>
-            <div style={{
-              position: 'absolute', bottom: 'var(--space-xl)', right: 'var(--space-xl)',
-              'font-size': 'var(--font-size-label)', color: 'var(--color-text-disabled)',
-              transition: 'opacity 0.3s ease',
-            }}>
+            <div class={styles.toggleHint}>
               Red — toggle chat  |  Yellow — smaller  |  Blue — larger  |  Green — settings
             </div>
           </Show>

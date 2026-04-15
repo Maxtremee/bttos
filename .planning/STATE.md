@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-04-14)
 Phase: 6 of 6 (settings & polish)
 Plan: Not started
 Status: Ready to execute
-Last activity: 2026-04-15 - Completed quick task 260415-hjo: make the yellow button scale the chat down and the blue button scale the chat up
+Last activity: 2026-04-15 - Completed quick task 260415-hnx: scale chat text size with yellow/blue buttons alongside the chat width
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -84,9 +84,10 @@ None yet.
 |---|-------------|------|--------|-----------|
 | 260415-fjn | Use ares-generate to scaffold the webOS app project into the existing one | 2026-04-15 | d97b3ac | [260415-fjn-use-ares-generate-to-scaffold-the-webos-](./quick/260415-fjn-use-ares-generate-to-scaffold-the-webos-/) |
 | 260415-hjo | Add yellow/blue button chat width scaling | 2026-04-15 | 11de2f7 | [260415-hjo-make-the-yellow-button-scale-the-chat-do](./quick/260415-hjo-make-the-yellow-button-scale-the-chat-do/) |
+| 260415-hnx | Scale chat text size and emotes with yellow/blue buttons | 2026-04-15 | 856704e | [260415-hnx-scale-chat-text-size-with-yellow-blue-bu](./quick/260415-hnx-scale-chat-text-size-with-yellow-blue-bu/) |
 
 ## Session Continuity
 
-Last session: 2026-04-14T22:06:13.034Z
-Stopped at: Phase 5 UI-SPEC approved
+Last session: 2026-04-15T00:00:00.000Z
+Stopped at: Completed quick task 260415-hnx: scale chat text size with yellow/blue buttons
 Resume file: .planning/phases/05-chat/05-UI-SPEC.md

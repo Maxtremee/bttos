@@ -39,12 +39,3 @@
   color: var(--color-text-secondary);
 }
 
-/* Toggle hint */
-.toggleHint {
-  position: absolute;
-  bottom: var(--space-xl);
-  right: var(--space-xl);
-  font-size: var(--font-size-label);
-  color: var(--color-text-disabled);
-  transition: opacity 0.3s ease;
-}

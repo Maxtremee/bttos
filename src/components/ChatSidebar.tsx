@@ -1,4 +1,4 @@
-import { For, Show } from 'solid-js'
+import { For, Show, createMemo } from 'solid-js'
 import type { ChatMessage } from '../types/chat'
 import type { EmoteMap } from '../services/EmoteService'
 import ChatMessageComponent from './ChatMessage'
@@ -14,6 +14,11 @@ interface ChatSidebarProps {
 }
 
 export default function ChatSidebar(props: ChatSidebarProps) {
+  // Memoize the reversed message list so we only rebuild the array
+  // when props.messages actually changes, not on every reactive read
+  // (e.g. width/scale updates). Fine-grained reactivity per SolidJS skill.
+  const reversedMessages = createMemo(() => [...props.messages].reverse())
+
   return (
     <div
       class={`${styles.sidebar} ${props.position === 'left' ? styles.borderRight : styles.borderLeft}`}
@@ -37,7 +42,7 @@ export default function ChatSidebar(props: ChatSidebarProps) {
 
       {/* Message list — column-reverse so newest messages appear at bottom naturally */}
       <div class={styles.messageList}>
-        <For each={[...props.messages].reverse()}>
+        <For each={reversedMessages()}>
           {(msg) => (
             <ChatMessageComponent message={msg} emoteMap={props.emoteMap} scale={props.scale ?? 1} />
           )}

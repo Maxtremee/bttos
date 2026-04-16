@@ -8,17 +8,9 @@
  * and auto-submits them while the user is watching a stream.
  */
 import { authStore } from '../stores/authStore'
-
-const GQL_ENDPOINT = 'https://gql.twitch.tv/gql'
-const GQL_CLIENT_ID = 'kimne78kx3ncx6brgo4mv6wki5h1ko'
-const CONTEXT_QUERY_HASH = '374314de591e69925fce3ddc2bcf085796f56ebb8cad67a0daa3165c03adc345'
-const CLAIM_MUTATION_HASH = '46aaeebe02c99afdf4fc97c7c0cba964124bf6b0af229395f1f6d1feed05b3d0'
+import { gqlClient, GqlClientError } from './clients'
 
 export type PollResult = 'claimed' | 'nothing' | 'stop'
-
-interface GqlError {
-  message: string
-}
 
 interface FetchContextResult {
   channelId: string
@@ -26,14 +18,6 @@ interface FetchContextResult {
 }
 
 export class TwitchChannelPointsService {
-  private gqlHeaders(): Record<string, string> {
-    return {
-      'Client-ID': GQL_CLIENT_ID,
-      'Authorization': `Bearer ${authStore.token}`,
-      'Content-Type': 'application/json',
-    }
-  }
-
   /**
    * Poll for an available claim and, if present, submit it.
    * - Returns 'stop' on 401 or PersistedQueryNotFound — caller MUST stop polling.
@@ -59,55 +43,45 @@ export class TwitchChannelPointsService {
   private async fetchContext(
     channelLogin: string,
   ): Promise<FetchContextResult | 'stop' | null> {
-    const res = await fetch(GQL_ENDPOINT, {
-      method: 'POST',
-      headers: this.gqlHeaders(),
-      body: JSON.stringify({
-        operationName: 'ChannelPointsContext',
-        extensions: {
-          persistedQuery: {
-            version: 1,
-            sha256Hash: CONTEXT_QUERY_HASH,
-          },
-        },
-        variables: { channelLogin },
-      }),
-    })
-
-    if (res.status === 401) {
-      console.warn('[TwitchChannelPointsService] 401 from GQL — stopping poll for', channelLogin)
-      return 'stop'
-    }
-
-    if (!res.ok) {
-      throw new Error(`[TwitchChannelPointsService] GQL request failed: ${res.status}`)
-    }
-
-    const json = (await res.json()) as {
-      errors?: GqlError[]
-      data?: {
-        community?: {
-          id?: string
-          channel?: {
-            self?: {
-              communityPoints?: {
-                availableClaim?: { id?: string } | null
-              }
+    let response: {
+      community?: {
+        id?: string
+        channel?: {
+          self?: {
+            communityPoints?: {
+              availableClaim?: { id?: string } | null
             }
           }
-        } | null
+        }
       } | null
     }
 
-    if (json.errors?.some((e) => e.message === 'PersistedQueryNotFound')) {
-      console.warn(
-        '[TwitchChannelPointsService] ChannelPointsContext persisted-query hash is stale — stopping poll for',
-        channelLogin,
-      )
-      return 'stop'
+    try {
+      response = await gqlClient.fetchChannelPointsContext(channelLogin)
+    } catch (err) {
+      if (err instanceof GqlClientError) {
+        if (err.code === 'persisted_query_not_found') {
+          console.warn(
+            '[TwitchChannelPointsService] ChannelPointsContext persisted-query hash is stale — stopping poll for',
+            channelLogin,
+          )
+          return 'stop'
+        }
+        if (err.code === 'unauthorized' || (err.code === 'http' && err.status === 401)) {
+          console.warn('[TwitchChannelPointsService] 401 from GQL — stopping poll for', channelLogin)
+          return 'stop'
+        }
+        if (err.code === 'http' && typeof err.status === 'number') {
+          throw new Error(`[TwitchChannelPointsService] GQL request failed: ${err.status}`)
+        }
+        if (err.code === 'graphql') {
+          return null
+        }
+      }
+      throw err
     }
 
-    const community = json.data?.community
+    const community = response.community
     if (!community || !community.id) {
       // Stream offline or channel has no community points enabled — nothing to do.
       return null
@@ -122,38 +96,34 @@ export class TwitchChannelPointsService {
   }
 
   private async claim(channelId: string, claimId: string): Promise<boolean> {
-    const res = await fetch(GQL_ENDPOINT, {
-      method: 'POST',
-      headers: this.gqlHeaders(),
-      body: JSON.stringify({
-        operationName: 'ClaimCommunityPoints',
-        extensions: {
-          persistedQuery: {
-            version: 1,
-            sha256Hash: CLAIM_MUTATION_HASH,
-          },
-        },
-        variables: {
-          input: { channelID: channelId, claimID: claimId },
-        },
-      }),
-    })
-
-    if (!res.ok) {
-      console.warn(
-        `[TwitchChannelPointsService] claim mutation failed: ${res.status} — will retry next tick`,
-      )
-      return false
-    }
-
-    const json = (await res.json()) as { errors?: GqlError[] }
-
-    if (json.errors && json.errors.length > 0) {
-      console.warn(
-        '[TwitchChannelPointsService] claim mutation returned errors — will retry next tick:',
-        json.errors[0].message,
-      )
-      return false
+    try {
+      await gqlClient.claimCommunityPoints(channelId, claimId)
+    } catch (err) {
+      if (err instanceof GqlClientError) {
+        if (err.code === 'http' && typeof err.status === 'number') {
+          console.warn(
+            `[TwitchChannelPointsService] claim mutation failed: ${err.status} — will retry next tick`,
+          )
+          return false
+        }
+        if (err.code === 'graphql' && err.message) {
+          console.warn(
+            '[TwitchChannelPointsService] claim mutation returned errors — will retry next tick:',
+            err.message,
+          )
+          return false
+        }
+        if (err.code === 'persisted_query_not_found') {
+          console.warn(
+            '[TwitchChannelPointsService] claim mutation persisted query stale — will retry next tick',
+          )
+          return false
+        }
+        if (err.code === 'unauthorized') {
+          return false
+        }
+      }
+      throw err
     }
 
     console.log('[TwitchChannelPointsService] claimed community points', {

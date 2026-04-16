@@ -247,7 +247,11 @@ describe('TwitchChatService', () => {
     const ws = getLatestWs()
     ws.mockSend(makeSessionWelcome())
 
-    // Flush microtasks for async subscribe without advancing timers
+    // Flush microtasks for async subscribe without advancing timers.
+    // The client abstraction adds additional await boundaries.
+    await Promise.resolve()
+    await Promise.resolve()
+    await Promise.resolve()
     await Promise.resolve()
     await Promise.resolve()
     await Promise.resolve()

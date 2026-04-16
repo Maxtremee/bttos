@@ -1,9 +1,4 @@
-import { authStore } from '../stores/authStore'
-import { twitchAuthService } from './TwitchAuthService'
-
-const GQL_ENDPOINT = 'https://gql.twitch.tv/gql'
-const GQL_CLIENT_ID = 'kimne78kx3ncx6brgo4mv6wki5h1ko'
-const PERSISTED_QUERY_HASH = 'ed230aa1e33e07eebb8928504583da78a5173989fadfb1ac94be06a04f3cdbe9'
+import { gqlClient, GqlClientError } from './clients'
 const CHANNEL_LOGIN_REGEX = /^[a-zA-Z0-9_]{1,25}$/
 
 export interface PlaybackAccessToken {
@@ -31,12 +26,6 @@ export function validateChannelLogin(login: string): boolean {
  * Uses Twitch's internal Client-ID (kimne78kx3ncx6brgo4mv6wki5h1ko) for the GQL endpoint.
  */
 export class TwitchStreamService {
-  private async ensureFreshToken(): Promise<void> {
-    if (authStore.expiresAt !== null && authStore.expiresAt - Date.now() < 300_000) {
-      await twitchAuthService.refreshTokens()
-    }
-  }
-
   /**
    * Fetch the PlaybackAccessToken for a channel via Twitch GQL.
    * @throws Error if channel login is invalid, GQL request fails, stream is offline, or persisted query is stale
@@ -46,50 +35,20 @@ export class TwitchStreamService {
       throw new Error(`Invalid channel login: ${channelLogin}`)
     }
 
-    await this.ensureFreshToken()
-
-    const res = await fetch(GQL_ENDPOINT, {
-      method: 'POST',
-      headers: {
-        'Client-ID': GQL_CLIENT_ID,
-        'Authorization': `Bearer ${authStore.token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        operationName: 'PlaybackAccessToken',
-        extensions: {
-          persistedQuery: {
-            version: 1,
-            sha256Hash: PERSISTED_QUERY_HASH,
-          },
-        },
-        variables: {
-          isLive: true,
-          login: channelLogin,
-          isVod: false,
-          vodID: '',
-          playerType: 'site',
-          platform: 'web',
-        },
-      }),
-    })
-
-    if (!res.ok) {
-      throw new Error(`GQL request failed: ${res.status}`)
+    try {
+      return await gqlClient.fetchPlaybackAccessToken(channelLogin)
+    } catch (err) {
+      if (!(err instanceof GqlClientError)) {
+        throw err
+      }
+      if (err.code === 'persisted_query_not_found') {
+        throw new Error('GQL persisted query hash stale — needs update')
+      }
+      if (err.code === 'http' && typeof err.status === 'number') {
+        throw new Error(`GQL request failed: ${err.status}`)
+      }
+      throw new Error(err.message)
     }
-
-    const json = await res.json()
-
-    if (json.errors?.some((e: { message: string }) => e.message === 'PersistedQueryNotFound')) {
-      throw new Error('GQL persisted query hash stale — needs update')
-    }
-
-    const pat = json.data?.streamPlaybackAccessToken
-    if (!pat) {
-      throw new Error('Stream is offline or unavailable')
-    }
-
-    return pat
   }
 
   /**

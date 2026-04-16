@@ -2,8 +2,7 @@ import { createSignal, createResource, createEffect, onMount, onCleanup, Show } 
 import { useParams, useLocation } from '@solidjs/router'
 import { useSpatialNavigation } from '../navigation'
 import { twitchAuthService } from '../services/TwitchAuthService'
-import { authStore } from '../stores/authStore'
-import type { StreamData } from '../services/TwitchChannelService'
+import { helixClient } from '../services/clients'
 import ChatSidebar from '../components/ChatSidebar'
 import PlayerSettingsOverlay from '../components/PlayerSettingsOverlay'
 import VideoInfoBar from '../components/organisms/VideoInfoBar'
@@ -31,15 +30,6 @@ const CHAT_WIDTH_STEP = 60
 // Auto-hide timings (ms)
 const INFO_BAR_HIDE_MS = 4000
 const HINT_HIDE_MS = 3000
-
-const CLIENT_ID = import.meta.env.VITE_TWITCH_CLIENT_ID as string
-
-function helixHeaders(): Record<string, string> {
-  return {
-    'Authorization': `Bearer ${authStore.token}`,
-    'Client-Id': CLIENT_ID,
-  }
-}
 
 export default function PlayerScreen() {
   const params = useParams<{ channel: string }>()
@@ -76,13 +66,11 @@ export default function PlayerScreen() {
   const [streamData] = createResource(
     () => params.channel,
     async (login: string) => {
-      const res = await fetch(
-        `https://api.twitch.tv/helix/streams?user_login=${encodeURIComponent(login)}`,
-        { headers: helixHeaders() }
-      )
-      if (!res.ok) return null
-      const json = await res.json() as { data: StreamData[] }
-      return json.data[0] ?? null
+      try {
+        return await helixClient.fetchStreamByLogin(login)
+      } catch {
+        return null
+      }
     }
   )
 

@@ -1,8 +1,7 @@
 import type { ChatMessage, ChatMessageEvent } from '../types/chat'
+import { helixClient } from './clients'
 
-const CLIENT_ID = import.meta.env.VITE_TWITCH_CLIENT_ID as string
 const EVENTSUB_WS_URL = 'wss://eventsub.wss.twitch.tv/ws'
-const SUBSCRIBE_URL = 'https://api.twitch.tv/helix/eventsub/subscriptions'
 const RECONNECT_DELAYS = [1000, 2000, 4000]
 const KEEPALIVE_CHECK_INTERVAL = 30_000
 
@@ -167,34 +166,19 @@ export class TwitchChatService {
     token: string
   ): Promise<void> {
     try {
-      const res = await fetch(SUBSCRIBE_URL, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Client-Id': CLIENT_ID,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          type: 'channel.chat.message',
-          version: '1',
-          condition: {
-            broadcaster_user_id: broadcasterId,
-            user_id: userId,
-          },
-          transport: {
-            method: 'websocket',
-            session_id: sessionId,
-          },
-        }),
+      const status = await helixClient.createChatSubscription({
+        sessionId,
+        broadcasterId,
+        userId,
+        token,
       })
-
-      if (res.status === 403) {
+      if (status === 403) {
         this.onScopeError?.()
         return
       }
-
-      if (!res.ok) {
-        console.warn(`[TwitchChatService] Subscribe failed: ${res.status}`)
+      if (status >= 400) {
+        console.warn(`[TwitchChatService] Subscribe failed: ${status}`)
+        return
       }
     } catch (err) {
       console.warn('[TwitchChatService] Subscribe error:', err)

@@ -1,7 +1,5 @@
 import { authStore } from '../stores/authStore'
-import { twitchAuthService } from './TwitchAuthService'
-
-const CLIENT_ID = import.meta.env.VITE_TWITCH_CLIENT_ID as string
+import { helixClient, HelixClientError } from './clients'
 
 // Safety cap: max 50 pages (5000 channels) to prevent infinite loops from malformed API responses
 const MAX_PAGINATION_PAGES = 50
@@ -38,19 +36,6 @@ export function formatViewers(count: number): string {
 }
 
 export class TwitchChannelService {
-  private getHeaders(): Record<string, string> {
-    return {
-      'Authorization': `Bearer ${authStore.token}`,
-      'Client-Id': CLIENT_ID,
-    }
-  }
-
-  private async ensureFreshToken(): Promise<void> {
-    if (authStore.expiresAt !== null && authStore.expiresAt - Date.now() < 300_000) {
-      await twitchAuthService.refreshTokens()
-    }
-  }
-
   /**
    * Fetch all live streams for the authenticated user's followed channels.
    *
@@ -59,38 +44,24 @@ export class TwitchChannelService {
    * Returns combined array of StreamData from all batches.
    */
   async fetchLiveFollowedChannels(): Promise<StreamData[]> {
-    await this.ensureFreshToken()
-
     // Step 1: Collect all followed broadcaster IDs via paginated /helix/channels/followed
     const followerIds: string[] = []
     let cursor: string | undefined = undefined
     let pageCount = 0
 
     do {
-      const params = new URLSearchParams({
-        user_id: authStore.userId ?? '',
-        first: '100',
-      })
-      if (cursor) {
-        params.set('after', cursor)
-      }
-
-      const url = `https://api.twitch.tv/helix/channels/followed?${params.toString()}`
-      let response = await fetch(url, { headers: this.getHeaders() })
-
-      // On 401, refresh token and retry once
-      if (response.status === 401) {
-        await twitchAuthService.refreshTokens()
-        response = await fetch(url, { headers: this.getHeaders() })
-      }
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch followed channels: ${response.status}`)
-      }
-
-      const data = await response.json() as {
+      let data: {
         data: { broadcaster_id: string }[]
         pagination?: { cursor?: string }
+      }
+
+      try {
+        data = await helixClient.fetchFollowedChannelsPage(authStore.userId ?? '', cursor)
+      } catch (err) {
+        if (err instanceof HelixClientError && typeof err.status === 'number') {
+          throw new Error(`Failed to fetch followed channels: ${err.status}`)
+        }
+        throw err
       }
 
       for (const channel of data.data) {
@@ -112,20 +83,16 @@ export class TwitchChannelService {
 
     for (let i = 0; i < followerIds.length; i += batchSize) {
       const batch = followerIds.slice(i, i + batchSize)
-      const params = new URLSearchParams({ first: '100' })
-      // Use params.append (NOT params.set) to send repeated user_id params
-      for (const id of batch) {
-        params.append('user_id', id)
+
+      let data: { data: StreamData[] }
+      try {
+        data = await helixClient.fetchStreamsByUserIds(batch)
+      } catch (err) {
+        if (err instanceof HelixClientError && typeof err.status === 'number') {
+          throw new Error(`Failed to fetch streams: ${err.status}`)
+        }
+        throw err
       }
-
-      const url = `https://api.twitch.tv/helix/streams?${params.toString()}`
-      const response = await fetch(url, { headers: this.getHeaders() })
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch streams: ${response.status}`)
-      }
-
-      const data = await response.json() as { data: StreamData[] }
       streams.push(...data.data)
     }
 

@@ -78,11 +78,6 @@
 }
 
 .button {
+  composes: button-base from '../styles/shared.css';
   background: var(--color-accent);
-  color: var(--color-text-primary);
-  padding: var(--space-md) var(--space-xl);
-  font-size: var(--font-size-label);
-  font-weight: var(--font-weight-semibold);
-  border: none;
-  cursor: pointer;
 }

@@ -1,6 +1,6 @@
 .message {
   padding-block: 2px;
-  line-height: 1.4;
+  line-height: var(--line-height-label);
   word-break: break-word;
 }
 

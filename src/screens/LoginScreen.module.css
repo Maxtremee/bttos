@@ -34,8 +34,8 @@
 .qrCode {
   width: 200px;
   height: 200px;
-  background: #ffffff;
-  padding: 8px;
+  background: var(--color-bg-qr);
+  padding: var(--space-sm);
 }
 
 .verificationHost {
@@ -82,12 +82,6 @@
 }
 
 .button {
-  min-height: var(--min-target-height);
-  padding: var(--space-md) var(--space-xl);
-  font-size: var(--font-size-label);
-  font-weight: var(--font-weight-semibold);
+  composes: button-base from '../styles/shared.css';
   background: var(--color-accent);
-  color: var(--color-text-primary);
-  border: none;
-  cursor: pointer;
 }

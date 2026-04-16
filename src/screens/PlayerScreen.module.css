@@ -99,7 +99,7 @@
   left: 0;
   width: 100%;
   padding: var(--space-lg) var(--space-xl);
-  background: rgba(26, 26, 26, 0.85);
+  background: var(--color-surface-overlay-light);
   transition: opacity 0.3s ease;
 }
 
@@ -144,12 +144,6 @@
 
 /* Shared button style */
 .button {
-  min-height: var(--min-target-height);
-  padding: var(--space-md) var(--space-xl);
-  font-size: var(--font-size-label);
-  font-weight: var(--font-weight-semibold);
+  composes: button-base from '../styles/shared.css';
   background: var(--color-accent);
-  color: var(--color-text-primary);
-  border: none;
-  cursor: pointer;
 }

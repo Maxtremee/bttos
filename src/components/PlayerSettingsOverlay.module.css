@@ -5,7 +5,7 @@
   width: 100vw;
   height: 100vh;
   z-index: 50;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--color-backdrop-light);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -13,7 +13,7 @@
 
 .panel {
   width: 400px;
-  background: rgba(26, 26, 26, 0.95);
+  background: var(--color-surface-overlay);
   padding: var(--space-xl);
   display: flex;
   flex-direction: column;
@@ -26,13 +26,7 @@
 }
 
 .prefRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-height: var(--min-target-height);
-  padding: var(--space-md) var(--space-lg);
-  background: var(--color-surface);
-  cursor: pointer;
+  composes: pref-row from '../styles/shared.css';
 }
 
 .prefLabel {

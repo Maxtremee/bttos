@@ -5,7 +5,7 @@
   width: 100vw;
   height: 100vh;
   z-index: 200;
-  background: rgba(0, 0, 0, 0.7);
+  background: var(--color-backdrop);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,13 +36,7 @@
 }
 
 .button {
-  min-height: var(--min-target-height);
-  padding: var(--space-md) var(--space-xl);
-  font-size: var(--font-size-label);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-primary);
-  border: none;
-  cursor: pointer;
+  composes: button-base from '../styles/shared.css';
 }
 
 .buttonCancel {

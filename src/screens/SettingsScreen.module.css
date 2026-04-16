@@ -17,13 +17,7 @@
 }
 
 .prefRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-height: var(--min-target-height);
-  padding: var(--space-md) var(--space-xl);
-  background: var(--color-surface);
-  cursor: pointer;
+  composes: pref-row from '../styles/shared.css';
 }
 
 .prefLabel {
@@ -41,12 +35,6 @@
 }
 
 .button {
-  min-height: var(--min-target-height);
-  padding: var(--space-md) var(--space-xl);
-  font-size: var(--font-size-label);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-primary);
+  composes: button-base from '../styles/shared.css';
   background: var(--color-destructive);
-  border: none;
-  cursor: pointer;
 }

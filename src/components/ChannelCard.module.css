@@ -1,6 +1,6 @@
 .card {
   background: var(--color-surface);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   height: 100%;
 }

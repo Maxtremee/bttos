@@ -35,6 +35,13 @@ export default function SettingsScreen() {
             updatePref('chatPosition', prefsStore.chatPosition === 'right' ? 'left' : 'right')
           }
         />
+        <PrefRow
+          focusKey="settings-pref-auto-claim-points"
+          label="Auto-claim channel points"
+          value={prefsStore.autoClaimChannelPoints ? 'On' : 'Off'}
+          active={prefsStore.autoClaimChannelPoints}
+          onToggle={() => updatePref('autoClaimChannelPoints', !prefsStore.autoClaimChannelPoints)}
+        />
       </div>
 
       {/* Log Out button — visually separated from prefs */}

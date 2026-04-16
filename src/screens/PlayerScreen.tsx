@@ -10,8 +10,9 @@ import VideoInfoBar from '../components/organisms/VideoInfoBar'
 import PlayerErrorOverlay from '../components/organisms/PlayerErrorOverlay'
 import ScopeErrorOverlay from '../components/organisms/ScopeErrorOverlay'
 import ToggleHint from '../components/organisms/ToggleHint'
-import { useHlsPlayer } from '../hooks/useHlsPlayer'
+import { useChannelPointsClaimer } from '../hooks/useChannelPointsClaimer'
 import { useChatSession } from '../hooks/useChatSession'
+import { useHlsPlayer } from '../hooks/useHlsPlayer'
 import { prefsStore, updatePref } from '../stores/prefsStore'
 import styles from './PlayerScreen.module.css'
 
@@ -69,6 +70,7 @@ export default function PlayerScreen() {
   // --- Player + chat composables ---
   const player = useHlsPlayer(params.channel, { onPlaying: showInfoBar })
   const chat = useChatSession()
+  useChannelPointsClaimer(params.channel)
 
   // --- Stream metadata fetch for info bar ---
   const [streamData] = createResource(

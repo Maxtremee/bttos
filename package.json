@@ -21,6 +21,7 @@
   "devDependencies": {
     "@solidjs/testing-library": "^0.8.10",
     "@testing-library/jest-dom": "^6.9.1",
+    "@webos-tools/cli": "^3.2.3",
     "@vitejs/plugin-legacy": "^6.1.1",
     "happy-dom": "^20.9.0",
     "terser": "^5.46.1",

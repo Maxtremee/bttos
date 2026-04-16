@@ -1,12 +1,13 @@
 {
   "id": "com.dev.bttos",
   "version": "0.1.0",
-  "vendor": "Dev",
+  "vendor": "github.com/Maxtremee",
   "type": "web",
   "main": "index.html",
   "title": "BTTOS",
   "icon": "icon.png",
   "largeIcon": "icon.png",
+  "iconColor": "#9146FF",
   "disableBackHistoryAPI": true,
   "screenSaverProperties": {
     "preferredType": 2

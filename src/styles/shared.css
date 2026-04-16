@@ -1,0 +1,22 @@
+/* Button base — shared across all actionable buttons.
+   Consumers compose this and add their own background color. */
+.button-base {
+  min-height: var(--min-target-height);
+  padding: var(--space-md) var(--space-xl);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  border: none;
+  cursor: pointer;
+}
+
+/* Preference row — shared between SettingsScreen and PlayerSettingsOverlay */
+.pref-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: var(--min-target-height);
+  padding: var(--space-md) var(--space-xl);
+  background: var(--color-surface);
+  cursor: pointer;
+}

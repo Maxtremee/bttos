@@ -2,7 +2,7 @@ import { createSignal, createResource, createEffect, onMount, onCleanup, Show } 
 import { createStore } from 'solid-js/store'
 import { useParams, useLocation } from '@solidjs/router'
 import Hls from 'hls.js'
-import { Focusable, useSpatialNavigation } from '../navigation'
+import { useSpatialNavigation } from '../navigation'
 import { twitchStreamService } from '../services/TwitchStreamService'
 import { twitchChatService } from '../services/TwitchChatService'
 import { emoteService, type EmoteMap } from '../services/EmoteService'
@@ -12,7 +12,9 @@ import type { StreamData } from '../services/TwitchChannelService'
 import type { ChatMessage } from '../types/chat'
 import ChatSidebar from '../components/ChatSidebar'
 import PlayerSettingsOverlay from '../components/PlayerSettingsOverlay'
-import ActionButton from '../components/atoms/ActionButton'
+import VideoInfoBar from '../components/organisms/VideoInfoBar'
+import PlayerErrorOverlay, { type PlayerErrorKind } from '../components/organisms/PlayerErrorOverlay'
+import ScopeErrorOverlay from '../components/organisms/ScopeErrorOverlay'
 import { prefsStore, updatePref } from '../stores/prefsStore'
 import styles from './PlayerScreen.module.css'
 
@@ -26,23 +28,12 @@ function helixHeaders(): Record<string, string> {
 }
 
 /**
- * Format viewer count for display.
- * Uses "watching" per UI-SPEC copywriting contract.
- */
-function formatWatching(count: number): string {
-  if (count >= 1000) {
-    return `${(count / 1000).toFixed(1)}K watching`
-  }
-  return `${count} watching`
-}
-
-/**
  * Determine errorKind from a caught error.
  * - TypeError (network failure) or message containing "fetch" -> 'network'
  * - Message containing "offline" -> 'offline'
  * - Otherwise -> 'unknown'
  */
-function classifyError(err: unknown): 'offline' | 'network' | 'unknown' {
+function classifyError(err: unknown): PlayerErrorKind {
   if (err instanceof TypeError) return 'network'
   if (err instanceof Error) {
     const msg = err.message.toLowerCase()
@@ -59,7 +50,7 @@ export default function PlayerScreen() {
 
   // --- State signals ---
   const [playerState, setPlayerState] = createSignal<'loading' | 'playing' | 'error'>('loading')
-  const [errorKind, setErrorKind] = createSignal<'offline' | 'network' | 'unknown'>('unknown')
+  const [errorKind, setErrorKind] = createSignal<PlayerErrorKind>('unknown')
   const [infoVisible, setInfoVisible] = createSignal(true)
 
   // --- Chat state ---
@@ -299,17 +290,7 @@ export default function PlayerScreen() {
     <>
       {/* Scope error overlay — takes over entire screen */}
       <Show when={scopeError()}>
-        <div class={`${styles.scopeOverlay} gap-col-md`}>
-          <h2 class={styles.scopeHeading}>
-            Chat access required
-          </h2>
-          <p class={styles.scopeText}>
-            Your login needs to be updated to show chat. Press OK to log out and sign in again.
-          </p>
-          <ActionButton focusKey="scope-reauth" onPress={handleScopeReauth}>
-            Sign in again
-          </ActionButton>
-        </div>
+        <ScopeErrorOverlay onReauth={handleScopeReauth} />
       </Show>
 
       {/* Main layout — flex row: [chat left] video area [chat right] */}
@@ -345,49 +326,12 @@ export default function PlayerScreen() {
 
           {/* Error overlay */}
           <Show when={playerState() === 'error'}>
-            <div class={`${styles.errorOverlay} gap-col-md`}>
-              <h2 class={styles.errorHeading}>
-                {errorKind() === 'offline'
-                  ? 'Stream is offline'
-                  : errorKind() === 'network'
-                  ? 'Connection lost'
-                  : 'Playback error'}
-              </h2>
-              <p class={styles.errorText}>
-                {errorKind() === 'offline'
-                  ? 'This channel has ended their stream. Press OK to retry or Back to return to channels.'
-                  : errorKind() === 'network'
-                  ? 'Could not reach the stream. Check your connection, then press OK to retry.'
-                  : 'Something went wrong. Press OK to retry or Back to return to channels.'}
-              </p>
-              <ActionButton focusKey="player-retry" onPress={handleRetry}>
-                Retry
-              </ActionButton>
-            </div>
+            <PlayerErrorOverlay kind={errorKind()} onRetry={handleRetry} />
           </Show>
 
           {/* Info bar — bottom overlay, auto-hide */}
           <Show when={playerState() === 'playing' && infoVisible() && streamData()}>
-            <div class={styles.infoBar}>
-              <div class={styles.infoBarInner}>
-                <div>
-                  <div class={styles.infoUsername}>
-                    {streamData()!.user_name}
-                  </div>
-                  <div class={styles.infoTitle}>
-                    {streamData()!.title}
-                  </div>
-                </div>
-                <div class={styles.infoRight}>
-                  <div class={styles.infoMeta}>
-                    {streamData()!.game_name}
-                  </div>
-                  <div class={styles.infoMeta}>
-                    {formatWatching(streamData()!.viewer_count)}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <VideoInfoBar stream={streamData()!} />
           </Show>
 
           {/* Toggle hint — bottom-right of video area */}

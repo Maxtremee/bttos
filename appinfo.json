@@ -5,8 +5,8 @@
   "type": "web",
   "main": "index.html",
   "title": "BTTOS",
-  "icon": "icon.png",
-  "largeIcon": "icon.png",
+  "icon": "assets/icon.png",
+  "largeIcon": "assets/icon.png",
   "iconColor": "#9146FF",
   "disableBackHistoryAPI": true,
   "screenSaverProperties": {

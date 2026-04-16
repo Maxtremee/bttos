@@ -1,0 +1,21 @@
+.row {
+  composes: pref-row from '../../styles/shared.css';
+}
+
+.label {
+  font-size: var(--font-size-body);
+  color: var(--color-text-primary);
+}
+
+.value {
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-semibold);
+}
+
+.active {
+  color: var(--color-accent);
+}
+
+.inactive {
+  color: var(--color-text-disabled);
+}

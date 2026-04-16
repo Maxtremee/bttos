@@ -1,8 +1,9 @@
 import { createSignal, onMount } from 'solid-js'
-import { Focusable, useSpatialNavigation } from '../navigation'
+import { useSpatialNavigation } from '../navigation'
 import { prefsStore, updatePref } from '../stores/prefsStore'
 import LogoutConfirmDialog from '../components/LogoutConfirmDialog'
 import ActionButton from '../components/atoms/ActionButton'
+import PrefRow from '../components/molecules/PrefRow'
 import styles from './SettingsScreen.module.css'
 
 export default function SettingsScreen() {
@@ -18,57 +19,22 @@ export default function SettingsScreen() {
       </h1>
 
       <div class={`${styles.prefList} gap-col-lg`}>
-        {/* Chat visibility toggle */}
-        <Focusable
+        <PrefRow
           focusKey="settings-pref-chat-visible"
-          onEnterPress={() => updatePref('chatVisible', !prefsStore.chatVisible)}
-          as="div"
-        >
-          {({ focused }) => (
-            <div
-              class={`${styles.prefRow} ${focused() ? 'focused' : ''}`}
-            >
-              <span class={styles.prefLabel}>
-                Chat visibility
-              </span>
-              <span
-                class={styles.prefValue}
-                style={{
-                  color: prefsStore.chatVisible
-                    ? 'var(--color-accent)'
-                    : 'var(--color-text-disabled)',
-                }}
-              >
-                {prefsStore.chatVisible ? 'On' : 'Off'}
-              </span>
-            </div>
-          )}
-        </Focusable>
-
-        {/* Chat position toggle */}
-        <Focusable
+          label="Chat visibility"
+          value={prefsStore.chatVisible ? 'On' : 'Off'}
+          active={prefsStore.chatVisible}
+          onToggle={() => updatePref('chatVisible', !prefsStore.chatVisible)}
+        />
+        <PrefRow
           focusKey="settings-pref-chat-position"
-          onEnterPress={() =>
+          label="Chat position"
+          value={prefsStore.chatPosition === 'right' ? 'Right' : 'Left'}
+          active={true}
+          onToggle={() =>
             updatePref('chatPosition', prefsStore.chatPosition === 'right' ? 'left' : 'right')
           }
-          as="div"
-        >
-          {({ focused }) => (
-            <div
-              class={`${styles.prefRow} ${focused() ? 'focused' : ''}`}
-            >
-              <span class={styles.prefLabel}>
-                Chat position
-              </span>
-              <span
-                class={styles.prefValue}
-                style={{ color: 'var(--color-accent)' }}
-              >
-                {prefsStore.chatPosition === 'right' ? 'Right' : 'Left'}
-              </span>
-            </div>
-          )}
-        </Focusable>
+        />
       </div>
 
       {/* Log Out button — visually separated from prefs */}

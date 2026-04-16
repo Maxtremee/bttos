@@ -25,21 +25,6 @@
   color: var(--color-text-primary);
 }
 
-.prefRow {
-  composes: pref-row from '../styles/shared.css';
-}
-
-.prefLabel {
-  font-size: var(--font-size-body);
-  font-weight: var(--font-weight-regular);
-  color: var(--color-text-primary);
-}
-
-.prefValue {
-  font-size: var(--font-size-label);
-  font-weight: var(--font-weight-semibold);
-}
-
 .hint {
   font-size: var(--font-size-label);
   color: var(--color-text-disabled);

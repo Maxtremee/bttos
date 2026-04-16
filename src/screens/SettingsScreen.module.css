@@ -16,20 +16,6 @@
   flex-direction: column;
 }
 
-.prefRow {
-  composes: pref-row from '../styles/shared.css';
-}
-
-.prefLabel {
-  font-size: var(--font-size-body);
-  color: var(--color-text-primary);
-}
-
-.prefValue {
-  font-size: var(--font-size-label);
-  font-weight: var(--font-weight-semibold);
-}
-
 .logoutSection {
   margin-top: var(--space-3xl);
 }

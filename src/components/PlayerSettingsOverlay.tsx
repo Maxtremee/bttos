@@ -1,6 +1,7 @@
 import { Show, createEffect, onMount, onCleanup } from 'solid-js'
-import { Focusable, useSpatialNavigation } from '../navigation'
+import { useSpatialNavigation } from '../navigation'
 import { prefsStore, updatePref } from '../stores/prefsStore'
+import PrefRow from './molecules/PrefRow'
 import styles from './PlayerSettingsOverlay.module.css'
 
 interface PlayerSettingsOverlayProps {
@@ -42,55 +43,22 @@ export default function PlayerSettingsOverlay(props: PlayerSettingsOverlayProps)
             Chat Settings
           </div>
 
-          {/* Chat visibility toggle */}
-          <Focusable
+          <PrefRow
             focusKey="overlay-pref-chat-visible"
-            onEnterPress={() => updatePref('chatVisible', !prefsStore.chatVisible)}
-            as="div"
-          >
-            {({ focused }: { focused: () => boolean }) => (
-              <div
-                class={`${styles.prefRow} ${focused() ? 'focused' : ''}`}
-              >
-                <span class={styles.prefLabel}>
-                  Chat visibility
-                </span>
-                <span
-                  class={styles.prefValue}
-                  style={{
-                    color: prefsStore.chatVisible ? 'var(--color-accent)' : 'var(--color-text-disabled)',
-                  }}
-                >
-                  {prefsStore.chatVisible ? 'On' : 'Off'}
-                </span>
-              </div>
-            )}
-          </Focusable>
-
-          {/* Chat position toggle */}
-          <Focusable
+            label="Chat visibility"
+            value={prefsStore.chatVisible ? 'On' : 'Off'}
+            active={prefsStore.chatVisible}
+            onToggle={() => updatePref('chatVisible', !prefsStore.chatVisible)}
+          />
+          <PrefRow
             focusKey="overlay-pref-chat-position"
-            onEnterPress={() =>
+            label="Chat position"
+            value={prefsStore.chatPosition === 'right' ? 'Right' : 'Left'}
+            active={true}
+            onToggle={() =>
               updatePref('chatPosition', prefsStore.chatPosition === 'right' ? 'left' : 'right')
             }
-            as="div"
-          >
-            {({ focused }: { focused: () => boolean }) => (
-              <div
-                class={`${styles.prefRow} ${focused() ? 'focused' : ''}`}
-              >
-                <span class={styles.prefLabel}>
-                  Chat position
-                </span>
-                <span
-                  class={styles.prefValue}
-                  style={{ color: 'var(--color-accent)' }}
-                >
-                  {prefsStore.chatPosition === 'right' ? 'Right' : 'Left'}
-                </span>
-              </div>
-            )}
-          </Focusable>
+          />
 
           {/* Dismiss hint */}
           <div class={styles.hint}>

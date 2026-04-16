@@ -4,8 +4,8 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 6 context gathered
-last_updated: "2026-04-16T09:35:30.328Z"
-last_activity: "2026-04-16 - Completed quick task 260416-g3l: Add auto channel points claiming"
+last_updated: "2026-04-16T09:46:34.842Z"
+last_activity: "2026-04-16 - Completed quick task 260416-gct: Settings toggle for auto claim channel points"
 progress:
   total_phases: 6
   completed_phases: 5
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-04-14)
 Phase: 6 of 6 (settings & polish)
 Plan: Not started
 Status: Ready to execute
-Last activity: 2026-04-16 - Completed quick task 260416-g3l: Add auto channel points claiming
+Last activity: 2026-04-16 - Completed quick task 260416-gct: Settings toggle for auto claim channel points
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -91,6 +91,7 @@ None yet.
 | 260416-fjq | Atomic design refactor: extract ActionButton atom, PrefRow molecule, PlayerScreen organisms | 2026-04-16 | 97db01b | [260416-fjq-atomic-design-refactor-extract-actionbut](./quick/260416-fjq-atomic-design-refactor-extract-actionbut/) |
 | 260416-fsf | Further reduce PlayerScreen: extract useHlsPlayer, useChatSession, ToggleHint organism (365 → 207 LOC) | 2026-04-16 | ef4a1e5 | [260416-fsf-further-reduce-playerscreen-extract-useh](./quick/260416-fsf-further-reduce-playerscreen-extract-useh/) |
 | 260416-g3l | Add auto channel points claiming (adapted from adamff-dev/twitch-adfree-webos) | 2026-04-16 | a8bf493 | [260416-g3l-add-auto-channel-points-claiming](./quick/260416-g3l-add-auto-channel-points-claiming/) |
+| 260416-gct | Settings toggle for auto claim channel points | 2026-04-16 | bde25ec | [260416-gct-settings-toggle-for-auto-claim-channel-p](./quick/260416-gct-settings-toggle-for-auto-claim-channel-p/) |
 
 ## Session Continuity
 

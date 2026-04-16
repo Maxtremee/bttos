@@ -2,6 +2,7 @@ import { createSignal, onMount } from 'solid-js'
 import { Focusable, useSpatialNavigation } from '../navigation'
 import { prefsStore, updatePref } from '../stores/prefsStore'
 import LogoutConfirmDialog from '../components/LogoutConfirmDialog'
+import ActionButton from '../components/atoms/ActionButton'
 import styles from './SettingsScreen.module.css'
 
 export default function SettingsScreen() {
@@ -72,19 +73,13 @@ export default function SettingsScreen() {
 
       {/* Log Out button — visually separated from prefs */}
       <div class={styles.logoutSection}>
-        <Focusable
+        <ActionButton
           focusKey="settings-logout"
-          onEnterPress={() => setDialogOpen(true)}
-          as="div"
+          variant="destructive"
+          onPress={() => setDialogOpen(true)}
         >
-          {({ focused }) => (
-            <button
-              class={`${styles.button} ${focused() ? 'focused' : ''}`}
-            >
-              Log Out
-            </button>
-          )}
-        </Focusable>
+          Log Out
+        </ActionButton>
       </div>
 
       <LogoutConfirmDialog open={dialogOpen()} onCancel={() => { setDialogOpen(false); setFocus('settings-logout') }} />

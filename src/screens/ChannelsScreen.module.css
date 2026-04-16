@@ -77,7 +77,3 @@
   color: var(--color-text-secondary);
 }
 
-.button {
-  composes: button-base from '../styles/shared.css';
-  background: var(--color-accent);
-}

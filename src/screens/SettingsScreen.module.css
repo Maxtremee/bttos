@@ -34,7 +34,3 @@
   margin-top: var(--space-3xl);
 }
 
-.button {
-  composes: button-base from '../styles/shared.css';
-  background: var(--color-destructive);
-}

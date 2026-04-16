@@ -1,7 +1,8 @@
 import { Show, onMount, onCleanup } from 'solid-js'
-import { Focusable, useSpatialNavigation } from '../navigation'
+import { useSpatialNavigation } from '../navigation'
 import { twitchAuthService } from '../services/TwitchAuthService'
 import { history } from '../router/history'
+import ActionButton from './atoms/ActionButton'
 import styles from './LogoutConfirmDialog.module.css'
 
 const KEY_BACK = 461
@@ -42,35 +43,19 @@ export default function LogoutConfirmDialog(props: LogoutConfirmDialogProps) {
             You will need to sign in again on your phone or computer.
           </p>
           <div class={`${styles.actions} gap-row-lg`}>
-            <Focusable
-              focusKey="logout-cancel"
-              onEnterPress={() => props.onCancel()}
-              as="div"
-            >
-              {({ focused }) => (
-                <button
-                  class={`${styles.button} ${styles.buttonCancel} ${focused() ? 'focused' : ''}`}
-                >
-                  Cancel
-                </button>
-              )}
-            </Focusable>
-            <Focusable
+            <ActionButton focusKey="logout-cancel" onPress={() => props.onCancel()}>
+              Cancel
+            </ActionButton>
+            <ActionButton
               focusKey="logout-confirm"
-              onEnterPress={() => {
+              variant="destructive"
+              onPress={() => {
                 twitchAuthService.clearTokens()
                 history.set({ value: '/login' })
               }}
-              as="div"
             >
-              {({ focused }) => (
-                <button
-                  class={`${styles.button} ${styles.buttonConfirm} ${focused() ? 'focused' : ''}`}
-                >
-                  Log Out
-                </button>
-              )}
-            </Focusable>
+              Log Out
+            </ActionButton>
           </div>
         </div>
       </div>

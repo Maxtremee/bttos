@@ -142,8 +142,3 @@
   transition: opacity 0.3s ease;
 }
 
-/* Shared button style */
-.button {
-  composes: button-base from '../styles/shared.css';
-  background: var(--color-accent);
-}

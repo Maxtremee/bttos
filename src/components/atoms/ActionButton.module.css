@@ -1,0 +1,11 @@
+.button {
+  composes: button-base from '../../styles/shared.css';
+}
+
+.primary {
+  background: var(--color-accent);
+}
+
+.destructive {
+  background: var(--color-destructive);
+}

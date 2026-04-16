@@ -1,8 +1,9 @@
 import { createSignal, onMount, onCleanup, createMemo, Show } from 'solid-js'
 import { useNavigate } from '@solidjs/router'
 import { renderSVG } from 'uqr'
-import { Focusable, useSpatialNavigation } from '../navigation'
+import { useSpatialNavigation } from '../navigation'
 import { twitchAuthService, type DeviceCodeResponse } from '../services/TwitchAuthService'
+import ActionButton from '../components/atoms/ActionButton'
 import styles from './LoginScreen.module.css'
 
 type AuthScreenState = 'loading' | 'polling' | 'success' | 'expired' | 'error'
@@ -149,16 +150,9 @@ export default function LoginScreen() {
           <p class={styles.errorText}>
             {statusMessage()}
           </p>
-          <Focusable focusKey="login-retry-btn" as="div" style={{ display: 'inline-block' }}>
-            {({ focused }: { focused: () => boolean }) => (
-              <button
-                class={`${styles.button} ${focused() ? 'focused' : ''}`}
-                onClick={startFlow}
-              >
-                Request new code
-              </button>
-            )}
-          </Focusable>
+          <ActionButton focusKey="login-retry-btn" onPress={startFlow}>
+            Request new code
+          </ActionButton>
         </div>
       </Show>
     </main>

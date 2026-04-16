@@ -1,6 +1,7 @@
 import { createResource, onMount, onCleanup, Show } from 'solid-js'
 import { Focusable, useSpatialNavigation } from '../navigation'
 import ChannelGrid from '../components/ChannelGrid'
+import ActionButton from '../components/atoms/ActionButton'
 import { twitchChannelService } from '../services/TwitchChannelService'
 import { history } from '../router/history'
 import styles from './ChannelsScreen.module.css'
@@ -71,20 +72,9 @@ export default function ChannelsScreen() {
               <p class={styles.errorSubtext}>
                 Check your connection and press OK to retry
               </p>
-              <Focusable
-                as="button"
-                focusKey="retry-btn"
-                onEnterPress={() => refetch()}
-              >
-                {({ focused }) => (
-                  <button
-                    class={`${styles.button} ${focused() ? 'focused' : ''}`}
-                    onClick={() => refetch()}
-                  >
-                    Retry
-                  </button>
-                )}
-              </Focusable>
+              <ActionButton focusKey="retry-btn" onPress={() => refetch()}>
+                Retry
+              </ActionButton>
             </div>
           )
         })()}

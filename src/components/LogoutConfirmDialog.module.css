@@ -34,15 +34,3 @@
 .actions {
   display: flex;
 }
-
-.button {
-  composes: button-base from '../styles/shared.css';
-}
-
-.buttonCancel {
-  background: var(--color-accent);
-}
-
-.buttonConfirm {
-  background: var(--color-destructive);
-}

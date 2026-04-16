@@ -12,6 +12,7 @@ import type { StreamData } from '../services/TwitchChannelService'
 import type { ChatMessage } from '../types/chat'
 import ChatSidebar from '../components/ChatSidebar'
 import PlayerSettingsOverlay from '../components/PlayerSettingsOverlay'
+import ActionButton from '../components/atoms/ActionButton'
 import { prefsStore, updatePref } from '../stores/prefsStore'
 import styles from './PlayerScreen.module.css'
 
@@ -305,16 +306,9 @@ export default function PlayerScreen() {
           <p class={styles.scopeText}>
             Your login needs to be updated to show chat. Press OK to log out and sign in again.
           </p>
-          <Focusable focusKey="scope-reauth" onEnterPress={handleScopeReauth} as="button">
-            {({ focused }: { focused: () => boolean }) => (
-              <button
-                class={`${styles.button} ${focused() ? 'focused' : ''}`}
-                onClick={handleScopeReauth}
-              >
-                Sign in again
-              </button>
-            )}
-          </Focusable>
+          <ActionButton focusKey="scope-reauth" onPress={handleScopeReauth}>
+            Sign in again
+          </ActionButton>
         </div>
       </Show>
 
@@ -366,16 +360,9 @@ export default function PlayerScreen() {
                   ? 'Could not reach the stream. Check your connection, then press OK to retry.'
                   : 'Something went wrong. Press OK to retry or Back to return to channels.'}
               </p>
-              <Focusable focusKey="player-retry" onEnterPress={handleRetry} as="button">
-                {({ focused }: { focused: () => boolean }) => (
-                  <button
-                    class={`${styles.button} ${focused() ? 'focused' : ''}`}
-                    onClick={handleRetry}
-                  >
-                    Retry
-                  </button>
-                )}
-              </Focusable>
+              <ActionButton focusKey="player-retry" onPress={handleRetry}>
+                Retry
+              </ActionButton>
             </div>
           </Show>
 

@@ -1,0 +1,80 @@
+name: Release webOS package on tag
+
+on:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Validate and export tag
+        id: tag
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+
+          if [[ ! "$TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Tag must match plain semver (example: 0.2.0). Got: $TAG"
+            exit 1
+          fi
+
+          echo "value=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Sync appinfo version with tag
+        run: |
+          node -e "const fs=require('node:fs');const path='appinfo.json';const next='${{ steps.tag.outputs.value }}';const app=JSON.parse(fs.readFileSync(path,'utf8'));app.version=next;fs.writeFileSync(path, JSON.stringify(app, null, 2)+'\\n');"
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build webOS package
+        run: npm run package
+
+      - name: Rename package artifact
+        id: artifact
+        shell: bash
+        run: |
+          TAG="${{ steps.tag.outputs.value }}"
+          SOURCE="com.dev.bttos_${TAG}_all.ipk"
+          TARGET="com.dev.bttos_${TAG}.ipk"
+
+          if [[ ! -f "$SOURCE" ]]; then
+            echo "Expected package not found: $SOURCE"
+            ls -la
+            exit 1
+          fi
+
+          mv "$SOURCE" "$TARGET"
+          echo "name=$TARGET" >> "$GITHUB_OUTPUT"
+
+      - name: Create or update release and upload artifact
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.value }}
+          files: ${{ steps.artifact.outputs.name }}
+          fail_on_unmatched_files: true
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

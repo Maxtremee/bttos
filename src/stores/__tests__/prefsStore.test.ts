@@ -12,6 +12,12 @@ describe('prefsStore', () => {
     const { prefsStore } = await import('../prefsStore')
     expect(prefsStore.chatVisible).toBe(true)
     expect(prefsStore.chatPosition).toBe('right')
+    expect(prefsStore.autoClaimChannelPoints).toBe(true)
+  })
+
+  it('defaults autoClaimChannelPoints to true', async () => {
+    const { prefsStore } = await import('../prefsStore')
+    expect(prefsStore.autoClaimChannelPoints).toBe(true)
   })
 
   it('loads persisted values from localStorage', async () => {
@@ -38,11 +44,12 @@ describe('prefsStore', () => {
   })
 
   it('merges missing keys with defaults', async () => {
-    // Only chatPosition stored — chatVisible should come from defaults
+    // Only chatPosition stored — chatVisible and autoClaimChannelPoints should come from defaults
     localStorage.setItem(PREFS_KEY, JSON.stringify({ chatPosition: 'left' }))
     const { prefsStore } = await import('../prefsStore')
     expect(prefsStore.chatVisible).toBe(true) // default
     expect(prefsStore.chatPosition).toBe('left') // stored
+    expect(prefsStore.autoClaimChannelPoints).toBe(true) // default
   })
 
   it('updatePref persists full state to localStorage after update', async () => {

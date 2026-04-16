@@ -1,5 +1,6 @@
 import { onCleanup } from 'solid-js'
 import { twitchChannelPointsService } from '../services/TwitchChannelPointsService'
+import { prefsStore } from '../stores/prefsStore'
 
 const POLL_INTERVAL_MS = 60_000
 
@@ -15,6 +16,7 @@ export function useChannelPointsClaimer(channelLogin: string): void {
 
   async function tick() {
     if (stopped) return
+    if (!prefsStore.autoClaimChannelPoints) return
     try {
       const result = await twitchChannelPointsService.pollAndClaim(channelLogin)
       if (result === 'stop') {

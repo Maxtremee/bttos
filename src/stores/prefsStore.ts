@@ -3,10 +3,15 @@ import { createStore } from 'solid-js/store'
 export interface PrefsState {
   chatVisible: boolean
   chatPosition: 'left' | 'right'
+  autoClaimChannelPoints: boolean
 }
 
 const PREFS_KEY = 'twitch_prefs'
-const DEFAULTS: PrefsState = { chatVisible: true, chatPosition: 'right' }
+const DEFAULTS: PrefsState = {
+  chatVisible: true,
+  chatPosition: 'right',
+  autoClaimChannelPoints: true,
+}
 
 function loadPrefs(): PrefsState {
   try {

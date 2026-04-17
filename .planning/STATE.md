@@ -4,8 +4,8 @@ milestone: v1.0
 milestone_name: milestone
 status: complete
 stopped_at: v1.0 archived; awaiting v1.1 initialization
-last_updated: "2026-04-17T12:50:00.000Z"
-last_activity: "2026-04-17 - Archived v1.0 milestone artifacts and collapsed active roadmap"
+last_updated: "2026-04-17T12:58:00.000Z"
+last_activity: "2026-04-17 - Archived v1.0 phase directories to .planning/milestones/v1.0-phases"
 progress:
   total_phases: 6
   completed_phases: 6
@@ -79,7 +79,7 @@ None yet.
 ### Blockers/Concerns
 
 - No active implementation blockers.
-- Deferred manual verification: Phase 6 runtime checks remain in .planning/phases/06-settings-polish/06-VERIFICATION.md.
+- Deferred manual verification: Runtime checks are tracked in .planning/milestones/v1.0-phases/*/*-VERIFICATION.md.
 
 ### Quick Tasks Completed
 
@@ -98,6 +98,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-17T12:50:00.000Z
-Stopped at: Milestone archived; phase directory cleanup pending
+Last session: 2026-04-17T12:58:00.000Z
+Stopped at: Milestone archived and cleanup completed
 Resume file: .planning/MILESTONES.md

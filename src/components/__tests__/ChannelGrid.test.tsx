@@ -5,6 +5,7 @@ import type { JSX } from 'solid-js'
 
 // Mock navigation
 const mockSetFocus = vi.fn()
+const mockScrollIntoView = vi.fn()
 vi.mock('../../navigation', () => ({
   useSpatialNavigation: () => ({ setFocus: mockSetFocus }),
   FocusableGroup: (props: {
@@ -19,9 +20,14 @@ vi.mock('../../navigation', () => ({
     focusKey?: string
     as?: string
     onEnterPress?: () => void
-    children: ((bag: { focused: () => boolean }) => unknown) | unknown
+    children: ((bag: { focused: () => boolean; ref: HTMLDivElement }) => unknown) | unknown
   }) => {
-    const bag = { focused: () => false }
+    const bag = {
+      focused: () => props.focusKey === 'channel-streamer_one',
+      ref: {
+        scrollIntoView: mockScrollIntoView,
+      } as unknown as HTMLDivElement,
+    }
     const child = typeof props.children === 'function' ? props.children(bag) : props.children
     // Attach focusKey as data attribute for assertions
     const wrapper = document.createElement('div')
@@ -77,6 +83,7 @@ describe('ChannelGrid', () => {
 
   beforeEach(() => {
     mockSetFocus.mockClear()
+    mockScrollIntoView.mockClear()
     mockNavigate.mockClear()
     container = document.createElement('div')
     document.body.appendChild(container)
@@ -128,5 +135,12 @@ describe('ChannelGrid', () => {
     // No extra cards
     const allTestIds = container.querySelectorAll('[data-testid]')
     expect(allTestIds.length).toBe(2)
+  })
+
+  it('scrolls the focused card into view', () => {
+    dispose = render(() => <ChannelGrid channels={mockChannels} />, container)
+
+    expect(mockScrollIntoView).toHaveBeenCalledTimes(1)
+    expect(mockScrollIntoView).toHaveBeenCalledWith({ block: 'nearest', inline: 'nearest' })
   })
 })

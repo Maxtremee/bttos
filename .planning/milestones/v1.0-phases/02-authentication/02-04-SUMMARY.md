@@ -36,6 +36,7 @@ metrics:
   tasks_total: 1
   files_created: 2
   files_modified: 1
+requirements-completed: [AUTH-01, AUTH-02, AUTH-03, AUTH-04, AUTH-05]
 ---
 
 # Phase 02 Plan 04: AuthGuard Route Protection Summary

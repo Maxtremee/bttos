@@ -1,5 +1,13 @@
 # Twitch webOS Alt
 
+## Current State
+
+v1.0 is archived and delivered as a complete six-phase milestone.
+
+- Core product path is implemented: device-code auth, live followed channels, playback, chat, settings.
+- Milestone closure includes archived roadmap/requirements/audit snapshots in `.planning/milestones/`.
+- Remaining work for v1.0 is operational follow-up: deferred manual runtime checks and Nyquist validation metadata cleanup.
+
 ## What This Is
 
 An alternative Twitch client for LG webOS TVs, replacing the slow and feature-poor official app. A lean, focused stream viewer for users who manage channels and chat from their phone or PC — the TV is purely a display device.
@@ -8,20 +16,30 @@ An alternative Twitch client for LG webOS TVs, replacing the slow and feature-po
 
 User can log in, see their followed channels, pick one, and watch the stream with chat — fast and reliably on webOS TV hardware.
 
+## Next Milestone Goals
+
+- Execute deferred manual runtime validation checklist against real webOS hardware.
+- Close Nyquist compliance gaps for phases 1, 3, 4, 5, and 6.
+- Define v1.1 scope (quality-of-life and stabilization priorities) via new requirements and roadmap.
+
 ## Requirements
 
 ### Validated
 
 - ✓ App loads and runs on real webOS TV hardware (Chromium 68+) — Phase 1
 - ✓ App is fully navigable with a standard TV remote (D-pad + OK + Back) — Phase 1
-- ✓ User can authenticate via device code or QR flow (required to use the app) — Phase 2 (pending human UAT)
-- ✓ User sees a list of their followed channels that are currently live — Phase 3
-- ✓ User can select a channel and watch the stream — Phase 4
+- ✓ User can authenticate via device code or QR flow (required to use the app) — Phase 2 (manual runtime validation deferred)
+- ✓ User sees a list of their followed channels that are currently live — Phase 3 (manual runtime validation deferred)
+- ✓ User can select a channel and watch the stream — Phase 4 (manual runtime validation deferred)
 - ✓ Stream plays at auto-selected best quality — Phase 4
+- ✓ User can toggle Twitch chat overlay on/off during playback — Phase 5 (manual runtime validation deferred)
+- ✓ User can access a settings screen (logout, basic preferences) — Phase 6 (manual runtime validation deferred)
 
 ### Active
-- [ ] User can toggle Twitch chat overlay on/off during playback
-- [ ] User can access a settings screen (logout, basic preferences)
+
+- [ ] Complete deferred manual runtime checks recorded in v1.0 audit and phase verification docs
+- [ ] Close Nyquist compliance metadata gaps across all phases
+- [ ] Define v1.1 requirements and roadmap
 
 ### Out of Scope
 
@@ -53,10 +71,10 @@ User can log in, see their followed channels, pick one, and watch the stream wit
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| SolidJS over React/Vue | Maximum performance on constrained TV hardware — no virtual DOM, tiny bundle, fine-grained updates | — Pending |
-| No chat input, only display | TV is a display device; users chat from phone/PC | — Pending |
-| Auto quality only | Simplicity for v1; TV should just play the best it can handle | — Pending |
-| Login required | App only works with followed channels, which requires auth | — Pending |
+| SolidJS over React/Vue | Maximum performance on constrained TV hardware — no virtual DOM, tiny bundle, fine-grained updates | ✓ Good |
+| No chat input, only display | TV is a display device; users chat from phone/PC | ✓ Good |
+| Auto quality only | Simplicity for v1; TV should just play the best it can handle | ✓ Good |
+| Login required | App only works with followed channels, which requires auth | ✓ Good |
 
 ## Evolution
 
@@ -76,4 +94,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-14 after Phase 4 completion*
+*Last updated: 2026-04-17 after v1.0 milestone archival*

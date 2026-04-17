@@ -28,6 +28,7 @@ metrics:
   tasks_completed: 1
   files_created: 1
   files_modified: 4
+requirements-completed: [SETT-01, SETT-02]
 ---
 
 # Phase 06 Plan 02: Settings Wiring Summary

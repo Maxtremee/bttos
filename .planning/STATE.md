@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Phase 6 context gathered
-last_updated: "2026-04-16T09:46:34.842Z"
-last_activity: "2026-04-16 - Completed quick task 260416-gct: Settings toggle for auto claim channel points"
+status: complete
+stopped_at: v1.0 archived; awaiting v1.1 initialization
+last_updated: "2026-04-17T12:50:00.000Z"
+last_activity: "2026-04-17 - Archived v1.0 milestone artifacts and collapsed active roadmap"
 progress:
   total_phases: 6
-  completed_phases: 5
-  total_plans: 13
-  completed_plans: 13
+  completed_phases: 6
+  total_plans: 15
+  completed_plans: 15
   percent: 100
 ---
 
@@ -21,22 +21,22 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-14)
 
 **Core value:** User can log in, see their followed channels, pick one, and watch the stream with chat — fast and reliably on webOS TV hardware.
-**Current focus:** Phase 1 — Foundation
+**Current focus:** Ready to start next milestone planning
 
 ## Current Position
 
 Phase: 6 of 6 (settings & polish)
-Plan: Not started
-Status: Ready to execute
-Last activity: 2026-04-16 - Completed quick task 260416-gct: Settings toggle for auto claim channel points
+Plan: Completed
+Status: Archived
+Last activity: 2026-04-17 - v1.0 archived to milestones snapshots
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 11
+- Total plans completed: 15
 - Average duration: —
 - Total execution time: 0 hours
 
@@ -46,8 +46,10 @@ Progress: [░░░░░░░░░░] 0%
 |-------|-------|-------|----------|
 | 01 | 3 | - | - |
 | 02 | 4 | - | - |
+| 03 | 2 | - | - |
 | 04 | 2 | - | - |
 | 05 | 2 | - | - |
+| 06 | 2 | - | - |
 
 **Recent Trend:**
 
@@ -76,7 +78,8 @@ None yet.
 
 ### Blockers/Concerns
 
-- Phase 4 risk: Twitch stream URL acquisition requires GQL + Usher token; official API does not provide HLS URLs directly. Needs investigation before or during Phase 4 planning.
+- No active implementation blockers.
+- Deferred manual verification: Phase 6 runtime checks remain in .planning/phases/06-settings-polish/06-VERIFICATION.md.
 
 ### Quick Tasks Completed
 
@@ -95,6 +98,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-15T11:19:51.426Z
-Stopped at: Phase 6 context gathered
-Resume file: .planning/phases/06-settings-polish/06-CONTEXT.md
+Last session: 2026-04-17T12:50:00.000Z
+Stopped at: Milestone archived; phase directory cleanup pending
+Resume file: .planning/MILESTONES.md

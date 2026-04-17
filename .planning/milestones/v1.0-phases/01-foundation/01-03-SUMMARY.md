@@ -36,6 +36,7 @@ metrics:
   tasks_total: 3
   files_created: 6
   files_modified: 2
+requirements-completed: [FNDN-01, FNDN-02]
 ---
 
 # Phase 1 Plan 03: App Shell (Routing + Screens + Exit Dialog) Summary

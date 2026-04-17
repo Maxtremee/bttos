@@ -33,6 +33,7 @@ metrics:
   completed_date: "2026-04-14"
   tasks_completed: 2
   files_changed: 4
+requirements-completed: [CHAN-01, CHAN-02, CHAN-03]
 ---
 
 # Phase 03 Plan 02: ChannelGrid and ChannelsScreen Summary

@@ -8,6 +8,9 @@ function stripModuleType(): Plugin {
     name: 'strip-module-type',
     enforce: 'post',
     transformIndexHtml(html) {
+      if (process.env.NODE_ENV === 'development') {
+        return html;
+      }
       return html.replace(/ type="module"/g, '').replace(/ crossorigin/g, '')
     },
   }

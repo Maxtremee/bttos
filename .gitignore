@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 .env
 *.ipk
+
+# Claude Code worktrees (local-only working trees, not part of repo history)
+.claude/worktrees/

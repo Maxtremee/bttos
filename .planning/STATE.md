@@ -1,36 +1,36 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: complete
-stopped_at: v1.0 archived; awaiting v1.1 initialization
-last_updated: "2026-04-17T12:58:00.000Z"
-last_activity: "2026-04-17 - Archived v1.0 phase directories to .planning/milestones/v1.0-phases"
+milestone: v1.1
+milestone_name: polish
+status: defining_requirements
+stopped_at: v1.1 initialization — gathering requirements for animated emote support
+last_updated: "2026-04-18T00:00:00.000Z"
+last_activity: "2026-04-18 - Milestone v1.1 started (animated emote support)"
 progress:
-  total_phases: 6
-  completed_phases: 6
-  total_plans: 15
-  completed_plans: 15
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-04-14)
+See: .planning/PROJECT.md (updated 2026-04-18)
 
 **Core value:** User can log in, see their followed channels, pick one, and watch the stream with chat — fast and reliably on webOS TV hardware.
-**Current focus:** Ready to start next milestone planning
+**Current focus:** v1.1 polish — animated emote support across all providers with performance guardrails
 
 ## Current Position
 
-Phase: 6 of 6 (settings & polish)
-Plan: Completed
-Status: Archived
-Last activity: 2026-04-17 - v1.0 archived to milestones snapshots
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-04-18 — Milestone v1.1 started
 
-Progress: [██████████] 100%
+Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 

@@ -2,11 +2,28 @@
 
 ## Current State
 
-v1.0 is archived and delivered as a complete six-phase milestone.
+v1.0 is archived. v1.1 ("polish") is the active milestone — chat parity and animated emote support.
 
-- Core product path is implemented: device-code auth, live followed channels, playback, chat, settings.
-- Milestone closure includes archived roadmap/requirements/audit snapshots in `.planning/milestones/`.
-- Remaining work for v1.0 is operational follow-up: deferred manual runtime checks and Nyquist validation metadata cleanup.
+- Core product path from v1.0 is implemented: device-code auth, live followed channels, playback, chat, settings.
+- v1.1 focus: animated emote support across all providers, with performance guardrails for constrained TV hardware.
+- Remaining operational follow-up from v1.0 (manual runtime checks, Nyquist metadata) is tracked outside this milestone.
+
+## Current Milestone: v1.1 polish
+
+**Goal:** Bring animated emote support to parity across all providers and guard the rendering cost on constrained TV hardware.
+
+**Target features:**
+- Twitch first-party animated emotes (switch from `/static/` to `/animated/` with static fallback)
+- Verify (and fix if broken) 7TV animated webp rendering on webOS Chromium 68
+- Verify (and fix if broken) BTTV animated GIF/webp rendering
+- FFZ animated emote support (upgrade to FFZ v2 API)
+- Pause emote animation when the chat overlay is hidden
+- Pause animation for emotes that aren't on-screen in the chat list
+
+**Key context:**
+- No user-facing animation toggle — always on (explicit decision)
+- Target platform still Chromium 68 on older webOS 5.x; animated webp supported since Chromium 32
+- Must not regress v1.0 chat rendering or introduce noticeable jank on low-end hardware
 
 ## What This Is
 
@@ -18,9 +35,10 @@ User can log in, see their followed channels, pick one, and watch the stream wit
 
 ## Next Milestone Goals
 
+See `## Current Milestone: v1.1 polish` above. Post-v1.1 candidates:
+
 - Execute deferred manual runtime validation checklist against real webOS hardware.
 - Close Nyquist compliance gaps for phases 1, 3, 4, 5, and 6.
-- Define v1.1 scope (quality-of-life and stabilization priorities) via new requirements and roadmap.
 
 ## Requirements
 
@@ -37,9 +55,10 @@ User can log in, see their followed channels, pick one, and watch the stream wit
 
 ### Active
 
-- [ ] Complete deferred manual runtime checks recorded in v1.0 audit and phase verification docs
-- [ ] Close Nyquist compliance metadata gaps across all phases
-- [ ] Define v1.1 requirements and roadmap
+- [ ] Animated emote support across Twitch first-party, 7TV, BTTV, FFZ (v1.1)
+- [ ] Performance guardrails: pause animation when chat hidden or emotes off-screen (v1.1)
+- [ ] Complete deferred manual runtime checks recorded in v1.0 audit and phase verification docs (carry-over)
+- [ ] Close Nyquist compliance metadata gaps across all phases (carry-over)
 
 ### Out of Scope
 
@@ -75,6 +94,7 @@ User can log in, see their followed channels, pick one, and watch the stream wit
 | No chat input, only display | TV is a display device; users chat from phone/PC | ✓ Good |
 | Auto quality only | Simplicity for v1; TV should just play the best it can handle | ✓ Good |
 | Login required | App only works with followed channels, which requires auth | ✓ Good |
+| Animated emotes always on (v1.1) | Avoid a settings knob; performance guardrails (pause-off-screen, pause-when-chat-hidden) handle the cost instead | Pending |
 
 ## Evolution
 
@@ -94,4 +114,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-17 after v1.0 milestone archival*
+*Last updated: 2026-04-18 — v1.1 "polish" milestone started (animated emote support)*

@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: polish
-status: defining_requirements
-stopped_at: v1.1 initialization — gathering requirements for animated emote support
+status: roadmap_defined
+stopped_at: v1.1 roadmap created — phases 7, 8, 9 defined; awaiting first phase plan
 last_updated: "2026-04-18T00:00:00.000Z"
-last_activity: "2026-04-18 - Milestone v1.1 started (animated emote support)"
+last_activity: "2026-04-18 - v1.1 roadmap created (Phases 7-9)"
 progress:
-  total_phases: 0
+  total_phases: 3
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-04-18)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: Not started (roadmap defined; ready to plan Phase 7)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-04-18 — Milestone v1.1 started
+Status: Roadmap defined
+Last activity: 2026-04-18 — v1.1 roadmap created (Phases 7–9)
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -50,6 +50,9 @@ Progress: [░░░░░░░░░░] 0%
 | 04 | 2 | - | - |
 | 05 | 2 | - | - |
 | 06 | 2 | - | - |
+| 07 | 0 | - | - |
+| 08 | 0 | - | - |
+| 09 | 0 | - | - |
 
 **Recent Trend:**
 
@@ -71,6 +74,7 @@ Recent decisions affecting current work:
 - [Research]: HLS.js needs conservative buffer config from Phase 4 day one (low-end CPU)
 - [Research]: Auth refresh singleton must exist before any API service (Phase 2 constraint)
 - [Research]: Phase 4 (Stream Playback) is highest risk — GQL + Usher token approach needs verification
+- [v1.1]: Animated emotes always-on — no user-facing toggle; perf guardrails (pause-when-hidden, pause-off-screen) handle the cost
 
 ### Pending Todos
 
@@ -98,6 +102,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-17T12:58:00.000Z
-Stopped at: Milestone archived and cleanup completed
-Resume file: .planning/MILESTONES.md
+Last session: 2026-04-18T00:00:00.000Z
+Stopped at: v1.1 roadmap created — awaiting plan for Phase 7
+Resume file: .planning/ROADMAP.md

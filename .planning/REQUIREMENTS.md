@@ -50,22 +50,22 @@ Explicitly excluded from v1.1. Documented to prevent scope creep.
 
 ## Traceability
 
-Which phases cover which requirements. Filled by roadmap creation.
+Which phases cover which requirements.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| EMOTE-01 | TBD | Pending roadmap |
-| EMOTE-02 | TBD | Pending roadmap |
-| EMOTE-03 | TBD | Pending roadmap |
-| EMOTE-04 | TBD | Pending roadmap |
-| PERF-01 | TBD | Pending roadmap |
-| PERF-02 | TBD | Pending roadmap |
+| EMOTE-01 | Phase 7 | Pending |
+| EMOTE-02 | Phase 8 | Pending |
+| EMOTE-03 | Phase 8 | Pending |
+| EMOTE-04 | Phase 8 | Pending |
+| PERF-01 | Phase 9 | Pending |
+| PERF-02 | Phase 9 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 6 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 6
+- Mapped to phases: 6
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-18*
-*Last updated: 2026-04-18 — v1.1 milestone requirements drafted*
+*Last updated: 2026-04-18 — v1.1 roadmap created; traceability populated (Phases 7–9)*

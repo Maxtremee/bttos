@@ -77,6 +77,7 @@ export class HelixClient {
     const res = await fetch(url, {
       method,
       headers: this.buildHeaders(options?.tokenOverride),
+      // oxlint-disable-next-line unicorn/no-invalid-fetch-options
       body: body === undefined ? undefined : JSON.stringify(body),
     });
 

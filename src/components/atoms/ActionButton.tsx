@@ -19,7 +19,7 @@ interface ActionButtonProps {
 export default function ActionButton(props: ActionButtonProps) {
   return (
     <Focusable focusKey={props.focusKey} onEnterPress={() => props.onPress()} as="div">
-      {({ focused }: { focused: () => boolean }) => (
+      {({ focused }) => (
         <button
           class={`${styles.button} ${styles[props.variant ?? 'primary']} ${focused() ? 'focused' : ''}`}
           onClick={() => props.onPress()}

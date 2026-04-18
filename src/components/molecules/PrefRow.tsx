@@ -18,7 +18,7 @@ interface PrefRowProps {
 export default function PrefRow(props: PrefRowProps) {
   return (
     <Focusable focusKey={props.focusKey} onEnterPress={() => props.onToggle()} as="div">
-      {({ focused }: { focused: () => boolean }) => (
+      {({ focused }) => (
         <div class={`${styles.row} ${focused() ? 'focused' : ''}`}>
           <span class={styles.label}>{props.label}</span>
           <span class={`${styles.value} ${props.active ? styles.active : styles.inactive}`}>

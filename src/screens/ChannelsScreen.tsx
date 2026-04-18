@@ -39,7 +39,7 @@ export default function ChannelsScreen() {
           onEnterPress={() => history.set({ value: '/settings' })}
           as="div"
         >
-          {({ focused }: { focused: () => boolean }) => (
+          {({ focused }) => (
             <div
               class={`${styles.gearButton} ${focused() ? 'focused' : ''}`}
               style={{

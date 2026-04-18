@@ -3,7 +3,7 @@ name: Release webOS package on tag
 on:
   push:
     tags:
-      - '*'
+      - "*"
 
 permissions:
   contents: write

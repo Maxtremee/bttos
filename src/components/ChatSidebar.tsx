@@ -1,41 +1,37 @@
-import { For, Show, createMemo } from 'solid-js'
-import type { ChatMessage } from '../types/chat'
-import type { EmoteMap } from '../services/EmoteService'
-import ChatMessageComponent from './ChatMessage'
-import styles from './ChatSidebar.module.css'
+import { For, Show, createMemo } from "solid-js";
+import type { ChatMessage } from "../types/chat";
+import type { EmoteMap } from "../services/EmoteService";
+import ChatMessageComponent from "./ChatMessage";
+import styles from "./ChatSidebar.module.css";
 
 interface ChatSidebarProps {
-  messages: ChatMessage[]
-  emoteMap: EmoteMap
-  status: 'connecting' | 'loading-emotes' | 'active' | 'reconnecting'
-  width?: number
-  scale?: number
-  position?: 'left' | 'right'
+  messages: ChatMessage[];
+  emoteMap: EmoteMap;
+  status: "connecting" | "loading-emotes" | "active" | "reconnecting";
+  width?: number;
+  scale?: number;
+  position?: "left" | "right";
 }
 
 export default function ChatSidebar(props: ChatSidebarProps) {
   // Memoize the reversed message list so we only rebuild the array
   // when props.messages actually changes, not on every reactive read
   // (e.g. width/scale updates). Fine-grained reactivity per SolidJS skill.
-  const reversedMessages = createMemo(() => [...props.messages].reverse())
+  const reversedMessages = createMemo(() => [...props.messages].reverse());
 
   return (
     <div
-      class={`${styles.sidebar} ${props.position === 'left' ? styles.borderRight : styles.borderLeft}`}
+      class={`${styles.sidebar} ${props.position === "left" ? styles.borderRight : styles.borderLeft}`}
       style={{ width: `${props.width ?? 260}px` }}
     >
       {/* Status bar — only shown when connecting or reconnecting */}
-      <Show when={props.status === 'loading-emotes' || props.status === 'reconnecting'}>
+      <Show when={props.status === "loading-emotes" || props.status === "reconnecting"}>
         <div class={styles.statusBar}>
-          <Show when={props.status === 'loading-emotes'}>
-            <span class={styles.statusText}>
-              Loading chat...
-            </span>
+          <Show when={props.status === "loading-emotes"}>
+            <span class={styles.statusText}>Loading chat...</span>
           </Show>
-          <Show when={props.status === 'reconnecting'}>
-            <span class={styles.statusText}>
-              Reconnecting...
-            </span>
+          <Show when={props.status === "reconnecting"}>
+            <span class={styles.statusText}>Reconnecting...</span>
           </Show>
         </div>
       </Show>
@@ -44,10 +40,14 @@ export default function ChatSidebar(props: ChatSidebarProps) {
       <div class={styles.messageList}>
         <For each={reversedMessages()}>
           {(msg) => (
-            <ChatMessageComponent message={msg} emoteMap={props.emoteMap} scale={props.scale ?? 1} />
+            <ChatMessageComponent
+              message={msg}
+              emoteMap={props.emoteMap}
+              scale={props.scale ?? 1}
+            />
           )}
         </For>
       </div>
     </div>
-  )
+  );
 }

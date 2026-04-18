@@ -1,11 +1,13 @@
 {
   "name": "bttos",
-  "private": true,
   "version": "1.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
     "preview": "vite preview",
     "test": "vitest run --reporter=verbose --passWithNoTests",
     "package": "vite build && cp appinfo.json icon.png largeIcon.png dist/ && cp -r webOSTVjs-1.2.13 dist/ && ares-package --no-minify dist/ -o .",
@@ -21,9 +23,10 @@
   "devDependencies": {
     "@solidjs/testing-library": "^0.8.10",
     "@testing-library/jest-dom": "^6.9.1",
-    "@webos-tools/cli": "^3.2.3",
     "@vitejs/plugin-legacy": "^6.1.1",
+    "@webos-tools/cli": "^3.2.3",
     "happy-dom": "^20.9.0",
+    "oxfmt": "^0.45.0",
     "terser": "^5.46.1",
     "typescript": "~5.8.3",
     "vite": "^6.3.5",

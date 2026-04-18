@@ -1,4 +1,4 @@
-import styles from './ToggleHint.module.css'
+import styles from "./ToggleHint.module.css";
 
 /**
  * ToggleHint — transient bottom-right hint showing the color-button
@@ -8,7 +8,7 @@ import styles from './ToggleHint.module.css'
 export default function ToggleHint() {
   return (
     <div class={styles.hint}>
-      Red — toggle chat  |  Yellow — smaller  |  Blue — larger  |  Green — settings
+      Red — toggle chat | Yellow — smaller | Blue — larger | Green — settings
     </div>
-  )
+  );
 }

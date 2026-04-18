@@ -1,14 +1,14 @@
-import type { JSX } from 'solid-js'
-import { Focusable } from '../../navigation'
-import styles from './ActionButton.module.css'
+import type { JSX } from "solid-js";
+import { Focusable } from "../../navigation";
+import styles from "./ActionButton.module.css";
 
-export type ActionButtonVariant = 'primary' | 'destructive'
+export type ActionButtonVariant = "primary" | "destructive";
 
 interface ActionButtonProps {
-  focusKey: string
-  onPress: () => void
-  variant?: ActionButtonVariant
-  children: JSX.Element
+  focusKey: string;
+  onPress: () => void;
+  variant?: ActionButtonVariant;
+  children: JSX.Element;
 }
 
 /**
@@ -21,12 +21,12 @@ export default function ActionButton(props: ActionButtonProps) {
     <Focusable focusKey={props.focusKey} onEnterPress={() => props.onPress()} as="div">
       {({ focused }) => (
         <button
-          class={`${styles.button} ${styles[props.variant ?? 'primary']} ${focused() ? 'focused' : ''}`}
+          class={`${styles.button} ${styles[props.variant ?? "primary"]} ${focused() ? "focused" : ""}`}
           onClick={() => props.onPress()}
         >
           {props.children}
         </button>
       )}
     </Focusable>
-  )
+  );
 }

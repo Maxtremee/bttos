@@ -1,4 +1,6 @@
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -88,12 +90,30 @@ body {
  *   - .gap-col-* for flex-direction: column (adds margin-top)
  *   - .gap-row-* for flex-direction: row (adds margin-left)
  */
-.gap-col-sm > * + * { margin-top: var(--space-sm); }
-.gap-col-md > * + * { margin-top: var(--space-md); }
-.gap-col-lg > * + * { margin-top: var(--space-lg); }
-.gap-col-xl > * + * { margin-top: var(--space-xl); }
-.gap-col-2xl > * + * { margin-top: var(--space-2xl); }
-.gap-row-sm > * + * { margin-left: var(--space-sm); }
-.gap-row-md > * + * { margin-left: var(--space-md); }
-.gap-row-lg > * + * { margin-left: var(--space-lg); }
-.gap-row-2xl > * + * { margin-left: var(--space-2xl); }
+.gap-col-sm > * + * {
+  margin-top: var(--space-sm);
+}
+.gap-col-md > * + * {
+  margin-top: var(--space-md);
+}
+.gap-col-lg > * + * {
+  margin-top: var(--space-lg);
+}
+.gap-col-xl > * + * {
+  margin-top: var(--space-xl);
+}
+.gap-col-2xl > * + * {
+  margin-top: var(--space-2xl);
+}
+.gap-row-sm > * + * {
+  margin-left: var(--space-sm);
+}
+.gap-row-md > * + * {
+  margin-left: var(--space-md);
+}
+.gap-row-lg > * + * {
+  margin-left: var(--space-lg);
+}
+.gap-row-2xl > * + * {
+  margin-left: var(--space-2xl);
+}

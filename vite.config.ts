@@ -1,43 +1,43 @@
-import { defineConfig, type Plugin } from 'vite'
-import solid from 'vite-plugin-solid'
-import legacy from '@vitejs/plugin-legacy'
+import { defineConfig, type Plugin } from "vite";
+import solid from "vite-plugin-solid";
+import legacy from "@vitejs/plugin-legacy";
 
 // Strip type="module" from script tags — webOS doesn't serve correct MIME types for ES modules
 function stripModuleType(): Plugin {
   return {
-    name: 'strip-module-type',
-    enforce: 'post',
+    name: "strip-module-type",
+    enforce: "post",
     transformIndexHtml(html) {
-      if (process.env.NODE_ENV === 'development') {
+      if (process.env.NODE_ENV === "development") {
         return html;
       }
-      return html.replace(/ type="module"/g, '').replace(/ crossorigin/g, '')
+      return html.replace(/ type="module"/g, "").replace(/ crossorigin/g, "");
     },
-  }
+  };
 }
 
 export default defineConfig({
   plugins: [
     solid(),
     legacy({
-      targets: ['chrome >= 68'],
+      targets: ["chrome >= 68"],
       renderModernChunks: false,
     }),
     stripModuleType(),
   ],
   build: {
-    outDir: 'dist',
+    outDir: "dist",
     assetsInlineLimit: 0,
-    cssTarget: 'chrome68',
+    cssTarget: "chrome68",
   },
-  base: './',
+  base: "./",
   server: {
     proxy: {
-      '/proxy/usher': {
-        target: 'https://usher.ttvnw.net',
+      "/proxy/usher": {
+        target: "https://usher.ttvnw.net",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/proxy\/usher/, ''),
+        rewrite: (path) => path.replace(/^\/proxy\/usher/, ""),
       },
     },
   },
-})
+});

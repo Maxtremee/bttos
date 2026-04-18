@@ -1,2 +1,2 @@
-export * from './GqlClient'
-export * from './HelixClient'
+export * from "./GqlClient";
+export * from "./HelixClient";

@@ -1,8 +1,8 @@
-import ActionButton from '../atoms/ActionButton'
-import styles from './ScopeErrorOverlay.module.css'
+import ActionButton from "../atoms/ActionButton";
+import styles from "./ScopeErrorOverlay.module.css";
 
 interface ScopeErrorOverlayProps {
-  onReauth: () => void
+  onReauth: () => void;
 }
 
 /**
@@ -21,5 +21,5 @@ export default function ScopeErrorOverlay(props: ScopeErrorOverlayProps) {
         Sign in again
       </ActionButton>
     </div>
-  )
+  );
 }

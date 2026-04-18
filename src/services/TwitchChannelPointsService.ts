@@ -7,14 +7,14 @@
  * Silently polls Twitch's private GQL endpoint for available community-point claims
  * and auto-submits them while the user is watching a stream.
  */
-import { authStore } from '../stores/authStore'
-import { gqlClient, GqlClientError } from './clients'
+import { authStore } from "../stores/authStore";
+import { gqlClient, GqlClientError } from "./clients";
 
-export type PollResult = 'claimed' | 'nothing' | 'stop'
+export type PollResult = "claimed" | "nothing" | "stop";
 
 interface FetchContextResult {
-  channelId: string
-  claimId: string
+  channelId: string;
+  claimId: string;
 }
 
 export class TwitchChannelPointsService {
@@ -29,109 +29,110 @@ export class TwitchChannelPointsService {
   async pollAndClaim(channelLogin: string): Promise<PollResult> {
     // No point polling unauthenticated
     if (!authStore.token) {
-      return 'stop'
+      return "stop";
     }
 
-    const ctx = await this.fetchContext(channelLogin)
-    if (ctx === 'stop') return 'stop'
-    if (ctx === null) return 'nothing'
+    const ctx = await this.fetchContext(channelLogin);
+    if (ctx === "stop") return "stop";
+    if (ctx === null) return "nothing";
 
-    const ok = await this.claim(ctx.channelId, ctx.claimId)
-    return ok ? 'claimed' : 'nothing'
+    const ok = await this.claim(ctx.channelId, ctx.claimId);
+    return ok ? "claimed" : "nothing";
   }
 
-  private async fetchContext(
-    channelLogin: string,
-  ): Promise<FetchContextResult | 'stop' | null> {
+  private async fetchContext(channelLogin: string): Promise<FetchContextResult | "stop" | null> {
     let response: {
       community?: {
-        id?: string
+        id?: string;
         channel?: {
           self?: {
             communityPoints?: {
-              availableClaim?: { id?: string } | null
-            }
-          }
-        }
-      } | null
-    }
+              availableClaim?: { id?: string } | null;
+            };
+          };
+        };
+      } | null;
+    };
 
     try {
-      response = await gqlClient.fetchChannelPointsContext(channelLogin)
+      response = await gqlClient.fetchChannelPointsContext(channelLogin);
     } catch (err) {
       if (err instanceof GqlClientError) {
-        if (err.code === 'persisted_query_not_found') {
+        if (err.code === "persisted_query_not_found") {
           console.warn(
-            '[TwitchChannelPointsService] ChannelPointsContext persisted-query hash is stale — stopping poll for',
+            "[TwitchChannelPointsService] ChannelPointsContext persisted-query hash is stale — stopping poll for",
             channelLogin,
-          )
-          return 'stop'
+          );
+          return "stop";
         }
-        if (err.code === 'unauthorized' || (err.code === 'http' && err.status === 401)) {
-          console.warn('[TwitchChannelPointsService] 401 from GQL — stopping poll for', channelLogin)
-          return 'stop'
+        if (err.code === "unauthorized" || (err.code === "http" && err.status === 401)) {
+          console.warn(
+            "[TwitchChannelPointsService] 401 from GQL — stopping poll for",
+            channelLogin,
+          );
+          return "stop";
         }
-        if (err.code === 'http' && typeof err.status === 'number') {
-          throw new Error(`[TwitchChannelPointsService] GQL request failed: ${err.status}`)
+        if (err.code === "http" && typeof err.status === "number") {
+          throw new Error(`[TwitchChannelPointsService] GQL request failed: ${err.status}`);
         }
-        if (err.code === 'graphql') {
-          return null
+        if (err.code === "graphql") {
+          return null;
         }
       }
-      throw err
+      throw err;
     }
 
-    const community = response.community
+    const community = response.community;
     if (!community || !community.id) {
       // Stream offline or channel has no community points enabled — nothing to do.
-      return null
+      return null;
     }
 
-    const availableClaim = community.channel?.self?.communityPoints?.availableClaim
+    const availableClaim = community.channel?.self?.communityPoints?.availableClaim;
     if (!availableClaim || !availableClaim.id) {
-      return null
+      return null;
     }
 
-    return { channelId: community.id, claimId: availableClaim.id }
+    return { channelId: community.id, claimId: availableClaim.id };
   }
 
   private async claim(channelId: string, claimId: string): Promise<boolean> {
     try {
-      await gqlClient.claimCommunityPoints(channelId, claimId)
+      await gqlClient.claimCommunityPoints(channelId, claimId);
     } catch (err) {
       if (err instanceof GqlClientError) {
-        if (err.code === 'http' && typeof err.status === 'number') {
+        if (err.code === "http" && typeof err.status === "number") {
           console.warn(
             `[TwitchChannelPointsService] claim mutation failed: ${err.status} — will retry next tick`,
-          )
-          return false
+          );
+          return false;
         }
-        if (err.code === 'graphql' && err.message) {
+        if (err.code === "graphql" && err.message) {
           console.warn(
-            '[TwitchChannelPointsService] claim mutation returned errors — will retry next tick:',
+            "[TwitchChannelPointsService] claim mutation returned errors — will retry next tick:",
             err.message,
-          )
-          return false
+          );
+          return false;
         }
-        if (err.code === 'persisted_query_not_found') {
+        if (err.code === "persisted_query_not_found") {
           console.warn(
-            '[TwitchChannelPointsService] claim mutation persisted query stale — will retry next tick',
-          )
-          return false
+            "[TwitchChannelPointsService] claim mutation persisted query stale — will retry next tick",
+          );
+          return false;
         }
-        if (err.code === 'unauthorized') {
-          return false
+        if (err.code === "unauthorized") {
+          return false;
         }
       }
-      throw err
+      throw err;
     }
 
-    console.log('[TwitchChannelPointsService] claimed community points', {
+    console.log("[TwitchChannelPointsService] claimed community points", {
       channelId,
       claimId,
-    })
-    return true
+    });
+    return true;
   }
 }
 
-export const twitchChannelPointsService = new TwitchChannelPointsService()
+export const twitchChannelPointsService = new TwitchChannelPointsService();

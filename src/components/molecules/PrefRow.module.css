@@ -1,5 +1,5 @@
 .row {
-  composes: pref-row from '../../styles/shared.css';
+  composes: pref-row from "../../styles/shared.css";
 }
 
 .label {

@@ -1,24 +1,24 @@
-import ActionButton from '../atoms/ActionButton'
-import styles from './PlayerErrorOverlay.module.css'
+import ActionButton from "../atoms/ActionButton";
+import styles from "./PlayerErrorOverlay.module.css";
 
-export type PlayerErrorKind = 'offline' | 'network' | 'unknown'
+export type PlayerErrorKind = "offline" | "network" | "unknown";
 
 interface PlayerErrorOverlayProps {
-  kind: PlayerErrorKind
-  onRetry: () => void
+  kind: PlayerErrorKind;
+  onRetry: () => void;
 }
 
 const HEADINGS: Record<PlayerErrorKind, string> = {
-  offline: 'Stream is offline',
-  network: 'Connection lost',
-  unknown: 'Playback error',
-}
+  offline: "Stream is offline",
+  network: "Connection lost",
+  unknown: "Playback error",
+};
 
 const BODIES: Record<PlayerErrorKind, string> = {
-  offline: 'This channel has ended their stream. Press OK to retry or Back to return to channels.',
-  network: 'Could not reach the stream. Check your connection, then press OK to retry.',
-  unknown: 'Something went wrong. Press OK to retry or Back to return to channels.',
-}
+  offline: "This channel has ended their stream. Press OK to retry or Back to return to channels.",
+  network: "Could not reach the stream. Check your connection, then press OK to retry.",
+  unknown: "Something went wrong. Press OK to retry or Back to return to channels.",
+};
 
 /**
  * PlayerErrorOverlay — full-area overlay shown when HLS playback fails.
@@ -33,5 +33,5 @@ export default function PlayerErrorOverlay(props: PlayerErrorOverlayProps) {
         Retry
       </ActionButton>
     </div>
-  )
+  );
 }

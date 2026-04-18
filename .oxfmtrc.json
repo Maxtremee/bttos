@@ -1,0 +1,11 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "ignorePatterns": [
+    ".agents/**",
+    ".claude/**",
+    ".planning/**",
+    "dist/**",
+    "node_modules/**",
+    "webOSTVjs-1.2.13/**"
+  ]
+}

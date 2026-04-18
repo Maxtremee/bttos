@@ -1,8 +1,8 @@
-import type { StreamData } from '../../services/TwitchChannelService'
-import styles from './VideoInfoBar.module.css'
+import type { StreamData } from "../../services/TwitchChannelService";
+import styles from "./VideoInfoBar.module.css";
 
 interface VideoInfoBarProps {
-  stream: StreamData
+  stream: StreamData;
 }
 
 /**
@@ -11,9 +11,9 @@ interface VideoInfoBarProps {
  */
 function formatWatching(count: number): string {
   if (count >= 1000) {
-    return `${(count / 1000).toFixed(1)}K watching`
+    return `${(count / 1000).toFixed(1)}K watching`;
   }
-  return `${count} watching`
+  return `${count} watching`;
 }
 
 /**
@@ -34,5 +34,5 @@ export default function VideoInfoBar(props: VideoInfoBarProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

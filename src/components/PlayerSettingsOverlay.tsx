@@ -2,6 +2,7 @@ import { Show, createEffect, onMount, onCleanup } from 'solid-js'
 import { useSpatialNavigation } from '../navigation'
 import { prefsStore, updatePref } from '../stores/prefsStore'
 import PrefRow from './molecules/PrefRow'
+import { KEY_BACK } from '../const/keys'
 import styles from './PlayerSettingsOverlay.module.css'
 
 interface PlayerSettingsOverlayProps {
@@ -21,7 +22,7 @@ export default function PlayerSettingsOverlay(props: PlayerSettingsOverlayProps)
 
   function handleKeyDown(e: KeyboardEvent) {
     if (!props.open) return
-    if (e.keyCode === 461) {
+    if (e.keyCode === KEY_BACK) {
       e.stopPropagation()
       e.preventDefault()
       props.onClose()

@@ -6,12 +6,11 @@ import ChannelsScreen from './screens/ChannelsScreen'
 import PlayerScreen from './screens/PlayerScreen'
 import SettingsScreen from './screens/SettingsScreen'
 import AuthGuard from './components/AuthGuard'
+import { KEY_BACK, KEY_GREEN } from './const/keys'
 
 declare const webOS: { platformBack: () => void } | undefined
 
 const ROOT_PATHS = ['/', '/login', '/channels']
-const KEY_BACK = 461 // webOS remote Back button
-const KEY_GREEN = 404 // webOS remote Green button
 
 export default function App() {
   function handleKeyDown(e: KeyboardEvent) {

@@ -99,6 +99,7 @@ None yet.
 | 260416-fsf | Further reduce PlayerScreen: extract useHlsPlayer, useChatSession, ToggleHint organism (365 → 207 LOC) | 2026-04-16 | ef4a1e5 | [260416-fsf-further-reduce-playerscreen-extract-useh](./quick/260416-fsf-further-reduce-playerscreen-extract-useh/) |
 | 260416-g3l | Add auto channel points claiming (adapted from adamff-dev/twitch-adfree-webos) | 2026-04-16 | a8bf493 | [260416-g3l-add-auto-channel-points-claiming](./quick/260416-g3l-add-auto-channel-points-claiming/) |
 | 260416-gct | Settings toggle for auto claim channel points | 2026-04-16 | bde25ec | [260416-gct-settings-toggle-for-auto-claim-channel-p](./quick/260416-gct-settings-toggle-for-auto-claim-channel-p/) |
+| 260418-kyx | Extract webOS remote keyCode constants to src/const/keys.ts | 2026-04-18 | dd84d9d | [260418-kyx-extract-key-constants-to-shared-file](./quick/260418-kyx-extract-key-constants-to-shared-file/) |
 
 ## Session Continuity
 

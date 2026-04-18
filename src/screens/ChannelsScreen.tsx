@@ -1,26 +1,14 @@
 import { createResource, onMount, onCleanup, Show } from 'solid-js'
-import { Focusable, useSpatialNavigation } from '../navigation'
+import { Focusable } from '../navigation'
 import ChannelGrid from '../components/ChannelGrid'
-import ActionButton from '../components/atoms/ActionButton'
 import { twitchChannelService } from '../services/TwitchChannelService'
 import { history } from '../router/history'
 import styles from './ChannelsScreen.module.css'
+import ChannelsScreenError from './ChannelsScreenError'
+import { ChannelsScreenEmpty } from './ChannelsScreenEmpty'
 
-function EmptyState() {
-  return (
-    <div class={`${styles.emptyState} gap-col-sm`}>
-      <p class={styles.emptyHeading}>
-        No channels live right now
-      </p>
-      <p class={styles.emptySubtext}>
-        Check back later or follow more channels on Twitch
-      </p>
-    </div>
-  )
-}
 
 export default function ChannelsScreen() {
-  const { setFocus } = useSpatialNavigation()
   const [channels, { refetch }] = createResource(() => twitchChannelService.fetchLiveFollowedChannels())
 
   onMount(() => {
@@ -46,7 +34,7 @@ export default function ChannelsScreen() {
                 color: focused() ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
               }}
             >
-              {'\u2699'}
+              ⚙️
             </div>
           )}
         </Focusable>
@@ -62,26 +50,11 @@ export default function ChannelsScreen() {
       </Show>
 
       <Show when={channels.state === 'errored'}>
-        {(() => {
-          onMount(() => setFocus('retry-btn'))
-          return (
-            <div class={`${styles.errorContainer} gap-col-md`}>
-              <p class={styles.errorHeading}>
-                Could not load channels
-              </p>
-              <p class={styles.errorSubtext}>
-                Check your connection and press OK to retry
-              </p>
-              <ActionButton focusKey="retry-btn" onPress={() => refetch()}>
-                Retry
-              </ActionButton>
-            </div>
-          )
-        })()}
+        <ChannelsScreenError refetch={refetch} />
       </Show>
 
       <Show when={channels.state === 'ready' || channels.state === 'refreshing'}>
-        <Show when={(channels() ?? []).length > 0} fallback={<EmptyState />}>
+        <Show when={(channels() ?? []).length > 0} fallback={<ChannelsScreenEmpty />}>
           <ChannelGrid channels={[...(channels() ?? [])].sort((a, b) => b.viewer_count - a.viewer_count)} />
         </Show>
       </Show>

@@ -33,7 +33,7 @@ export default function ChannelsScreen() {
                 color: focused() ? "var(--color-text-primary)" : "var(--color-text-secondary)",
               }}
             >
-              {'\u2699'}
+              {"\u2699"}
             </div>
           )}
         </Focusable>

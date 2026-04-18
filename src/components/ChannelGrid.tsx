@@ -1,4 +1,4 @@
-import { For, createEffect, onMount } from "solid-js";
+import { For, onMount } from "solid-js";
 import { FocusableGroup, Focusable, useSpatialNavigation } from "../navigation";
 import { useNavigate } from "@solidjs/router";
 import ChannelCard from "./ChannelCard";
@@ -7,22 +7,6 @@ import styles from "./ChannelGrid.module.css";
 
 interface ChannelGridProps {
   channels: StreamData[];
-}
-
-interface FocusableChannelCardProps {
-  channel: StreamData;
-  focused: () => boolean;
-  element: HTMLDivElement | undefined;
-}
-
-function FocusableChannelCard(props: FocusableChannelCardProps) {
-  createEffect(() => {
-    if (props.focused()) {
-      props.element?.scrollIntoView({ block: "nearest", inline: "nearest" });
-    }
-  });
-
-  return <ChannelCard channel={props.channel} focused={props.focused()} />;
 }
 
 export default function ChannelGrid(props: ChannelGridProps) {
@@ -50,9 +34,7 @@ export default function ChannelGrid(props: ChannelGridProps) {
                   })
                 }
               >
-                {({ focused, ref }) => (
-                  <FocusableChannelCard channel={channel} focused={focused} element={ref} />
-                )}
+                {({ focused }) => <ChannelCard channel={channel} focused={focused()} />}
               </Focusable>
             )}
           </For>

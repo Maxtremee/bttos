@@ -3,9 +3,8 @@ import { useSpatialNavigation } from '../navigation'
 import { twitchAuthService } from '../services/TwitchAuthService'
 import { history } from '../router/history'
 import ActionButton from './atoms/ActionButton'
+import { KEY_BACK } from '../const/keys'
 import styles from './LogoutConfirmDialog.module.css'
-
-const KEY_BACK = 461
 
 interface LogoutConfirmDialogProps {
   open: boolean

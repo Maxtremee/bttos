@@ -13,13 +13,8 @@ import { useChannelPointsClaimer } from '../hooks/useChannelPointsClaimer'
 import { useChatSession } from '../hooks/useChatSession'
 import { useHlsPlayer } from '../hooks/useHlsPlayer'
 import { prefsStore, updatePref } from '../stores/prefsStore'
+import { KEY_RED, KEY_GREEN, KEY_YELLOW, KEY_BLUE } from '../const/keys'
 import styles from './PlayerScreen.module.css'
-
-// Remote color-button keyCodes
-const KEY_RED = 403
-const KEY_GREEN = 404
-const KEY_YELLOW = 405
-const KEY_BLUE = 406
 
 // Chat width bounds and step (px)
 const CHAT_WIDTH_DEFAULT = 260

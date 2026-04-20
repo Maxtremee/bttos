@@ -13,7 +13,9 @@
     "preview": "vite preview",
     "test": "vitest run --reporter=verbose --passWithNoTests",
     "package": "vite build && cp appinfo.json icon.png largeIcon.png dist/ && cp -r webOSTVjs-1.2.13 dist/ && ares-package --no-minify dist/ -o .",
-    "deploy": "npm run package && source ~/.nvm/nvm.sh && nvm use 18 && node /Users/maksymilianzadka/.nvm/versions/node/v24.14.1/lib/node_modules/@webos-tools/cli/bin/ares-install.js com.dev.bttos_0.1.0_all.ipk"
+    "deploy": "npm run package && source ~/.nvm/nvm.sh && nvm use 18 && node /Users/maksymilianzadka/.nvm/versions/node/v24.14.1/lib/node_modules/@webos-tools/cli/bin/ares-install.js com.dev.bttos_0.1.0_all.ipk",
+    "typecheck": "tsc --noEmit",
+    "prepare": "husky"
   },
   "dependencies": {
     "@lampa-dev/solidjs-spatial-navigation": "^1.0.0",
@@ -28,6 +30,7 @@
     "@vitejs/plugin-legacy": "^6.1.1",
     "@webos-tools/cli": "^3.2.3",
     "happy-dom": "^20.9.0",
+    "husky": "^9.1.7",
     "oxfmt": "^0.45.0",
     "oxlint": "^1.60.0",
     "terser": "^5.46.1",

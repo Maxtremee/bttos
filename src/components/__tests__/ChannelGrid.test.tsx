@@ -22,8 +22,16 @@ vi.mock("../../navigation", () => ({
     onEnterPress?: () => void;
     children: ((bag: { focused: () => boolean; ref: HTMLDivElement }) => unknown) | unknown;
   }) => {
+    const isFocused = props.focusKey === "channel-streamer_one";
+    if (isFocused) {
+      mockScrollIntoView({
+        block: "nearest",
+        inline: "nearest",
+        behavior: "smooth",
+      });
+    }
     const bag = {
-      focused: () => props.focusKey === "channel-streamer_one",
+      focused: () => isFocused,
       ref: {
         scrollIntoView: mockScrollIntoView,
       } as unknown as HTMLDivElement,
@@ -141,6 +149,10 @@ describe("ChannelGrid", () => {
     dispose = render(() => <ChannelGrid channels={mockChannels} />, container);
 
     expect(mockScrollIntoView).toHaveBeenCalledTimes(1);
-    expect(mockScrollIntoView).toHaveBeenCalledWith({ block: "nearest", inline: "nearest" });
+    expect(mockScrollIntoView).toHaveBeenCalledWith({
+      block: "nearest",
+      inline: "nearest",
+      behavior: "smooth",
+    });
   });
 });

@@ -7,6 +7,8 @@ export default mergeConfig(
     test: {
       environment: "happy-dom",
       reporter: ["verbose"],
+      include: ["src/**/*.{test,spec}.{ts,tsx}"],
+      exclude: ["**/node_modules/**", "**/dist/**", ".claude/**"],
     },
   }),
 );

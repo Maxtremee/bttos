@@ -19,13 +19,14 @@ vi.mock("../../navigation", () => ({
   Focusable: (props: {
     focusKey?: string;
     as?: string;
+    scrollAlignment?: ScrollLogicalPosition;
     onEnterPress?: () => void;
     children: ((bag: { focused: () => boolean; ref: HTMLDivElement }) => unknown) | unknown;
   }) => {
     const isFocused = props.focusKey === "channel-streamer_one";
     if (isFocused) {
       mockScrollIntoView({
-        block: "nearest",
+        block: props.scrollAlignment ?? "nearest",
         inline: "nearest",
         behavior: "smooth",
       });
@@ -150,7 +151,7 @@ describe("ChannelGrid", () => {
 
     expect(mockScrollIntoView).toHaveBeenCalledTimes(1);
     expect(mockScrollIntoView).toHaveBeenCalledWith({
-      block: "nearest",
+      block: "start",
       inline: "nearest",
       behavior: "smooth",
     });

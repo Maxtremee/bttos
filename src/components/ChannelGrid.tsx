@@ -28,6 +28,7 @@ export default function ChannelGrid(props: ChannelGridProps) {
               <Focusable
                 as="div"
                 focusKey={"channel-" + channel.user_login}
+                scrollAlignment="start"
                 onEnterPress={() =>
                   navigate("/player/" + channel.user_login, {
                     state: { broadcasterId: channel.user_id },

@@ -33,7 +33,6 @@ export default function PlayerScreen() {
   // --- UI state ---
   const [infoVisible, setInfoVisible] = createSignal(true);
   const [hintVisible, setHintVisible] = createSignal(true);
-  const [chatWidth, setChatWidth] = createSignal(CHAT_WIDTH_DEFAULT);
   const [settingsOverlayVisible, setSettingsOverlayVisible] = createSignal(false);
 
   let hideTimer: ReturnType<typeof setTimeout> | undefined;
@@ -103,11 +102,11 @@ export default function PlayerScreen() {
         showHint();
         break;
       case KEY_YELLOW:
-        setChatWidth((w) => Math.max(CHAT_WIDTH_MIN, w - CHAT_WIDTH_STEP));
+        updatePref("chatWidth", Math.max(CHAT_WIDTH_MIN, prefsStore.chatWidth - CHAT_WIDTH_STEP));
         showHint();
         break;
       case KEY_BLUE:
-        setChatWidth((w) => Math.min(CHAT_WIDTH_MAX, w + CHAT_WIDTH_STEP));
+        updatePref("chatWidth", Math.min(CHAT_WIDTH_MAX, prefsStore.chatWidth + CHAT_WIDTH_STEP));
         showHint();
         break;
       case KEY_GREEN:
@@ -140,8 +139,8 @@ export default function PlayerScreen() {
             messages={chat.messages}
             emoteMap={chat.emoteMap()}
             status={chat.status()}
-            width={chatWidth()}
-            scale={chatWidth() / CHAT_WIDTH_DEFAULT}
+            width={prefsStore.chatWidth}
+            scale={prefsStore.chatWidth / CHAT_WIDTH_DEFAULT}
             position="left"
           />
         </Show>
@@ -183,8 +182,8 @@ export default function PlayerScreen() {
             messages={chat.messages}
             emoteMap={chat.emoteMap()}
             status={chat.status()}
-            width={chatWidth()}
-            scale={chatWidth() / CHAT_WIDTH_DEFAULT}
+            width={prefsStore.chatWidth}
+            scale={prefsStore.chatWidth / CHAT_WIDTH_DEFAULT}
             position="right"
           />
         </Show>

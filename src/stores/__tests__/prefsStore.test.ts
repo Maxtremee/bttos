@@ -12,6 +12,7 @@ describe("prefsStore", () => {
     const { prefsStore } = await import("../prefsStore");
     expect(prefsStore.chatVisible).toBe(true);
     expect(prefsStore.chatPosition).toBe("right");
+    expect(prefsStore.chatWidth).toBe(260);
     expect(prefsStore.autoClaimChannelPoints).toBe(true);
   });
 
@@ -21,10 +22,14 @@ describe("prefsStore", () => {
   });
 
   it("loads persisted values from localStorage", async () => {
-    localStorage.setItem(PREFS_KEY, JSON.stringify({ chatVisible: false, chatPosition: "left" }));
+    localStorage.setItem(
+      PREFS_KEY,
+      JSON.stringify({ chatVisible: false, chatPosition: "left", chatWidth: 320 }),
+    );
     const { prefsStore } = await import("../prefsStore");
     expect(prefsStore.chatVisible).toBe(false);
     expect(prefsStore.chatPosition).toBe("left");
+    expect(prefsStore.chatWidth).toBe(320);
   });
 
   it("falls back to defaults on corrupted JSON and removes the bad entry", async () => {
@@ -37,10 +42,10 @@ describe("prefsStore", () => {
 
   it("updatePref writes updated value to localStorage", async () => {
     const { prefsStore, updatePref } = await import("../prefsStore");
-    updatePref("chatVisible", false);
-    expect(prefsStore.chatVisible).toBe(false);
+    updatePref("chatWidth", 380);
+    expect(prefsStore.chatWidth).toBe(380);
     const stored = JSON.parse(localStorage.getItem(PREFS_KEY) ?? "{}");
-    expect(stored.chatVisible).toBe(false);
+    expect(stored.chatWidth).toBe(380);
   });
 
   it("merges missing keys with defaults", async () => {
@@ -49,6 +54,7 @@ describe("prefsStore", () => {
     const { prefsStore } = await import("../prefsStore");
     expect(prefsStore.chatVisible).toBe(true); // default
     expect(prefsStore.chatPosition).toBe("left"); // stored
+    expect(prefsStore.chatWidth).toBe(260); // default
     expect(prefsStore.autoClaimChannelPoints).toBe(true); // default
   });
 

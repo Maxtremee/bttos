@@ -1,6 +1,5 @@
 {
   "name": "bttos",
-  "version": "1.1.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -13,7 +12,7 @@
     "preview": "vite preview",
     "test": "vitest run --reporter=verbose --passWithNoTests",
     "package": "vite build && cp appinfo.json icon.png largeIcon.png dist/ && cp -r webOSTVjs-1.2.13 dist/ && ares-package --no-minify dist/ -o .",
-    "deploy": "npm run package && ares-install com.dev.bttos_0.1.0_all.ipk",
+    "deploy": "npm run package && ares-install com.dev.bttos_1.2.0_all.ipk",
     "typecheck": "tsc --noEmit",
     "prepare": "husky"
   },
@@ -26,7 +25,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-legacy": "^6.1.1",
-    "@webos-tools/cli": "^3.2.3",
+    "@webos-tools/cli": "3.2.5",
     "happy-dom": "^20.9.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",

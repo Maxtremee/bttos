@@ -1,5 +1,5 @@
 import { authStore } from "../stores/authStore";
-import { helixClient, HelixClientError } from "./clients";
+import { helixClient, HelixClientError } from "./clients/HelixClient";
 
 // Safety cap: max 50 pages (5000 channels) to prevent infinite loops from malformed API responses
 const MAX_PAGINATION_PAGES = 50;

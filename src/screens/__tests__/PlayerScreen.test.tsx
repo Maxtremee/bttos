@@ -61,15 +61,13 @@ vi.mock("../../navigation", () => ({
 }));
 
 vi.mock("../../services/TwitchStreamService", () => ({
-  twitchStreamService: {
-    get fetchStreamM3u8Url() {
-      return mockFetchStreamM3u8Url;
-    },
+  get fetchStreamM3u8Url() {
+    return mockFetchStreamM3u8Url;
   },
 }));
 
 vi.mock("../../stores/authStore", () => ({
-  authStore: { token: "test-token", refreshToken: null, expiresAt: null, userId: "user123" },
+  authStore: { token: "test-token", expiresAt: null, userId: "user123" },
 }));
 
 vi.mock("@solidjs/router", () => ({

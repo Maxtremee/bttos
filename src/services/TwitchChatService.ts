@@ -1,5 +1,5 @@
 import type { ChatMessage, ChatMessageEvent } from "../types/chat";
-import { helixClient } from "./clients";
+import { helixClient } from "./clients/HelixClient";
 
 const EVENTSUB_WS_URL = "wss://eventsub.wss.twitch.tv/ws";
 const RECONNECT_DELAYS = [1000, 2000, 4000];

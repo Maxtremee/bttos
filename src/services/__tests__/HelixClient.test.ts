@@ -5,7 +5,6 @@ vi.stubEnv("VITE_TWITCH_CLIENT_ID", "test_client_id");
 
 const mockAuthStore = {
   token: "test_oauth_token",
-  refreshToken: "refresh_token",
   userId: "test_user",
   expiresAt: Date.now() + 3_600_000,
 };
@@ -27,7 +26,7 @@ vi.mock("../TwitchAuthService", () => ({
 }));
 
 describe("HelixClient", () => {
-  let client: import("../clients").HelixClient;
+  let client: import("../clients/HelixClient").HelixClient;
 
   beforeEach(async () => {
     vi.resetModules();
@@ -38,7 +37,7 @@ describe("HelixClient", () => {
 
     globalThis.fetch = vi.fn();
 
-    const mod = await import("../clients");
+    const mod = await import("../clients/HelixClient");
     client = new mod.HelixClient();
   });
 

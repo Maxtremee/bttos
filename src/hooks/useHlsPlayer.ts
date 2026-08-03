@@ -1,6 +1,6 @@
 import { createSignal, onCleanup } from "solid-js";
 import Hls from "hls.js";
-import { twitchStreamService } from "../services/TwitchStreamService";
+import { fetchStreamM3u8Url } from "../services/TwitchStreamService";
 import type { PlayerErrorKind } from "../components/organisms/PlayerErrorOverlay";
 
 export type HlsPlayerState = "loading" | "playing" | "error";
@@ -45,7 +45,7 @@ export function useHlsPlayer(channel: string, opts: UseHlsPlayerOptions = {}) {
     retryCount = 0;
 
     try {
-      const m3u8Url = await twitchStreamService.fetchStreamM3u8Url(channel);
+      const m3u8Url = await fetchStreamM3u8Url(channel);
 
       if (!Hls.isSupported()) {
         setErrorKind("unknown");

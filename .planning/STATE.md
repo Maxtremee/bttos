@@ -83,24 +83,10 @@ None yet.
 ### Blockers/Concerns
 
 - No active implementation blockers.
-- Deferred manual verification: Runtime checks are tracked in .planning/milestones/v1.0-phases/*/*-VERIFICATION.md.
 
 ### Quick Tasks Completed
 
-| # | Description | Date | Commit | Directory |
-|---|-------------|------|--------|-----------|
-| 260415-fjn | Use ares-generate to scaffold the webOS app project into the existing one | 2026-04-15 | d97b3ac | [260415-fjn-use-ares-generate-to-scaffold-the-webos-](./quick/260415-fjn-use-ares-generate-to-scaffold-the-webos-/) |
-| 260415-hjo | Add yellow/blue button chat width scaling | 2026-04-15 | 11de2f7 | [260415-hjo-make-the-yellow-button-scale-the-chat-do](./quick/260415-hjo-make-the-yellow-button-scale-the-chat-do/) |
-| 260415-hnx | Scale chat text size and emotes with yellow/blue buttons | 2026-04-15 | 856704e | [260415-hnx-scale-chat-text-size-with-yellow-blue-bu](./quick/260415-hnx-scale-chat-text-size-with-yellow-blue-bu/) |
-| 260415-l6j | Rename app to BTTOS in all relevant places | 2026-04-15 | 69b0735 | [260415-l6j-rename-app-to-bttos-in-all-relevant-plac](./quick/260415-l6j-rename-app-to-bttos-in-all-relevant-plac/) |
-| 260415-lly | Move to CSS modules - colocate styles with components | 2026-04-15 | cce5838 | [260415-lly-move-to-css-modules-colocate-styles-with](./quick/260415-lly-move-to-css-modules-colocate-styles-with/) |
-| 260415-m2b | Apply skills-based codebase improvements: design tokens, SolidJS best practices, component organization | 2026-04-16 | da9dd60 | [260415-m2b-apply-skills-based-codebase-improvements](./quick/260415-m2b-apply-skills-based-codebase-improvements/) |
-| 260416-fjq | Atomic design refactor: extract ActionButton atom, PrefRow molecule, PlayerScreen organisms | 2026-04-16 | 97db01b | [260416-fjq-atomic-design-refactor-extract-actionbut](./quick/260416-fjq-atomic-design-refactor-extract-actionbut/) |
-| 260416-fsf | Further reduce PlayerScreen: extract useHlsPlayer, useChatSession, ToggleHint organism (365 → 207 LOC) | 2026-04-16 | ef4a1e5 | [260416-fsf-further-reduce-playerscreen-extract-useh](./quick/260416-fsf-further-reduce-playerscreen-extract-useh/) |
-| 260416-g3l | Add auto channel points claiming (adapted from adamff-dev/twitch-adfree-webos) | 2026-04-16 | a8bf493 | [260416-g3l-add-auto-channel-points-claiming](./quick/260416-g3l-add-auto-channel-points-claiming/) |
-| 260416-gct | Settings toggle for auto claim channel points | 2026-04-16 | bde25ec | [260416-gct-settings-toggle-for-auto-claim-channel-p](./quick/260416-gct-settings-toggle-for-auto-claim-channel-p/) |
-| 260418-kyx | Extract webOS remote keyCode constants to src/const/keys.ts | 2026-04-18 | dd84d9d | [260418-kyx-extract-key-constants-to-shared-file](./quick/260418-kyx-extract-key-constants-to-shared-file/) |
-| 260418-hve | Create .d.ts file for webOSTVjs-1.2.13 module | 2026-04-18 | ea9617d | [260418-hve-create-dts-file-for-webos-module](./quick/260418-hve-create-dts-file-for-webos-module/) |
+Completed task details remain in Git history through tag `1.1.0`.
 
 ## Session Continuity
 

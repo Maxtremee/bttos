@@ -23,6 +23,7 @@ export function initSpatialNav(): void {
 
 type FocusableRenderProps = FocusableProps<object> &
   Omit<JSX.HTMLAttributes<HTMLElement>, "children" | "ref"> & {
+    scrollAlignment?: ScrollLogicalPosition;
     children: (props: FocusableCallbackProps) => JSX.Element;
   };
 
@@ -34,14 +35,14 @@ type FocusableRenderProps = FocusableProps<object> &
  * which is <body> when the focusable is a non-natively-focusable element).
  */
 export function Focusable(props: FocusableRenderProps): JSX.Element {
-  const [local, others] = splitProps(props, ["children", "onFocus"]);
+  const [local, others] = splitProps(props, ["children", "onFocus", "scrollAlignment"]);
   return (
     <BaseFocusable
       {...others}
       // @ts-expect-error
       onFocus={(layout, extra, details) => {
         layout.node.scrollIntoView({
-          block: "nearest",
+          block: local.scrollAlignment ?? "nearest",
           inline: "nearest",
           behavior: "smooth",
         });

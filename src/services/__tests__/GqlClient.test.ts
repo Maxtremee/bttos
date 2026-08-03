@@ -2,8 +2,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockAuthStore = {
-  token: "test_oauth_token",
-  refreshToken: "refresh_token",
+  token: "test_oauth_token" as string | null,
   userId: "test_user",
   expiresAt: Date.now() + 3_600_000,
 };
@@ -25,8 +24,8 @@ vi.mock("../TwitchAuthService", () => ({
 }));
 
 describe("GqlClient", () => {
-  let client: import("../clients").GqlClient;
-  let GqlClientError: typeof import("../clients").GqlClientError;
+  let client: import("../clients/GqlClient").GqlClient;
+  let GqlClientError: typeof import("../clients/GqlClient").GqlClientError;
 
   beforeEach(async () => {
     vi.resetModules();
@@ -36,7 +35,7 @@ describe("GqlClient", () => {
 
     globalThis.fetch = vi.fn();
 
-    const mod = await import("../clients");
+    const mod = await import("../clients/GqlClient");
     client = new mod.GqlClient();
     GqlClientError = mod.GqlClientError;
   });

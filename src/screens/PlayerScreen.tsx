@@ -2,13 +2,12 @@ import { createSignal, createResource, createEffect, onMount, onCleanup, Show } 
 import { useParams, useLocation } from "@solidjs/router";
 import { useSpatialNavigation } from "../navigation";
 import { twitchAuthService } from "../services/TwitchAuthService";
-import { helixClient } from "../services/clients";
+import { helixClient } from "../services/clients/HelixClient";
 import ChatSidebar from "../components/ChatSidebar";
 import PlayerSettingsOverlay from "../components/PlayerSettingsOverlay";
 import VideoInfoBar from "../components/organisms/VideoInfoBar";
 import PlayerErrorOverlay from "../components/organisms/PlayerErrorOverlay";
 import ScopeErrorOverlay from "../components/organisms/ScopeErrorOverlay";
-import ToggleHint from "../components/organisms/ToggleHint";
 import { useChannelPointsClaimer } from "../hooks/useChannelPointsClaimer";
 import { useChatSession } from "../hooks/useChatSession";
 import { useHlsPlayer } from "../hooks/useHlsPlayer";
@@ -168,7 +167,9 @@ export default function PlayerScreen() {
           </Show>
 
           <Show when={hintVisible() && player.state() === "playing"}>
-            <ToggleHint />
+            <div class={styles.hint}>
+              Red — toggle chat | Yellow — smaller | Blue — larger | Green — settings
+            </div>
           </Show>
 
           <PlayerSettingsOverlay

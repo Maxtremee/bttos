@@ -8,7 +8,7 @@
  * and auto-submits them while the user is watching a stream.
  */
 import { authStore } from "../stores/authStore";
-import { gqlClient, GqlClientError } from "./clients";
+import { gqlClient, GqlClientError } from "./clients/GqlClient";
 
 export type PollResult = "claimed" | "nothing" | "stop";
 

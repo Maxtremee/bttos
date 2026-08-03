@@ -78,7 +78,7 @@ export class TwitchAuthService {
       localStorage.removeItem("twitch_expires_at");
       localStorage.removeItem("twitch_refresh_token");
       localStorage.removeItem("twitch_user_id");
-      setAuthStore({ token: null, refreshToken: null, expiresAt: null, userId: null });
+      setAuthStore({ token: null, expiresAt: null, userId: null });
       throw new Error("Token refresh failed — re-authentication required");
     }
 
@@ -91,7 +91,7 @@ export class TwitchAuthService {
     localStorage.setItem("twitch_expires_at", String(expiresAt));
     localStorage.setItem("twitch_refresh_token", data.refresh_token);
 
-    setAuthStore({ token: data.access_token, refreshToken: data.refresh_token, expiresAt });
+    setAuthStore({ token: data.access_token, expiresAt });
   }
 
   persistTokens(data: TokenResponse, userId: string): void {
@@ -102,7 +102,6 @@ export class TwitchAuthService {
     localStorage.setItem("twitch_user_id", userId);
     setAuthStore({
       token: data.access_token,
-      refreshToken: data.refresh_token,
       expiresAt,
       userId,
     });
@@ -113,7 +112,7 @@ export class TwitchAuthService {
     localStorage.removeItem("twitch_expires_at");
     localStorage.removeItem("twitch_refresh_token");
     localStorage.removeItem("twitch_user_id");
-    setAuthStore({ token: null, refreshToken: null, expiresAt: null, userId: null });
+    setAuthStore({ token: null, expiresAt: null, userId: null });
   }
 }
 

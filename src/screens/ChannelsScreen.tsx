@@ -1,11 +1,34 @@
 import { createResource, onMount, onCleanup, Show } from "solid-js";
-import { Focusable } from "../navigation";
+import { Focusable, useSpatialNavigation } from "../navigation";
 import ChannelGrid from "../components/ChannelGrid";
+import ActionButton from "../components/atoms/ActionButton";
 import { twitchChannelService } from "../services/TwitchChannelService";
 import { history } from "../router/history";
 import styles from "./ChannelsScreen.module.css";
-import ChannelsScreenError from "./ChannelsScreenError";
-import { ChannelsScreenEmpty } from "./ChannelsScreenEmpty";
+
+function ChannelsScreenError(props: { refetch: () => void }) {
+  const { setFocus } = useSpatialNavigation();
+  onMount(() => setFocus("retry-btn"));
+
+  return (
+    <div class={`${styles.errorContainer} gap-col-md`}>
+      <p class={styles.errorHeading}>Could not load channels</p>
+      <p class={styles.errorSubtext}>Check your connection and press OK to retry</p>
+      <ActionButton focusKey="retry-btn" onPress={props.refetch}>
+        Retry
+      </ActionButton>
+    </div>
+  );
+}
+
+function ChannelsScreenEmpty() {
+  return (
+    <div class={`${styles.emptyState} gap-col-sm`}>
+      <p class={styles.emptyHeading}>No channels live right now</p>
+      <p class={styles.emptySubtext}>Check back later or follow more channels on Twitch</p>
+    </div>
+  );
+}
 
 export default function ChannelsScreen() {
   const [channels, { refetch }] = createResource(() =>

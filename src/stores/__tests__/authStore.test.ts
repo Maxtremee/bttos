@@ -12,12 +12,6 @@ describe("authStore", () => {
     expect(authStore.token).toBe("tok123");
   });
 
-  it('initialises refreshToken from localStorage.getItem("twitch_refresh_token")', async () => {
-    localStorage.setItem("twitch_refresh_token", "ref456");
-    const { authStore } = await import("../authStore");
-    expect(authStore.refreshToken).toBe("ref456");
-  });
-
   it('initialises expiresAt as Number(localStorage.getItem("twitch_expires_at")) or null', async () => {
     // With value
     localStorage.setItem("twitch_expires_at", "1700000000000");

@@ -15,8 +15,4 @@
 - Implemented chat stack (EventSub + BTTV/7TV/FFZ rendering) and runtime toggles.
 - Shipped preference persistence and settings wiring across channels/player experiences.
 
-### Archives
-
-- Roadmap snapshot: `.planning/milestones/v1.0-ROADMAP.md`
-- Requirements snapshot: `.planning/milestones/v1.0-REQUIREMENTS.md`
-- Audit snapshot: `.planning/milestones/v1.0-MILESTONE-AUDIT.md`
+The full milestone archive remains available in Git history through tag `1.1.0`.

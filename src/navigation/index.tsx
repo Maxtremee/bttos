@@ -42,7 +42,7 @@ export function Focusable(props: FocusableRenderProps): JSX.Element {
       // @ts-expect-error
       onFocus={(layout, extra, details) => {
         layout.node.scrollIntoView({
-          block: local.scrollAlignment ?? "nearest",
+          block: details.event ? (local.scrollAlignment ?? "nearest") : "nearest",
           inline: "nearest",
           behavior: "smooth",
         });

@@ -38,11 +38,7 @@ describe("Focusable scrolling", () => {
       container,
     );
 
-    expect(mocks.scrollIntoView).toHaveBeenCalledWith({
-      block: "nearest",
-      inline: "nearest",
-      behavior: "smooth",
-    });
+    expect(mocks.scrollIntoView).not.toHaveBeenCalled();
     dispose();
   });
 

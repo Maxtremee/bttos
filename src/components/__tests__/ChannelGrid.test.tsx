@@ -5,7 +5,7 @@ import type { JSX } from "solid-js";
 
 // Mock navigation
 const mockSetFocus = vi.fn();
-const mockScrollIntoView = vi.fn();
+const mockScrollAlignment = vi.fn();
 vi.mock("../../navigation", () => ({
   useSpatialNavigation: () => ({ setFocus: mockSetFocus }),
   FocusableGroup: (props: {
@@ -24,18 +24,10 @@ vi.mock("../../navigation", () => ({
     children: ((bag: { focused: () => boolean; ref: HTMLDivElement }) => unknown) | unknown;
   }) => {
     const isFocused = props.focusKey === "channel-streamer_one";
-    if (isFocused) {
-      mockScrollIntoView({
-        block: props.scrollAlignment ?? "nearest",
-        inline: "nearest",
-        behavior: "smooth",
-      });
-    }
+    mockScrollAlignment(props.scrollAlignment);
     const bag = {
       focused: () => isFocused,
-      ref: {
-        scrollIntoView: mockScrollIntoView,
-      } as unknown as HTMLDivElement,
+      ref: {} as HTMLDivElement,
     };
     const child = typeof props.children === "function" ? props.children(bag) : props.children;
     // Attach focusKey as data attribute for assertions
@@ -92,7 +84,7 @@ describe("ChannelGrid", () => {
 
   beforeEach(() => {
     mockSetFocus.mockClear();
-    mockScrollIntoView.mockClear();
+    mockScrollAlignment.mockClear();
     mockNavigate.mockClear();
     container = document.createElement("div");
     document.body.appendChild(container);
@@ -146,14 +138,10 @@ describe("ChannelGrid", () => {
     expect(allTestIds.length).toBe(2);
   });
 
-  it("scrolls the focused card into view", () => {
+  it("configures cards to align at the top on D-pad focus", () => {
     dispose = render(() => <ChannelGrid channels={mockChannels} />, container);
 
-    expect(mockScrollIntoView).toHaveBeenCalledTimes(1);
-    expect(mockScrollIntoView).toHaveBeenCalledWith({
-      block: "start",
-      inline: "nearest",
-      behavior: "smooth",
-    });
+    expect(mockScrollAlignment).toHaveBeenCalledTimes(mockChannels.length);
+    expect(mockScrollAlignment).toHaveBeenCalledWith("start");
   });
 });
